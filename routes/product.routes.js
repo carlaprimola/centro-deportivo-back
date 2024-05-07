@@ -1,15 +1,16 @@
-import productController from "../../controllers/productController.js";
+import { Router } from "express";
+import productController from "../controllers/product.controller.js";
 
 
 const v1ProductRouter = Router();
 //v1ProductRouter.use(isAdmin); // Aplicar el middleware isAdmin a todas las rutas de roles
 
 v1ProductRouter
-    .get("/", productController.getAllProducts)
-    .get("/:product_Id", productController.getProduct)
-    .post("/", productController.createNewProduct)
-    .patch("/:product_Id", productController.updateOneProduct)
-    .delete("/:product_Id", productController.deleteOneProduct)
-    .patch("/:productId/update-stock", productController.updateStock)
+    .get('/products', productController.getALLProducts)
+    .get('/products/:id', productController.getProduct)
+    .post('/add-product', productController.createNewProduct)
+    .put('/products/:id', productController.updateOneProduct)
+    .delete('/products/:id', productController.deleteOneProduct)
+    .put('/products/:id/stock', productController.updateOneProduct)
 
-export { v1ProductRouter };
+export default v1ProductRouter ;
