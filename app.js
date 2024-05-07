@@ -6,6 +6,7 @@ import cors from 'cors';
 
 import authRoutes from './routes/auth.routes.js'
 import taskRoutes from './routes/task.routes.js'
+import duePaymentsRoutes from './routes/duePayment.routes.js'
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use('/', (req, res) =>{
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api", authRoutes) 
 app.use("/api", taskRoutes)
+app.use("/api", duePaymentsRoutes)
 
 export default app;
