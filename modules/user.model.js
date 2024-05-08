@@ -1,13 +1,23 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         required: true,
         trim: true, //quita espacios
     },
+    lastname: {
+        type: String,
+        required: true,        
+    },
     email: {
         type: String,
+        required: true,
+        trim: true,
+        unique: true, //unico
+    },
+    mobile: {
+        type: Number,
         required: true,
         trim: true,
         unique: true, //email unico
@@ -16,7 +26,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    tipoRol: {
+    rol_id: {
         type: String,        
         default: "user",
         enum: ["user", "admin"],
