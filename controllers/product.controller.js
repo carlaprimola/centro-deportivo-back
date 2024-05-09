@@ -1,4 +1,4 @@
-import  ProductModel  from "../modules/product.model.js";
+import  ProductModel  from "../models/product.model.js";
 
     // GET ALL PRODUCTS
 
@@ -23,7 +23,7 @@ export const ProductController = {
     }
     },
 
-    // CREATE PRODUCT
+    // POST CREATE PRODUCT
     createNewProduct: async (req, res) => {
         try {
             const product = new ProductModel(req.body);
