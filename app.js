@@ -5,7 +5,7 @@ import express from 'express';
 import cors from 'cors';
 
 import v1ProductRouter from './routes/product.routes.js'
-/* import authRoutes from './routes/auth.routes.js'*/
+import authRoutes from './routes/auth.routes.js'
 
 
 
@@ -16,6 +16,7 @@ const app = express();
     origin: 'http://localhost:5173',
     credentials: true,
 })); */
+
 app.use(cors());
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 app.use(express.json());
@@ -28,6 +29,6 @@ app.use(express.json());
 }) */
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/products", v1ProductRouter) 
-
+app.use("/api/", authRoutes)
 
 export default app;
