@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createDuePayment, getAllDuePayments, getSingleDuePayment, updateDuePayment } from "../controllers/duePayment.controller";
+import { createDuePayment, getAllDuePayments, getSingleDuePayment, updateDuePayment } from "../controllers/duePayment.controller.js";
 
 const router = Router();
 

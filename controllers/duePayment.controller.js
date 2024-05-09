@@ -1,9 +1,9 @@
-import DuePayment from "../models/duePayment.model.js";
+import membership_payments from "../models/duePayment.model.js";
 
 // GETS ALL DUEPAYMENTS
 export const getAllDuePayments = async (req, res) => {
   try {
-    const payments = await DuePayment.find();
+    const payments = await membership_payments.find();
 
     if (payments.length === 0) {
       return res.status(200).json({ message: 'Todavía no hay pagos.' });
@@ -20,7 +20,7 @@ export const getSingleDuePayment = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const payment = await DuePayment.findById(id);
+    const payment = await membership_payments.findById(id);
 
     if (!payment) {
       return res.status(404).json({ message: "Pago no encontrado." });
@@ -37,7 +37,7 @@ export const createDuePayment = async (req, res) => {
   const { user_id, voucher_img } = req.body;
 
   try {
-    const newDuePayment = new DuePayment({
+    const newDuePayment = new membership_payments ({
       user_id,
       voucher_img
     });
@@ -56,7 +56,7 @@ export const updateDuePayment = async (req, res) => {
   const { status } = req.body;
 
   try {
-    const duePayment = await DuePayment.findById(id);
+    const duePayment = await membership_payments.findById(id);
 
     if (!duePayment) {
       return res.status(404).json({ message: 'Pago no encontrado.' });
@@ -66,6 +66,23 @@ export const updateDuePayment = async (req, res) => {
     await duePayment.save();
 
     res.status(200).json({ duePayment });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// DELETE A DUEPAYMENT
+export const deleteDuePayment = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const deletedPayment = await membership_payments.findByIdAndDelete(id);
+
+    if (!deletedPayment) {
+      return res.status(404).json({ message: 'Pago no encontrado.' });
+    }
+
+    res.status(200).json({ message: 'Pago eliminado exitosamente.' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

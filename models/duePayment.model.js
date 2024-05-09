@@ -12,6 +12,10 @@ const duePaymentSchema = new mongoose.Schema({
     required: true,
     default: false
   },
+  category : {
+    type: String,
+    require: true
+  },
   voucher_img: {
     type: String,
     required: true
@@ -21,6 +25,6 @@ const duePaymentSchema = new mongoose.Schema({
 });
 
 // Crear el modelo a partir del esquema
-const DuePayment = mongoose.model('DuePayment', duePaymentSchema);
+const DuePayment = mongoose.model('membership_payments', duePaymentSchema);
 
 export default DuePayment;
