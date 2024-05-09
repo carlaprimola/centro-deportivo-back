@@ -1,9 +1,9 @@
-import  ProductModel  from "../modules/product.model.js";
+import  ProductModel  from "../models/product.model.js";
 
     // GET ALL PRODUCTS
 
-export const ProductController = {
-    getALLProducts: async (_req, res) => {
+const ProductController = {
+    getAllProducts: async (_req, res) => {
     try {
         const products = await ProductModel.find();
         res.json(products);

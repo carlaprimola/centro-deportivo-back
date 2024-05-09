@@ -13,7 +13,7 @@ const db = () => {
     console.log(error);
   }
 };
-export { db };
+export {db} ;
 
 // const __dirname = path.resolve();
 
