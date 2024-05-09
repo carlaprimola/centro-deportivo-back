@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 const db = () => {
+  dotenv.config();
   try {
     const db = mongoose.connect(process.env.MONGODB_URL, {
     
@@ -20,7 +22,6 @@ export { db };
 // app.get('*', (req, res) =>{
 //     res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 // });
-
 
 
 
