@@ -3,10 +3,11 @@ import  ProductModel  from "../modules/product.model.js";
     // GET ALL PRODUCTS
 
 export const ProductController = {
-    getALLProducts: async (_req, res) => {
+    getAllProducts: async (_req, res) => {
     try {
         const products = await ProductModel.find();
-        res.json(products);
+        res.status(200).json(products);
+        console.log(products);
     } catch (error) {
         res.status(500).json({ message: "Error to obtain the products", error });
     }
@@ -26,6 +27,7 @@ export const ProductController = {
     createNewProduct: async (req, res) => {
         try {
             const product = new ProductModel(req.body);
+            console.log(product);
             const savedProduct = await product.save();
             res.json({ message: "Product created successfully", product: savedProduct });
         } catch (error) {

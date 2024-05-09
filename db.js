@@ -1,16 +1,15 @@
 import mongoose from "mongoose";
-import path from 'path';
-import app from './app.js';
-import express from "express";
 
-const connectDB = async () => {
+const db = () => {
   try {
-    await mongoose.connect("mongodb+srv://sudosu:settym-surzuv-2fuQqo@free-cluster.zgdlrwr.mongodb.net/")
-    console.log("🎉 Conectado a MongoDB");
+    const db = mongoose.connect("mongodb+srv://sudosu:settym-surzuv-2fuQqo@free-cluster.zgdlrwr.mongodb.net/centro_deportivo");
+    console.log("Conexión con la base de datos MongoDB exitosa");
   } catch (error) {
-    console.log("❌ Error al conectar a MongoDB", error);
+    console.log("Error en conectar con la base de datos MongoDB");
+    console.log(error);
   }
 };
+export { db };
 
 // const __dirname = path.resolve();
 
@@ -20,7 +19,7 @@ const connectDB = async () => {
 //     res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 // });
 
-export default connectDB;
+
 
 
 
