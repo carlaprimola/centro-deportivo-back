@@ -9,7 +9,7 @@ const v1ProductRouter = Router();
 v1ProductRouter
     .get('/', productController.getAllProducts)
     .get('/product/:id', productController.getProduct)
-    .post('/add-product',productController.createNewProduct)
+    .post('/add-product',validateSchema (createProductSchema),productController.createNewProduct)
     .put('/product/:id', productController.updateOneProduct)
     .delete('/product/:id', productController.deleteOneProduct)
     /* .put('/products/:id/stock', productController.updateOneProduct) */
