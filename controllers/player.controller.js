@@ -1,120 +1,158 @@
-import Player from '../models/playerModel.js';
-import Role from '../models/rolesModel.js'; 
-import bcrypt from 'bcryptjs';
+import Player from "../models/player.model.js";
 
-// -_- ------------- obtener TODOS los usuarios ------------- -_- //
-export const getPlayersCtrl = async (req, res) => {
+export const getPlayersCtlr = async (req, res) => {
   try {
+    console.log("entrando en player controller getUsersCtrl");
     // Consulta todos los usuarios en la base de datos
-    const users = await User.find();
+    const players = await Player.find();
+
+    console.log(`player controller obtiene estos datos del modelo: ${players}`);
 
     // Devuelve los usuarios encontrados como respuesta JSON
-    res.json(users);
+    res.json(players);
   } catch (error) {
     // Si hay algún error, devuelve un error al cliente
-    res.status(500).json({ message: 'Error al obtener usuarios', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al obtener usuarios", error: error.message });
   }
 };
 
-// -_- ------------- crear un usuario ------------- -_- //
+export const getPlayerByIdCtlr = async (req, res) => {
+  try {
+    console.log("Entrando en player controller getPlayerByIdCtrl");
+
+    // Obtener el ID del jugador desde los parámetros de la solicitud
+    const playerId = req.params.id;
+
+    // Consultar el jugador por su ID en la base de datos
+    const player = await Player.findById(playerId);
+
+    // Verificar si se encontró el jugador
+    if (!player) {
+      return res.status(404).json({ message: "Jugador no encontrado" });
+    }
+
+    // Devolver el jugador encontrado como respuesta JSON
+    res.json(player);
+  } catch (error) {
+    // Si hay algún error, devolver un error al cliente
+    res
+      .status(500)
+      .json({ message: "Error al obtener el jugador", error: error.message });
+  }
+};
+
 export const createPlayerCtrl = async (req, res) => {
   try {
-    // Obtener los datos del usuario del cuerpo de la solicitud
-    const userData = req.body;
+    console.log("Entrando en player controller createPlayerCtrl");
 
-    // Encriptar la contraseña antes de guardarla
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
-    userData.password = hashedPassword;
+    // Obtener los datos del jugador del cuerpo de la solicitud
+    const {
+      name,
+      lastname,
+      birthdate,
+      size,
+      team_id,
+      status,
+      gender,
+      father_id,
+    } = req.body;
 
-    // Verificar si se enviaron roles en la solicitud
-    if (userData.roles && userData.roles.length > 0) {
-      // Buscar los roles enviados en la base de datos
-      const foundRoles = await Role.find({ name: { $in: userData.roles } });
+    // Crear un nuevo jugador en la base de datos
+    const newPlayer = await Player.create({
+      name,
+      lastname,
+      birthdate,
+      size,
+      team_id,
+      status,
+      gender,
+      father_id,
+    });
 
-      // Verificar si se encontraron roles
-      if (foundRoles.length > 0) {
-        // Asignar los roles encontrados al usuario
-        userData.roles = foundRoles.map(role => role._id);
-      } else {
-        // Si no se encontraron roles, asignar el rol de usuario por defecto
-        const defaultRole = await Role.findOne({ name: 'user' });
-        userData.roles = [defaultRole._id];
-      }
-    } else {
-      // Si no se enviaron roles, asignar el rol de usuario por defecto
-      const defaultRole = await Role.findOne({ name: 'user' });
-      userData.roles = [defaultRole._id];
-    }
-
-    // Crear un nuevo usuario en la base de datos
-    const newUser = await User.create(userData);
-
-    // Devolver el usuario recién creado como respuesta
-    res.status(201).json(newUser);
+    // Devolver el nuevo jugador creado como respuesta JSON
+    res.status(201).json(newPlayer);
   } catch (error) {
-    console.error('Error al crear usuario:', error);
-    res.status(500).json({ message: 'Error interno del servidor' });
+    // Si hay algún error, devolver un error al cliente
+    res
+      .status(500)
+      .json({ message: "Error al crear el jugador", error: error.message });
   }
 };
-
-
-// -_- ------------- obtener un usuario por id ------------- -_- //
-export const getPlayerByIdCtrl = async (req, res) => {
-  const userId = req.params.id; // Obtener el ID del usuario de los parámetros de la solicitud
-  
+export const deletePlayerCtrl = async (req, res) => {
   try {
-    // Buscar el usuario por su ID
-    const user = await User.findById(userId);
-    
-    // Verificar si el usuario existe
-    if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+    console.log("Entrando en player controller deletePlayerCtrl");
+
+    // Obtener el ID del jugador desde los parámetros de la solicitud
+    const playerId = req.params.id;
+
+    // Buscar y eliminar el jugador por su ID en la base de datos
+    const deletedPlayer = await Player.findByIdAndDelete(playerId);
+
+    // Verificar si se encontró y eliminó el jugador
+    if (!deletedPlayer) {
+      return res.status(404).json({ message: "Jugador no encontrado" });
     }
 
-    // Devolver el usuario encontrado como respuesta
-    res.status(200).json({ user });
+    // Devolver el jugador eliminado como respuesta JSON
+    res.json(deletedPlayer);
   } catch (error) {
-    console.error('Error al obtener usuario por ID:', error);
-    res.status(500).json({ message: 'Error interno del servidor' });
+    // Si hay algún error, devolver un error al cliente
+    res
+      .status(500)
+      .json({ message: "Error al eliminar el jugador", error: error.message });
   }
 };
-
-
-// -_- ------------- actualizar un usuario por id ------------- -_- //
-export const updatePlayerByIdCtrl = async (req, res) => {
-  const userId = req.params.id; // Obtener el ID del usuario de los parámetros de la solicitud
-  const userData = req.body; // Obtener los datos del usuario de la solicitud body
-  
+export const updatePlayerCtrl = async (req, res) => {
   try {
-    // Buscar y actualizar el usuario por su ID
-    const updatedUser = await User.findByIdAndUpdate(userId, userData, { new: true });
-    
-    // Verificar si el usuario existe
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+    console.log("Entrando en player controller updatePlayerCtrl");
+
+    // Obtener el ID del jugador desde los parámetros de la solicitud
+    const playerId = req.params.id;
+
+    // Obtener los nuevos datos del jugador del cuerpo de la solicitud
+    const {
+      name,
+      lastname,
+      birthdate,
+      size,
+      team_id,
+      status,
+      gender,
+      father_id,
+    } = req.body;
+
+    // Buscar y actualizar el jugador por su ID en la base de datos
+    const updatedPlayer = await Player.findByIdAndUpdate(
+      playerId,
+      {
+        name,
+        lastname,
+        birthdate,
+        size,
+        team_id,
+        status,
+        gender,
+        father_id,
+      },
+      { new: true }
+    );
+
+    // Verificar si se encontró y actualizó el jugador
+    if (!updatedPlayer) {
+      return res.status(404).json({ message: "Jugador no encontrado" });
     }
 
-    // Devolver el usuario actualizado como respuesta
-    res.status(200).json({ message: 'Usuario actualizado correctamente', user: updatedUser });
+    // Devolver el jugador actualizado como respuesta JSON
+    res.json(updatedPlayer);
   } catch (error) {
-    console.error('Error al actualizar usuario:', error);
-    res.status(500).json({ message: 'Error interno del servidor' });
+    // Si hay algún error, devolver un error al cliente
+    res
+      .status(500)
+      .json({
+        message: "Error al actualizar el jugador",
+        error: error.message,
+      });
   }
 };
-// -_- ------------- eliminar un usuario por id ------------- -_- //
-export const deletePlayerByIdCtrl = async (req, res) => {
-  const userId = req.params.id; // Obtener el ID del usuario de los parámetros de la solicitud
-  try {
-    // Buscar y eliminar el usuario por su ID
-    const deletedUser = await User.findByIdAndDelete(userId);
-    if (!deletedUser) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
-    }
-    res.status(200).json({ message: 'Usuario eliminado correctamente', user: deletedUser });
-  } catch (error) {
-    console.error('Error al eliminar usuario:', error);
-    res.status(500).json({ message: 'Error interno del servidor' });
-  }
-};
-
-

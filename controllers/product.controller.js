@@ -6,9 +6,10 @@ const ProductController = {
     getAllProducts: async (_req, res) => {
     try {
         const products = await ProductModel.find();
+        console.log('Consulta MongoDB:', ProductModel.find().toString());
         res.json(products);
     } catch (error) {
-        res.status(500).json({ message: "Error to obtain the products", error });
+        res.status(500).json({ message: 'Error al obtener productos', error: error.message });
     }
 },
     // GET ONE PRODUCT
