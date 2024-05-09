@@ -5,6 +5,8 @@ import express from 'express';
 import cors from 'cors';
 
 import v1ProductRouter from './routes/product.routes.js'
+import duePaymentsRouter from './routes/duePayment.routes.js'
+
 /* import authRoutes from './routes/auth.routes.js'*/
 
 
@@ -28,6 +30,7 @@ app.use(express.json());
 }) */
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/products", v1ProductRouter) 
+app.use("/api/payments", duePaymentsRouter) 
 
 
 export default app;

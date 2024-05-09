@@ -44,7 +44,7 @@ export const createDuePayment = async (req, res) => {
 
     await newDuePayment.save();
 
-    res.status(201).json({ newDuePayment });
+    res.status(201).json( `creado correctamente ${ newDuePayment }`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

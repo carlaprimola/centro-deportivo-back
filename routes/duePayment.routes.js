@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { createDuePayment, getAllDuePayments, getSingleDuePayment, updateDuePayment } from "../controllers/duePayment.controller.js";
+import { createDuePayment, deleteDuePayment, getAllDuePayments, getSingleDuePayment, updateDuePayment } from "../controllers/duePayment.controller.js";
 
 const router = Router();
 
-router.get('/payment', getSingleDuePayment);
-router.get('/payments', getAllDuePayments);
-router.get('/payments', createDuePayment);
-router.get('/payments', updateDuePayment);
+router.get('/', getAllDuePayments);
+router.get('/payment/:id', getSingleDuePayment);
+router.post('/payment', createDuePayment);
+router.put('/payment/:id', updateDuePayment);
+router.delete('/payment/:id', deleteDuePayment);
+
+export default router;
