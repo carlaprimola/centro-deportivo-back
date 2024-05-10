@@ -13,7 +13,7 @@ const db = () => {
     console.log(error);
   }
 };
-export { db };
+export {db} ;
 
 // const __dirname = path.resolve();
 
@@ -22,7 +22,6 @@ export { db };
 // app.get('*', (req, res) =>{
 //     res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 // });
-
 
 
 

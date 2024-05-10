@@ -2,7 +2,7 @@ import  ProductModel  from "../models/product.model.js";
 
     // GET ALL PRODUCTS
 
-export const ProductController = {
+const ProductController = {
     getAllProducts: async (_req, res) => {
     try {
         const products = await ProductModel.find();
