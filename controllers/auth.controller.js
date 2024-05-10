@@ -11,7 +11,7 @@ import { loginSchema } from '../schemas/auth.schema.js';
 //Register
 export const register = async (req, res) => {
     console.log(req.body);
-    const { username, email, password, tipoRol, honeypot, timestamp } = req.body;      
+    const { name, lastname, email, mobile, password, rol_id, honeypot, timestamp } = req.body;      
 
     if (honeypot) {
         // si el campo honeypot tiene algún valor, es probable que sea un bot
@@ -40,10 +40,12 @@ export const register = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, 10); //encripta password
 
         const newUser = new User({
-            username,
+            name,
+            lastname,
             email,
+            mobile,
             password: passwordHash,
-            tipoRol: tipoRol || "user", // Utiliza el valor proporcionado o el valor predeterminado "user"
+            // rol_id: rol_id || "user", // Utiliza el valor proporcionado o el valor predeterminado "user"
         });
 
         const userSaved = await newUser.save();
@@ -181,6 +183,8 @@ export const getAllUsers = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener los usuarios' });
     }
 };
+
+
 
 // Controlador para actualizar un usuario
 export const updateUser = async (req, res) => {
