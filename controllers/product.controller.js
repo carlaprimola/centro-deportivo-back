@@ -1,4 +1,5 @@
 import  ProductModel  from "../models/product.model.js";
+import  ProductModel  from "../models/product.model.js";
 
     // GET ALL PRODUCTS
 
@@ -27,6 +28,7 @@ const ProductController = {
     createNewProduct: async (req, res) => {
         try {
             const product = new ProductModel(req.body);
+            console.log(product);
             const savedProduct = await product.save();
             res.json({ message: "Product created successfully", product: savedProduct });
         } catch (error) {

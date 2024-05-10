@@ -11,9 +11,13 @@ const app = express();
 
 //configuramos el puerto
 /* app.use(cors({
+/* app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
 })); */
+app.use(cors());
+/* app.use(morgan('dev')); */ //simplifica el proceso de registros
+
 app.use(cors());
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 app.use(express.json());
