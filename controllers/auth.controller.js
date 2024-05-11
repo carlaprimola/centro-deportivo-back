@@ -77,7 +77,7 @@ export const login = async (req, res) => {
         if (!userLogged) return res.status(400).json({ message: 'Usuario no encontrado' })
 
         const isMatch = await bcrypt.compare(password, userLogged.password) 
-        console.log(password, userLogged.password, isMatch)
+        
         if (!isMatch) return res.status(400).json({ message: 'La contraseña es incorrecta' })
 
         // Si la contraseña es correcta, puedes proceder con el inicio de sesión y generar el token de acceso.   
@@ -134,19 +134,23 @@ export const logout = async (req, res) => {
   return res.sendStatus(200);
 }
 
-export const profile = async (req, res) => {
-   const userFound = await User.findById(req.user._id)
+// export const profile = async (req, res) => {
+//    const userFound = await User.findById(req.user._id)
 
-   if(!userFound) return res.status(403).json({message: 'Usuario no encontrado'})
+//    if(!userFound) return res.status(403).json({message: 'Usuario no encontrado'})
 
-   return res.json({
-     id: userFound._id,
-     username: userFound.username,
-     email: userFound.email,
-     createdAt: userFound.createdAt,
-     updatedAt: userFound.updatedAt,
-   })
-}
+//    return res.json({
+//     id: userLogged._id,
+//     name: userLogged.name,
+//     lastname: userLogged.lastname,
+//     email: userLogged.email,
+//     mobile: userLogged.mobile,
+//     role: userLogged.tipoRol,
+//     createdAt: userFound.createdAt,
+//     updatedAt: userFound.updatedAt,
+//    })
+// }
+
    //no dejar continuar tras el login si no hay token
    export const verifyToken = async (req, res, next) => {
     const {token} =  req.cookies
@@ -172,7 +176,7 @@ export const profile = async (req, res) => {
     //Verificar el tipo de rol
     export const isAdmin = (req, res, next) => {
         try {
-            if (req.user.tipoRol !== 'admin') {
+            if (req.user. rol_id !== 'admin') {
                 return res.status(403).json({message: 'Requiere rol de administrador'});
             }
             next();

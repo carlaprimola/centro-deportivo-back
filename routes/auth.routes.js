@@ -1,18 +1,17 @@
 import { Router } from "express";
 import { login, 
   logout, 
-  register, 
-  profile, 
+  register,  
   verifyToken, 
   getAllUsers,
   getUserById, 
   updateUser, 
   deleteUser,
   isAdmin } from "../controllers/auth.controller.js";
-  // import { getUsers } from "../controllers/admin.controller.js";
-// import { authRequired } from "../middlewares/validateToken.js";
-// import { validateSchema } from "../middlewares/validator.middleware.js";
-// import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
+  import { getUsers } from "../controllers/admin.controller.js";
+import { authRequired } from "../middlewares/validateToken.js";
+import { validateSchema } from "../middlewares/validator.middleware.js";
+import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 // import rateLimit from "express-rate-limit";
 import { get } from "mongoose";
 
@@ -35,20 +34,19 @@ const router = Router()
 
 
 router.post('/register', register)  
-// router.post('/login', validateSchema(loginSchema), login)
-router.post('/login', login)
+router.post('/login', validateSchema(loginSchema), login)
 router.post('/logout', logout)
 router.get('/verify', verifyToken)
 // router.get('/profile', authRequired, profile)
-router.get('/profile', profile)
+// router.get('/profile', profile)
 
 //rutas para el admin
-// router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios
-router.get('/user', getAllUsers);
-router.get('/user/:id', getUserById);
-// router.patch('/user/:id', authRequired, updateUser);
-router.patch('/user/:id', updateUser); //actualiza un usuario
-// router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario
-router.delete('/user/:id', deleteUser);
+router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios
+// router.get('/user', getAllUsers);
+router.get('/user/:id',verifyToken, isAdmin, getUserById);
+router.patch('/user/:id', authRequired, updateUser); //actualiza un usuario
+// router.patch('/user/:id', updateUser); 
+router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario
+// router.delete('/user/:id', deleteUser);
 
 export default router;
