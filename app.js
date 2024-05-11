@@ -5,7 +5,7 @@ import express from "express";
 import cors from "cors";
 import ProductRouter from "./routes/product.routes.js";
 import PlayerRouter from "./routes/player.routes.js";
-/* import authRoutes from './routes/auth.routes.js'*/
+import authRoutes from './routes/auth.routes.js'
 
 const app = express();
 

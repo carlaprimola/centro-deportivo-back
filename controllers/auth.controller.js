@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import { createAccessToken } from '../libs/jwt.js';
 import jwt from 'jsonwebtoken';
 import { TOKEN_SECRET } from '../config.js';
-import { cleanAndValidate } from '../schemas/auth.schema.js';
+// import { cleanAndValidate } from '../schemas/auth.schema.js';
 import { registerSchema } from '../schemas/auth.schema.js';
 import { loginSchema } from '../schemas/auth.schema.js';
 
@@ -15,19 +15,21 @@ export const register = async (req, res) => {
 
     if (honeypot) {
         // si el campo honeypot tiene algún valor, es probable que sea un bot
-        return res.status(400).send({ error: 'Alerta bot 🤖'});
-        
+        return res.status(400).send({ error: 'Alerta bot 🤖'});        
       }
 
-      // Comprobar si el formulario se envió demasiado rápido
-    const timeElapsed = Date.now() - timestamp;
-    if (serverTimestamp - clientTimestamp < 1000) { // 5000 milisegundos = 5 segundos
-        return res.status(400).send({ error: 'El formulario se envió demasiado rápido 🤖'});
-        
-    }
+      // Obtener la fecha actual del servidor
+    const serverTimestamp = Date.now();
 
-    // Validar el valor de tipoRol solo si se proporciona en la solicitud
-    if (tipoRol && tipoRol !== "admin" && tipoRol !== "user") {
+      // Comprobar si el formulario se envió demasiado rápido
+      const timeElapsed = serverTimestamp - timestamp;
+      const clientTimestamp = timestamp; // Definir clientTimestamp usando el valor del timestamp enviado por el cliente
+      if (timeElapsed < 1000) { // 1000 milisegundos = 1 segundo
+          return res.status(400).send({ error: 'El formulario se envió demasiado rápido 🤖'});
+      }
+
+    // Validar el valor de rol_id solo si se proporciona en la solicitud
+    if (rol_id && rol_id !== "admin" && rol_id !== "user") {
         return res.status(400).json({ message: "Ese rol no existe" });
     }
     
@@ -45,7 +47,7 @@ export const register = async (req, res) => {
             email,
             mobile,
             password: passwordHash,
-            // rol_id: rol_id || "user", // Utiliza el valor proporcionado o el valor predeterminado "user"
+            rol_id: rol_id || "user", // Utiliza el valor proporcionado o el valor predeterminado "user"
         });
 
         const userSaved = await newUser.save();
@@ -57,7 +59,7 @@ export const register = async (req, res) => {
             email: userSaved.email,
             createdAt: userSaved.createdAt,
             updatedAt: userSaved.updatedAt,
-            tipoRol: userSaved.tipoRol,
+            rol_id: userSaved.rol_id,
         });
     } catch (error) {
         console.log('❌', error);
@@ -75,8 +77,10 @@ export const login = async (req, res) => {
         if (!userLogged) return res.status(400).json({ message: 'Usuario no encontrado' })
 
         const isMatch = await bcrypt.compare(password, userLogged.password) 
+        console.log(password, userLogged.password, isMatch)
         if (!isMatch) return res.status(400).json({ message: 'La contraseña es incorrecta' })
 
+        // Si la contraseña es correcta, puedes proceder con el inicio de sesión y generar el token de acceso.   
         const token = await createAccessToken({ _id: userLogged._id })
         res.cookie("token", token, {
             httpOnly: true,
@@ -85,14 +89,19 @@ export const login = async (req, res) => {
             sameSite: "strict" // las cookies solo se envían al mismo sitio
         })
 
+        // Enviar una respuesta adecuada, por ejemplo, un mensaje de éxito junto con el token.
+        res.json({ message: 'Inicio de sesión exitoso', token });
+
         // Verificar el rol del usuario
         if (userLogged.tipoRol === 'user') {
             // Usuario con rol de usuario normal
             // Realizar acciones específicas para el rol de user
                 res.json({
                 id: userLogged._id,
-                username: userLogged.username,
+                name: userLogged.name,
+                lastname: userLogged.lastname,
                 email: userLogged.email,
+                mobile: userLogged.mobile,
                 role: userLogged.tipoRol,
                 isAdmin: false,               
                 tipoRol: userLogged.tipoRol,
@@ -102,8 +111,10 @@ export const login = async (req, res) => {
             // Realizar acciones específicas para el rol de admin
             res.json({
                 id: userLogged._id,
-                username: userLogged.username,
+                name: userLogged.name,
+                lastname: userLogged.lastname,
                 email: userLogged.email,
+                mobile: userLogged.mobile,
                 role: userLogged.tipoRol,
                 isAdmin: true,
                 tipoRol: userLogged.tipoRol,
@@ -237,15 +248,15 @@ export const cleanRegister = async (req, res) => {
   };
 
   // Función para manejar el inicio de sesión de usuarios
-export const cleanLogin = async (req, res) => {
-    try {
-      const cleanData = cleanAndValidate(req.body, loginSchema);
-      // Procesa cleanData
-    } catch (error) {
-      return res.status(400).json({message: error.message
-    })
-}
-  };
+// export const cleanLogin = async (req, res) => {
+//     try {
+//       const cleanData = cleanAndValidate(req.body, loginSchema);
+//       // Procesa cleanData
+//     } catch (error) {
+//       return res.status(400).json({message: error.message
+//     })
+// }
+//   };
   
 
 

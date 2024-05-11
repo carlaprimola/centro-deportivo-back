@@ -55,12 +55,12 @@ export const loginSchema = z.object({
 })
 
 // Función para limpiar y validar los datos de entrada
-export function cleanAndValidate(data, schema) {
-  // Limpiar los datos de entrada
-  const cleanData = Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [key, xss(value)])
-  );
+// export function cleanAndValidate(data, schema) {
+//   // Limpiar los datos de entrada
+//   const cleanData = Object.fromEntries(
+//     Object.entries(data).map(([key, value]) => [key, xss(value)])
+//   );
 
-  // Validar los datos limpios
-  return schema.parse(cleanData);
-}
+//   // Validar los datos limpios
+//   return schema.parse(cleanData);
+// }
