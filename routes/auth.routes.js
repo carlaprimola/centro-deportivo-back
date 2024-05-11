@@ -4,7 +4,8 @@ import { login,
   register, 
   profile, 
   verifyToken, 
-  getAllUsers, 
+  getAllUsers,
+  getUserById, 
   updateUser, 
   deleteUser,
   isAdmin } from "../controllers/auth.controller.js";
@@ -44,6 +45,7 @@ router.get('/profile', profile)
 //rutas para el admin
 // router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios
 router.get('/user', getAllUsers);
+router.get('/user/:id', getUserById);
 // router.patch('/user/:id', authRequired, updateUser);
 router.patch('/user/:id', updateUser); //actualiza un usuario
 // router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario
