@@ -18,7 +18,10 @@ const app = express();
 app.use(cors());
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 
-app.use(cors());
+app.use(cors({
+    origin:'http://localhost:5173',
+}));
+//solo permitimos conexión con el puerto 5173
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 app.use(express.json());
 app.use(cookieParser());
