@@ -10,7 +10,7 @@ import { loginSchema } from '../schemas/auth.schema.js';
 
 //Register
 export const register = async (req, res) => {
-    console.log(req.body);
+    console.log("Datos recibidos para el registro:", req.body);
     const { name, lastname, email, mobile, password, rol_id, honeypot, timestamp } = req.body;      
 
     if (honeypot) {
@@ -52,6 +52,7 @@ export const register = async (req, res) => {
 
         const userSaved = await newUser.save();
         const token = await createAccessToken({ _id: userSaved._id });
+        console.log('token generado para registro:', token);
         res.cookie("token", token);
         res.json({
             // id: userSaved._id,
@@ -73,6 +74,7 @@ export const register = async (req, res) => {
 
 // Login
 export const login = async (req, res) => {
+    console.log('Datos recibidos para inicio de sesión:', req.body);
     const { email, password } = req.body;
     
     try {
@@ -81,11 +83,11 @@ export const login = async (req, res) => {
         if (!userLogged) return res.status(400).json({ message: 'Usuario no encontrado' })
 
         const isMatch = await bcrypt.compare(password, userLogged.password) 
-        
         if (!isMatch) return res.status(400).json({ message: 'La contraseña es incorrecta' })
 
         // Si la contraseña es correcta, puedes proceder con el inicio de sesión y generar el token de acceso.   
         const token = await createAccessToken({ _id: userLogged._id })
+        console.log('token generado para inicio de sesión', token)
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // las cookies solo se envían a través de HTTPS en producción
@@ -93,44 +95,25 @@ export const login = async (req, res) => {
             sameSite: "strict" // las cookies solo se envían al mismo sitio
         })
 
-        // Enviar una respuesta adecuada, por ejemplo, un mensaje de éxito junto con el token.
-        res.json({ message: 'Inicio de sesión exitoso', token });
-
-        // Verificar el rol del usuario
-        if (userLogged.tipoRol === 'user') {
-            // Usuario con rol de usuario normal
-            // Realizar acciones específicas para el rol de user
-                res.json({
+        // Solo una respuesta para evitar el error
+        res.json({
+            message: 'Inicio de sesión exitoso',
+            user: {
                 id: userLogged._id,
                 name: userLogged.name,
                 lastname: userLogged.lastname,
                 email: userLogged.email,
                 mobile: userLogged.mobile,
                 role: userLogged.tipoRol,
-                isAdmin: false,               
-                tipoRol: userLogged.tipoRol,
-            });
-        } else {
-            // Usuario con rol de admin
-            // Realizar acciones específicas para el rol de admin
-            res.json({
-                id: userLogged._id,
-                name: userLogged.name,
-                lastname: userLogged.lastname,
-                email: userLogged.email,
-                mobile: userLogged.mobile,
-                role: userLogged.tipoRol,
-                isAdmin: true,
-                tipoRol: userLogged.tipoRol,
-            });
-        }
+                isAdmin: userLogged.tipoRol === 'admin'
+            }
+        });
     } catch (error) {
-        console.log('❌', error)
-        res.status(500).json({ message: 'Algo salió mal, intente más tarde' })
+        console.log('❌', error);
+        res.status(500).json({ message: 'Algo salió mal, intente más tarde' });
     }
-}
+};
 
-//Logout
 export const logout = async (req, res) => {
   res.cookie('token', "", {
     expires: new Date(0)
@@ -138,82 +121,53 @@ export const logout = async (req, res) => {
   return res.sendStatus(200);
 }
 
-// export const profile = async (req, res) => {
-//    const userFound = await User.findById(req.user._id)
-
-//    if(!userFound) return res.status(403).json({message: 'Usuario no encontrado'})
-
-//    return res.json({
-//     id: userLogged._id,
-//     name: userLogged.name,
-//     lastname: userLogged.lastname,
-//     email: userLogged.email,
-//     mobile: userLogged.mobile,
-//     role: userLogged.tipoRol,
-//     createdAt: userFound.createdAt,
-//     updatedAt: userFound.updatedAt,
-//    })
-// }
-
-   //no dejar continuar tras el login si no hay token
-   export const verifyToken = async (req, res, next) => {
-    const {token} =  req.cookies
-    console.log("🔐",req.cookies)
-    if (!token) return res.status(401).json({message: "No se ha encontrado ningún token"})
+export const verifyToken = async (req, res, next) => {
+    const { token } = req.cookies;
+    console.log('Verificando token', token)
+    if (!token) return res.status(401).json({ message: "No se ha encontrado ningún token" });
     
     try {
-        // Verificar el token
         const payload = jwt.verify(token, TOKEN_SECRET);
-        console.log('El token es válido y su payload es:', payload);
+        console.log("El token es válido y su payload es:", payload);
+        const userFound = await User.findById(payload._id);
+        if (!userFound) return res.status(403).json({ message: 'Usuario no encontrado' });
 
-        const userFound = await User.findById(payload._id)
-        if(!userFound) return res.status(403).json({message: 'Usuario no encontrado'})
-
-        req.user = userFound; // Adjuntar el usuario al objeto de solicitud
-        next(); // Pasar al siguiente middleware o controlador
+        req.user = userFound;
+        next();
     } catch (error) {
         console.error('El token no es válido:', error);
-        res.status(500).json({message: 'Hubo un error al verificar el token'});
+        res.status(500).json({ message: 'Hubo un error al verificar el token' });
     }
 }
 
-    //Verificar el tipo de rol
-    export const isAdmin = (req, res, next) => {
-        try {
-            if (req.user. rol_id !== 'admin') {
-                return res.status(403).json({message: 'Requiere rol de administrador'});
-            }
-            next();
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({message: 'Hubo un error al verificar el rol del usuario'});
+export const isAdmin = (req, res, next) => {
+    try {
+        if (req.user.rol_id !== 'admin') {
+            return res.status(403).json({ message: 'Requiere rol de administrador' });
         }
-    }   
+        next();
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Hubo un error al verificar el rol del usuario' });
+    }
+}
 
-
-// Controlador para mostrar todos los usuarios
 export const getAllUsers = async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
-        console.log(users)
     } catch (error) {
         console.log('❌', error);
         res.status(500).json({ message: 'Error al obtener los usuarios' });
     }
 };
 
-// Controlador para obtener un usuario por su ID
 export const getUserById = async (req, res) => {
     const userId = req.params.id;
 
     try {
         const user = await User.findById(userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
+        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json(user);
     } catch (error) {
         console.log('❌', error);
@@ -221,19 +175,13 @@ export const getUserById = async (req, res) => {
     }
 };
 
-
-// Controlador para actualizar un usuario
 export const updateUser = async (req, res) => {
     const userId = req.params.id;
-    const updateFields = req.body; // Campos a actualizar
+    const updateFields = req.body;
 
     try {
         const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true });
-
-        if (!updatedUser) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
+        if (!updatedUser) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json(updatedUser);
     } catch (error) {
         console.log('❌', error);
@@ -241,47 +189,15 @@ export const updateUser = async (req, res) => {
     }
 };
 
-// Controlador para eliminar un usuario
 export const deleteUser = async (req, res) => {
     const userId = req.params.id;
 
     try {
         const deletedUser = await User.findByIdAndDelete(userId);
-
-        if (!deletedUser) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        // Devolver el mensaje "Usuario eliminado correctamente" en lugar de los datos del usuario
+        if (!deletedUser) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json({ message: 'Usuario eliminado correctamente' });
     } catch (error) {
         console.log('❌', error);
         res.status(500).json({ message: 'Error al eliminar el usuario' });
     }
 };
-
-// Función para manejar el registro de usuarios
-export const cleanRegister = async (req, res) => {
-    try {
-      const cleanData = cleanAndValidate(req.body, registerSchema);
-      const user = await User.create(cleanData);
-     console.log(user);
-      res.status(201).json({ message: 'User registered successfully', user });
-    } catch (error) {
-      return res.status(400).json({message: error.errors.map(err => err.message)});
-    }
-  };
-
-  // Función para manejar el inicio de sesión de usuarios
-export const cleanLogin = async (req, res) => {
-    try {
-      const cleanData = cleanAndValidate(req.body, loginSchema);
-      // Procesa cleanData
-    } catch (error) {
-      return res.status(400).json({message: error.message
-    })
-}
-  };
-  
-
-
