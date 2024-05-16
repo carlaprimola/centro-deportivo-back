@@ -47,7 +47,6 @@ export const register = async (req, res) => {
             email,
             mobile,
             password: passwordHash,
-            observations,
             rol_id: rol_id || "user", // Utiliza el valor proporcionado o el valor predeterminado "user"
         });
 
