@@ -1,5 +1,4 @@
-
-import { Schema, model } from "mongoose";
+import { Schema, SchemaType, model } from "mongoose";
 
 
 const playerSchema = new Schema({
@@ -25,7 +24,8 @@ const playerSchema = new Schema({
     index:true,
   },
   team_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "Team",
     required: true,
     index:true,
   },
@@ -40,7 +40,8 @@ const playerSchema = new Schema({
     index:true,
   },
   father_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref:"user",
     required: true,
     index:true,
   }

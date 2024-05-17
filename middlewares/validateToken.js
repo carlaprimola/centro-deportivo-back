@@ -13,7 +13,7 @@ export const authRequired = async (req, res, next) => {
         jwt.verify(token, TOKEN_SECRET,(err, user) => {
             if(err) return res.status(403).json({message: 'El token no es válido'});
 
-            req.user = user
+            req.userId = user
 
             next();
         })

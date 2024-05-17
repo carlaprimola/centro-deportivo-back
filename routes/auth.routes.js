@@ -2,16 +2,17 @@ import { Router } from "express";
 import { login, 
   logout, 
   register,  
-  verifyToken, 
-  getAllUsers,
+  verifyToken,
   getUserById, 
+  getAllUsers, 
   updateUser, 
   deleteUser,
   isAdmin } from "../controllers/auth.controller.js";
-  import { getUsers } from "../controllers/admin.controller.js";
+import { getUsers } from "../controllers/admin.controller.js";
 import { authRequired } from "../middlewares/validateToken.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
+import { getMyPlayers, createPlayer } from "../controllers/users.players.controller.js";
 // import rateLimit from "express-rate-limit";
 import { get } from "mongoose";
 
@@ -39,6 +40,10 @@ router.post('/logout', logout)
 router.get('/verify', verifyToken)
 // router.get('/profile', authRequired, profile)
 // router.get('/profile', profile)
+
+//RUTAS PARA EL USUARIO
+router.get('/myplayers', verifyToken, getMyPlayers);
+router.post('/newPlayer', verifyToken, createPlayer);
 
 //rutas para el admin
 router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios
