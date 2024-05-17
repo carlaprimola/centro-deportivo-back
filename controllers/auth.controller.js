@@ -111,7 +111,7 @@ export const logout = async (req, res) => {
     return res.sendStatus(200);
 };
 
-// Perfil
+// Perfil de usuario
 export const profile = async (req, res) => {
     const userFound = await User.findById(req.user._id);
 
@@ -119,7 +119,7 @@ export const profile = async (req, res) => {
 
     return res.json({
         id: userFound._id,
-        username: userFound.username,
+        // username: userFound.username,
         email: userFound.email,
         createdAt: userFound.createdAt,
         updatedAt: userFound.updatedAt,
