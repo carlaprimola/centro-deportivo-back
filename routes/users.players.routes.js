@@ -8,7 +8,7 @@ import { createPlayer, getMyPlayers } from "../controllers/users.players.control
 const router = Router();
 
 router.get('/myplayers', authRequired, getMyPlayers); //ver mis jugadores
-router.post('/newplayer', authRequired, createPlayer);//crear un jugador nuevo
+router.post('/players', authRequired, createPlayer);//crear un jugador nuevo
 
 
 // router.get('/tasks/:id', authRequired, getTask);

@@ -43,7 +43,7 @@ router.get('/verify', verifyToken)
 
 //RUTAS PARA EL USUARIO
 router.get('/myplayers', verifyToken, getMyPlayers);
-router.post('/newPlayer', verifyToken, createPlayer);
+router.post('/players', verifyToken, createPlayer);
 
 //rutas para el admin
 router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios

@@ -29,33 +29,35 @@ export const createPlayer = async (req, res) => {
       name,
       lastname,
       birthdate,
-      size,
-      team_id,
-      status,
       gender,
+      allergies,
+      injuryOrIllness,
+      shirtSize,
+      pantsSize,
+      shoeSize
     } = req.body;
 
-     // Obtener el father_id del usuario autenticado (asumimos que el middleware de autenticación añade req.userId)
-     const father_id = req.userId;
+     //Aquí relaciono el id del representante 
+     const parent_id = req.user._id;
 
     // Crear un nuevo jugador en la base de datos
     const newPlayer = await Player.create({
       name,
       lastname,
       birthdate,
-      size,
-      team_id,
-      status,
+      parent_id,
+      //team_id,
       gender,
-      father_id,
+      allergies,
+      injuryOrIllness,
+      shirtSize,
+      pantsSize,
+      shoeSize
     });
 
-    // Devolver el nuevo jugador creado como respuesta JSON
     res.status(201).json(newPlayer);
   } catch (error) {
-    // Si hay algún error, devolver un error al cliente
-    res
-      .status(500)
-      .json({ message: "Error al crear el jugador", error: error.message });
+    
+    res.status(500).json({ message: "Error al crear el jugador", error: error.message });
   }
 };
