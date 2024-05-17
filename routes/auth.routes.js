@@ -8,7 +8,7 @@ import { login,
   updateUser, 
   deleteUser,
   isAdmin } from "../controllers/auth.controller.js";
-  import { getUsers } from "../controllers/admin.controller.js";
+  // import { getUsers } from "../controllers/admin.controller.js";
 import { authRequired } from "../middlewares/validateToken.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
@@ -41,12 +41,12 @@ router.get('/verify', verifyToken)
 // router.get('/profile', profile)
 
 //rutas para el admin
-router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios
+router.get('/user', verifyToken, isAdmin, getAllUsers); //muestra todos los usuarios
 // router.get('/user', getAllUsers);
-router.get('/user/:id',verifyToken, isAdmin, getUserById);
-router.patch('/user/:id', authRequired, updateUser); //actualiza un usuario
+router.get('/user/:id',verifyToken, getUserById);
+router.patch('/user/:id', verifyToken, isAdmin, updateUser); //actualiza un usuario
 // router.patch('/user/:id', updateUser); 
-router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario
+router.delete('/user/:id', verifyToken, isAdmin, deleteUser); //elimina un usuario
 // router.delete('/user/:id', deleteUser);
 
 export default router;
