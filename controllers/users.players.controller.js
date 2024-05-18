@@ -2,10 +2,10 @@ import Player from "../models/player.model.js";
 
 export const getMyPlayers = async (req, res) => {
   try {
-    console.log("Entrando en users.players controller getPlayersByUser");
+    console.log("Entrando en mis players");
     
     // Supongamos que `req.userId` contiene el ID del usuario autenticado
-    const userId = req.userId;
+    const userId = req.user._id;
     
     // Consulta solo los jugadores creados por el usuario autenticado
     const usersPlayers = await Player.find({ createdBy: userId });
