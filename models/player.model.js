@@ -41,21 +41,21 @@ const playerSchema = new Schema({
     type: String,
     index: true,
   },
-  // shirtSize: {
-  //   type: String,
-  //   enum: ["S", "M", "L", "XL"],
-  //   required: true,
-  // },
-  // pantsSize: {
-  //   type: String,
-  //   enum: ["34", "36", "38", "40"],
-  //   required: true,
-  // },
-  // shoeSize: {
-  //   type: String,
-  //   enum: ["36", "37", "38", "39"],
-  //   required: true,
-  // },
+  shirtSize: {
+     type: String,
+     enum: ["S", "M", "L", "XL"],
+     required: true,
+   },
+  pantsSize: {
+     type: Number,
+     enum: [34, 36, 38, 40],
+     required: true,
+   },
+   shoeSize: {
+     type: Number,
+     enum: [36, 37, 38, 39, 40, 41, 42],
+     required: true,
+   },
   status: {
     type: Boolean,
     default: false,
