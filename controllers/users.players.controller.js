@@ -2,21 +2,17 @@ import Player from "../models/player.model.js";
 
 export const getMyPlayers = async (req, res) => {
   try {
-    console.log("Entrando en mis players");
-    
+  
     //el ID y el nombre del usuario autenticado
-    const parent_id = req.user._id;
-    const name_parent = req.name._id
+    const userId = req.user._id;
+    const name_parent = req.name
+    console.log(`Players de ${name_parent}`);
     
     // Consulta solo los jugadores creados por el usuario autenticado
-    const usersPlayers = await Player.find({ createdBy: parent_id });
-    
-    console.log(`Players del usuario: ${name_parent}`);
-    
-    // Enviar los jugadores obtenidos en la respuesta
+    const usersPlayers = await Player.find({ parent_id: userId });
     res.status(200).json(usersPlayers);
   } catch (error) {
-    console.error(`Error en getPlayersByUser: ${error.message}`);
+    console.error(`Error en getMyPlayers: ${error.message}`);
     res.status(500).json({ message: "Error al obtener los jugadores" });
   }
 };

@@ -14,7 +14,7 @@ export const authRequired = async (req, res, next) => {
             if(err) return res.status(403).json({message: 'El token no es válido'});
 
             req.user = { _id: user._id } //Aquí asigno el id del usuario authenticado a req.user
-            req.name = { name: name._id}
+            req.name = { name: name}
             next();
         })
    
