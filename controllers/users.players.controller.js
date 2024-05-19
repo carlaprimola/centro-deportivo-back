@@ -5,9 +5,7 @@ export const getMyPlayers = async (req, res) => {
   
     //el ID y el nombre del usuario autenticado
     const userId = req.user._id;
-    const name_parent = req.name
-    console.log(`Players de ${name_parent}`);
-    
+    console.log(`Players de ${userId}`);
     // Consulta solo los jugadores creados por el usuario autenticado
     const usersPlayers = await Player.find({ parent_id: userId });
     res.status(200).json(usersPlayers);
@@ -19,9 +17,6 @@ export const getMyPlayers = async (req, res) => {
 
 export const createPlayer = async (req, res) => {
   try {
-    console.log("Creando nuevo jugador");
-
-    // Obtener los datos del jugador del cuerpo de la solicitud
     const {
       name,
       lastname,
@@ -36,8 +31,7 @@ export const createPlayer = async (req, res) => {
 
      //Aquí relaciono el id del representante 
      const parent_id = req.user._id;
-
-    // Crear un nuevo jugador en la base de datos
+    // Creando un nuevo jugador en la base de datos
     const newPlayer = await Player.create({
       name,
       lastname,
