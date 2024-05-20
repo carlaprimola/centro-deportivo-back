@@ -39,7 +39,7 @@ router.get('/verify', verifyToken)
 router.get('/profile', authRequired, profile)
 
 //rutas para el admin
-router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios
+router.get('/user', añadir verifyToken, isAdmin, getUsers); //muestra todos los usuarios ,
 router.patch('/user/:id', authRequired, updateUser); //actualiza un usuario
 router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario
 
