@@ -1,58 +1,87 @@
-
 import { Schema, model } from "mongoose";
 
-
 const playerSchema = new Schema({
-
   name: {
     type: String,
     required: true,
-    index:true,
+    index: true,
   },
   lastname: {
     type: String,
     required: true,
-    index:true,
+    index: true,
   },
   birthdate: {
     type: Date,
     required: true,
-    index:true,
+    index: true,
   },
-  size: {
+  parent_id: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true,
+  },
+  email: {
     type: String,
     required: true,
-    index:true,
+    index: true,
   },
-  team_id: {
+  dni: {
     type: String,
     required: true,
-    index:true,
+    index: true,
   },
+  phone: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  post_code: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  team: {
+    type: Schema.Types.ObjectId,
+    ref: "Team",
+    required: false,
+    index: true,
+  },
+
+  allergies: {
+    type: String,
+    index: true,
+  },
+  injury_illness: {
+    type: String,
+    index: true,
+  },
+  shirt_size: {
+     type: String,
+     enum: ["S", "M", "L", "XL"],
+     required: true,
+   },
+  pants_size: {
+     type: Number,
+     enum: [34, 36, 38, 40],
+     required: true,
+   },
+   shoe_size: {
+     type: Number,
+     enum: [36, 37, 38, 39, 40, 41, 42],
+     required: true,
+   },
   status: {
-    type: Boolean, default: false,
+    type: Boolean,
+    default: false,
     required: true,
-    index:true,
+    index: true,
   },
-  gender: {
-    type: String,
-    required: true,
-    index:true,
-  },
-  father_id: {
-    type: String,
-    required: true,
-    index:true,
-  }
-  
-,  
-
-
-},
-{
+}, {
   timestamps: true,
-  versionKey: false // -_- para que no aparezca la versión del documento en la base de datos
-})
+  versionKey: false // Para que no aparezca la versión del documento en la base de datos
+});
 
-// -_- Exportar el modelo con la funcion model de mongoose que recibe el nombre del modelo y el esquema
-export default model('Player', playerSchema)
+// Exportar el modelo con la función model de mongoose que recibe el nombre del modelo y el esquema
+export default model('Player', playerSchema);
