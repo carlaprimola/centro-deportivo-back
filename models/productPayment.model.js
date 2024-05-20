@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
-import { string } from 'zod';
+import { object, string } from 'zod';
 
 const productPaymentSchema = new mongoose.Schema({
   user_id: {
-   type : String ,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   sumary : {
