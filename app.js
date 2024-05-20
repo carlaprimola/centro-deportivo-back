@@ -4,7 +4,7 @@ import express from "express";
 import cors from 'cors';
 import authRoutes from './routes/auth.routes.js';
 import memberPaymentRouter from './routes/memberPayment.routes.js'
-
+import productPayment from "./routes/productPayment.routes.js";
 /* import authRoutes from './routes/auth.routes.js'*/
 
 
@@ -31,7 +31,7 @@ app.use(cookieParser());
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/payments", memberPaymentRouter) ;
 app.use("/api/", authRoutes)
-
+app.use("/api/payments", productPayment)
 
 
 //-_- Ruta productos -_-
