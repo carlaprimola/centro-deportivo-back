@@ -22,17 +22,33 @@ const playerSchema = new Schema({
     required: true,
     index: true,
   },
-  team_id: {
+  email: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  dni: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  post_code: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  team: {
     type: Schema.Types.ObjectId,
     ref: "Team",
     required: false,
     index: true,
   },
-  gender: {
-    type: String,
-    required: true,
-    index: true,
-  },
+
   allergies: {
     type: String,
     index: true,
