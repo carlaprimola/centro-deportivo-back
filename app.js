@@ -1,4 +1,3 @@
-//importamos express
 import express from "express";
 /* import morgan from 'morgan'; */
 import cookieParser from 'cookie-parser';
@@ -9,20 +8,14 @@ import authRoutes from './routes/auth.routes.js'
 
 const app = express();
 
-//configuramos el puerto
-/* app.use(cors({
-/* app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-})); */
+
 app.use(cors());
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 
 app.use(cors({
     origin:'http://localhost:5173',
 }));
-//solo permitimos conexión con el puerto 5173
-/* app.use(morgan('dev')); */ //simplifica el proceso de registros
+
 app.use(express.json());
 app.use(cookieParser());
 
