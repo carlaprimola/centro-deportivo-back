@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
-import { string } from 'zod';
 
 const membershipPaymentSchema = new mongoose.Schema({
-  // Poner el object id
   player_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Player',
     required: true
   },
   annual_payment: {
