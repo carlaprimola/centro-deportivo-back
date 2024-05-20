@@ -32,10 +32,10 @@ export const createPlayer = async (req, res) => {
       phone,
       post_code,
       allergies,
-      injuryOrIllness,
-      shirtSize,
-      pantsSize,
-      shoeSize
+      injury_illness,
+      shirt_size,
+      pants_size,
+      shoe_size
     } = req.body;
 
      //Aquí relaciono el id del representante 
@@ -51,10 +51,10 @@ export const createPlayer = async (req, res) => {
       phone,
       post_code,
       allergies,
-      injuryOrIllness,
-      shirtSize,
-      pantsSize,
-      shoeSize
+      injury_illness,
+      shirt_size,
+      pants_size,
+      shoe_size
     });
 
     res.status(201).json(newPlayer);

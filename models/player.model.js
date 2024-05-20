@@ -53,21 +53,21 @@ const playerSchema = new Schema({
     type: String,
     index: true,
   },
-  injuryOrIllness: {
+  injury_illness: {
     type: String,
     index: true,
   },
-  shirtSize: {
+  shirt_size: {
      type: String,
      enum: ["S", "M", "L", "XL"],
      required: true,
    },
-  pantsSize: {
+  pants_size: {
      type: Number,
      enum: [34, 36, 38, 40],
      required: true,
    },
-   shoeSize: {
+   shoe_size: {
      type: Number,
      enum: [36, 37, 38, 39, 40, 41, 42],
      required: true,
