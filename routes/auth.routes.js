@@ -40,20 +40,8 @@ router.post('/logout', logout)
 
 
 //rutas para el admin
-// el admin será el encargado de la gestión de los usuarios, es el que puede ver todos los usuarios, mmodificarlo, eliminarlos y ver un usuario en concreto
-router.get('/user', verifyToken, isAdmin, getAllUsers); //muestra todos los usuarios
-// router.get('/user', getAllUsers);
-router.get('/user/:id',verifyToken,isAdmin, getUserById);
-router.patch('/user/:id', verifyToken, isAdmin, updateUser); //actualiza un usuario
-// router.patch('/user/:id', updateUser); 
-router.delete('/user/:id', verifyToken, isAdmin, deleteUser); //elimina un usuario
-// router.delete('/user/:id', deleteUser);
-
-//rutas protegidas
-router.get('/verify', verifyToken)
-//comprobado en consola
-// router.get('/profile', authRequired, profile);
-//Este middleware se utiliza para verificar si el usuario está autenticado verificando la existencia y validez del token JWT. Verifica que esté aplicado en rutas que requieren autenticación, como /profile
-//si hace falta añadir la parte de perfil o igual es mejor dashboard si al final hacemos la home del dashboard
+router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios
+router.patch('/user/:id', authRequired, updateUser); //actualiza un usuario
+router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario
 
 export default router;
