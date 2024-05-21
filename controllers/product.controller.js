@@ -1,15 +1,16 @@
 import  ProductModel  from "../models/product.model.js";
 
+
     // GET ALL PRODUCTS
 
 const ProductController = {
     getAllProducts: async (_req, res) => {
     try {
         const products = await ProductModel.find();
-        res.status(200).json(products);
-        console.log(products);
+        console.log('Consulta MongoDB:', ProductModel.find().toString());
+        res.json(products);
     } catch (error) {
-        res.status(500).json({ message: "Error to obtain the products", error });
+        res.status(500).json({ message: 'Error al obtener productos', error: error.message });
     }
 },
     // GET ONE PRODUCT

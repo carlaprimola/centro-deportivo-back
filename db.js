@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+
+
 const db = () => {
   dotenv.config();
   try {
     const db = mongoose.connect(process.env.MONGODB_URL, {
-    
+
     });
     console.log("Conexión con la base de datos MongoDB exitosa");
   } catch (error) {
@@ -13,7 +15,7 @@ const db = () => {
     console.log(error);
   }
 };
-export {db} ;
+export { db };
 
 // const __dirname = path.resolve();
 

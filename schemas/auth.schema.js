@@ -9,17 +9,17 @@ function isValidEmail(email) {
   return email.length <= 100 && validator.isEmail(email); //menos de 100 caracteres y valida formato email
 }
 
-//Validar registro
+// Validar registro
 export const registerSchema = z.object({
-  username: z.string({
-    required_error: "El nombre de usuario es requerido"
-  })
-  .min(3, {
-    message: "Username debe tener mínimo 3 caracteres",
-  })
-  .max(10,{
-    message: "Username debe tener máximo 10 caracteres",
-  }),
+  // username: z.string({
+  //   required_error: "El nombre de usuario es requerido"
+  // })
+  // .min(3, {
+  //   message: "Username debe tener mínimo 3 caracteres",
+  // })
+  // .max(10,{
+  //   message: "Username debe tener máximo 10 caracteres",
+  // }),
   email: z.string({
     required_error: "El correo electrónico es requerido",
     
@@ -39,6 +39,21 @@ export const registerSchema = z.object({
         message: "La contraseña debe tener al menos 6 caracteres"})
     })
 
+//   import Joi from 'joi';
+
+// export const registerSchema = Joi.object({
+//     name: Joi.string().min(3).max(30).required(),
+//     lastname: Joi.string().min(3).max(30).required(),
+//     email: Joi.string().email().required(),
+//     mobile: Joi.string().pattern(/^[0-9]+$/).min(10).max(15).required(),
+//     password: Joi.string().min(6).max(20).required(),
+//     rol_id: Joi.string().valid('user', 'admin'),
+//     honeypot: Joi.string().allow(''),
+//     timestamp: Joi.number().required(),
+// });
+
+
+
 //Validar login
 export const loginSchema = z.object({
     email: z.string({
@@ -55,12 +70,12 @@ export const loginSchema = z.object({
 })
 
 // Función para limpiar y validar los datos de entrada
-export function cleanAndValidate(data, schema) {
-  // Limpiar los datos de entrada
-  const cleanData = Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [key, xss(value)])
-  );
+// export function cleanAndValidate(data, schema) {
+//   // Limpiar los datos de entrada
+//   const cleanData = Object.fromEntries(
+//     Object.entries(data).map(([key, value]) => [key, xss(value)])
+//   );
 
-  // Validar los datos limpios
-  return schema.parse(cleanData);
-}
+//   // Validar los datos limpios
+//   return schema.parse(cleanData);
+// }

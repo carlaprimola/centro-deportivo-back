@@ -10,3 +10,5 @@ export const createProductSchema = z.object({
   image: z.string().url({ message: 'URL de imagen inválida' }),
   rating: z.object().optional(), // Aunque está comentado en tu modelo original
 });
+
+
