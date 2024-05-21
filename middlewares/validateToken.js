@@ -10,11 +10,10 @@ export const authRequired = async (req, res, next) => {
     if (!token) 
         return res.status(401).json({message: 'Acceso no autorizado'});
 
-        jwt.verify(token, TOKEN_SECRET,(err, user) => {
+        jwt.verify(token, TOKEN_SECRET,(err, user, name) => {
             if(err) return res.status(403).json({message: 'El token no es válido'});
 
-            req.user = user
-
+            req.user = { _id: user._id } //Aquí asigno el id del usuario authenticado a req.user
             next();
         })
    

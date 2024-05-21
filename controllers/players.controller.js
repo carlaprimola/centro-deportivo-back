@@ -4,7 +4,7 @@ export const getPlayersCtlr = async (req, res) => {
   try {
     console.log("entrando en player controller getUsersCtrl");
     // Consulta todos los usuarios en la base de datos
-    const players = await Player.find();
+    const players = await Player.findby();
 
     console.log(`player controller obtiene estos datos del modelo: ${players}`);
 
@@ -43,43 +43,43 @@ export const getPlayerByIdCtlr = async (req, res) => {
   }
 };
 
-export const createPlayerCtrl = async (req, res) => {
-  try {
-    console.log("Entrando en player controller createPlayerCtrl");
+//export const createPlayerCtrl = async (req, res) => {
+//   try {
+//     console.log("Entrando en player controller createPlayerCtrl");
 
-    // Obtener los datos del jugador del cuerpo de la solicitud
-    const {
-      name,
-      lastname,
-      birthdate,
-      size,
-      team_id,
-      status,
-      gender,
-      father_id,
-    } = req.body;
+//     // Obtener los datos del jugador del cuerpo de la solicitud
+//     const {
+//       name,
+//       lastname,
+//       birthdate,
+//       size,
+//       team_id,
+//       status,
+//       gender,
+//       father_id,
+//     } = req.body;
 
-    // Crear un nuevo jugador en la base de datos
-    const newPlayer = await Player.create({
-      name,
-      lastname,
-      birthdate,
-      size,
-      team_id,
-      status,
-      gender,
-      father_id,
-    });
+//     // Crear un nuevo jugador en la base de datos
+//     const newPlayer = await Player.create({
+//       name,
+//       lastname,
+//       birthdate,
+//       size,
+//       team_id,
+//       status,
+//       gender,
+//       father_id,
+//     });
 
-    // Devolver el nuevo jugador creado como respuesta JSON
-    res.status(201).json(newPlayer);
-  } catch (error) {
-    // Si hay algún error, devolver un error al cliente
-    res
-      .status(500)
-      .json({ message: "Error al crear el jugador", error: error.message });
-  }
-};
+//     // Devolver el nuevo jugador creado como respuesta JSON
+//     res.status(201).json(newPlayer);
+//   } catch (error) {
+//     // Si hay algún error, devolver un error al cliente
+//     res
+//       .status(500)
+//       .json({ message: "Error al crear el jugador", error: error.message });
+//   }
+// };
 export const deletePlayerCtrl = async (req, res) => {
   try {
     console.log("Entrando en player controller deletePlayerCtrl");
