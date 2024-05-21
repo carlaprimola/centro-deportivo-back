@@ -3,6 +3,9 @@ import express from "express";
 import cors from 'cors';
 import authRoutes from './routes/auth.routes.js';
 import memberPaymentRouter from './routes/memberPayment.routes.js'
+import productPayment from "./routes/productPayment.routes.js";
+/* import authRoutes from './routes/auth.routes.js'*/
+
 
 import cookieParser from 'cookie-parser';
 import ProductRouter from "./routes/product.routes.js";
@@ -16,11 +19,13 @@ app.use(cors());
 
 app.use(cors({
     origin:'http://localhost:5173',
-    credentials: true, //esto es lo que permite credenciales (cookies, autorizaciones)
+    credentials: true
 }));
 
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
+
+
 
 /* app.use('/', (req, res) =>{
     res.json({message: 'Bienvenido a la API de Proyectos'})
@@ -29,7 +34,7 @@ app.use(cookieParser());
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/payments", memberPaymentRouter) ;
 app.use("/api/", authRoutes)
-
+app.use("/api/payments", productPayment)
 
 
 //-_- Ruta productos -_-

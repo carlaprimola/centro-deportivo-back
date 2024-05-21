@@ -75,15 +75,23 @@ export const register = async (req, res) => {
 // Login
 export const login = async (req, res) => {
     const { email, password } = req.body;
+    console.log('Datos recibidos para login:', req.body);
     
     try {
         const userLogged = await User.findOne({ email });
-        if (!userLogged) return res.status(400).json({ message: 'Usuario no encontrado' });
+        if (!userLogged) {
+            console.log("Usuario no encontrado");
+            return res.status(400).json({ message: 'Usuario no encontrado' });
+        }
 
         const isMatch = await bcrypt.compare(password, userLogged.password);
-        if (!isMatch) return res.status(400).json({ message: 'La contraseña es incorrecta' });
+        if (!isMatch){
+        console.log('la contraseña es incorrecta');
+        return res.status(400).json({ message: 'La contraseña es incorrecta' });
+        } 
 
         const token = await createAccessToken({ _id: userLogged._id });
+        console.log('Token generado para login:', token);
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
@@ -93,9 +101,9 @@ export const login = async (req, res) => {
 
         res.json({
             id: userLogged._id,
-            username: userLogged.username,
+            // username: userLogged.username,
             email: userLogged.email,
-            role: userLogged.rol_id,
+            // role: userLogged.rol_id,
             isAdmin: userLogged.rol_id === 'admin',
             rol_id: userLogged.rol_id,
         });
@@ -104,6 +112,7 @@ export const login = async (req, res) => {
         res.status(500).json({ message: 'Algo salió mal, intente más tarde' });
     }
 };
+
 
 // Logout
 export const logout = async (req, res) => {
