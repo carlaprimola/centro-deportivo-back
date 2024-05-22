@@ -40,9 +40,9 @@ router.get('/verify', verifyToken)
 // router.get('/profile', authRequired, profile)
 // router.get('/profile', profile)
 
-//RUTAS PARA EL USUARIO
-router.get('/myplayers', verifyToken, getMyPlayers);
-router.post('/players', verifyToken, createPlayer);
+//RUTAS PARA EL USUARIO 
+router.get('/myplayers', authRequired, getMyPlayers);
+router.post('/players', authRequired, createPlayer);
 
 //rutas para el admin
 router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios ,
