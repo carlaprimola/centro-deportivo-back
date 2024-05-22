@@ -106,6 +106,7 @@ export const login = async (req, res) => {
             // role: userLogged.rol_id,
             isAdmin: userLogged.rol_id === 'admin',
             rol_id: userLogged.rol_id,
+            token
         });
     } catch (error) {
         console.log('❌', error);
