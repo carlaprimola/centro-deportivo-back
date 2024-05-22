@@ -8,6 +8,10 @@ const OrderController = {
         try {
             const { userEmail, productNames, summary, status, document } = req.body;
 
+            /* if (!userEmail || !productNames || !summary || !status || !document) {
+                return res.status(400).json({ message: 'All fields are required' });
+            } */
+
             const user = await User.findOne({ email: userEmail });
             if (!user) return res.status(404).json({ message: 'User not found' });
 
