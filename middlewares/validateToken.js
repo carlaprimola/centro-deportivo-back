@@ -7,6 +7,8 @@ export const authRequired = async (req, res, next) => {
     //Si hay token puedes continuar, sino te bloquea
     //const {token} = req.cookies;
     const token = req.cookies.token || req.headers['authorization'];
+    const role = req.body
+    console.log(`Rol del usuario autenticado: ${role}`);
 
     if (!token) 
         return res.status(401).json({message: 'Acceso no autorizado'});

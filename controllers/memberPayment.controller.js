@@ -1,6 +1,8 @@
 import MembershipPayment from "../models/memberPayment.model.js";
+import User  from "../models/user.model.js" 
+import Player from "../models/player.model.js"
 
-// GETS ALL PAYMENTS
+// Obtener todos los pagos
 export const getAllMembershipPayments = async (req, res) => {
   try {
     const payments = await MembershipPayment.find();
@@ -16,7 +18,7 @@ export const getAllMembershipPayments = async (req, res) => {
 };
 
 
-// GETS A PAYMENT
+// Obtener 1 pago ¿¿???
 export const getSingleMembershipPayment = async (req, res) => {
   const id = req.params.id;
 
@@ -36,9 +38,31 @@ export const getSingleMembershipPayment = async (req, res) => {
 
 // CREATES A PAYMENT
 export const createMembershipPayment = async (req, res) => {
-  const { player_id, first_payment, second_payment, third_payment } = req.body; 
-
+ 
   try {
+    const { player_id, first_payment, second_payment, third_payment } = req.body; 
+    // -_- Nueva linea para coger el id de la url asociada al representante
+    const parentID = req.params.id;
+    console.log(parentID)
+     // -_- Fin de Nueva linea para coger el id de la url asociada al representante
+    
+     // -_- Nueva instrucción para verificar si el padre/responsable existe en la base de datos
+     const parent = await User.findById(parentID);
+     if (!parent) {
+       return res.status(404).json({ error: 'El padre/responsable no existe' });
+     }
+     console.log(`parent id tiene valor de: ${parent}`)
+      //  -_- Nueva instrucción para Obtener el ID del jugador asociado al padre/responsable
+    const playerID = parent.players_id;
+    console.log(`playerID dentro de parent info tiene valor de: ${playerID}`)
+
+    // Verificar si el jugador existe en la base de datos
+    const player = await Player.findById(playerID);
+    if (!player) {
+      return res.status(404).json({ error: 'El jugador asociado al padre/responsable no existe' });
+    }
+
+// -_- Final de nueva instrucción para verificar si el padre/responsable existe en la base de datos
     const newMemberPayment = new MembershipPayment({
       player_id,
       first_payment: first_payment ? {
@@ -121,7 +145,7 @@ export const deleteMembershipPayment = async (req, res) => {
   }
 };
 
-// DELETE A SINGLE PAYMENT
+
 // DELETE A SINGLE PAYMENT
 export const deleteSinglePayment = async (req, res) => {
   const { id, paymentType } = req.params;

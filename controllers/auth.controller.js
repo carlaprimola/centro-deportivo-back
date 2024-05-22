@@ -4,8 +4,8 @@ import { createAccessToken } from '../libs/jwt.js';
 import jwt from 'jsonwebtoken';
 import { TOKEN_SECRET } from '../config.js';
 // import { cleanAndValidate } from '../schemas/auth.schema.js';
-import { registerSchema } from '../schemas/auth.schema.js';
-import { loginSchema } from '../schemas/auth.schema.js';
+// import { registerSchema } from '../schemas/auth.schema.js';
+// import { loginSchema } from '../schemas/auth.schema.js';
 
 
 //Register
