@@ -31,6 +31,11 @@ const userSchema = new mongoose.Schema({
         default: "user",
         enum: ["user", "admin"],
     },
+   players_id: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'players'
+    }]
+
  }, {
         timestamps: true,
     }
