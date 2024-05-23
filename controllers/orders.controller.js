@@ -16,15 +16,11 @@ const storage = multer.diskStorage({
 const OrderController = {
     addOrder: async (req, res) => {
         try {
-            console.log('Request Headers:', req.headers);
-            console.log('Request Body:', req.body);
 
-            // Simplemente asignar req.body directamente a los campos del modelo
             const { user_id, product_ids, summary, status, document } = req.body;
+            const orderId = req.params.id;
+            console.log(orderId);
 
-            if (!user_id || !product_ids || !summary || !status || document) {
-                return res.status(400).json({ message: 'All fields are required' });
-            }
 
             const orderData = {
                 user_id,

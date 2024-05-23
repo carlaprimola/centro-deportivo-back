@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema({
     }],
     summary: {
         type: String,
-        required: true
+
     },
     status: {
         type: String,
@@ -30,4 +30,7 @@ const orderSchema = new mongoose.Schema({
     versionKey: false
 });
 
-export default mongoose.model('Order', orderSchema);
+// Crear el modelo a partir del esquema
+const Order = mongoose.model('Order', orderSchema);
+
+export default Order;
