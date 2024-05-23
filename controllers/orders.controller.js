@@ -1,44 +1,53 @@
 import Order from '../models/orders.model.js';
-import User from '../models/user.model.js';
-import Product from '../models/product.model.js';
+import multer from 'multer';
+//import User from '../models/user.model.js';
+//import Product from '../models/product.model.js';
 
-// Crear un nuevo pedido
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+// POST ADD ORDER
 const OrderController = {
     addOrder: async (req, res) => {
         try {
-            const { userEmail, productNames, summary, status, document } = req.body;
+            console.log('Request Headers:', req.headers);
+            console.log('Request Body:', req.body);
 
-            /* if (!userEmail || !productNames || !summary || !status || !document) {
+            // Simplemente asignar req.body directamente a los campos del modelo
+            const { user_id, product_ids, summary, status, document } = req.body;
+
+            if (!user_id || !product_ids || !summary || !status || document) {
                 return res.status(400).json({ message: 'All fields are required' });
-            } */
-
-            const user = await User.findOne({ email: userEmail });
-            if (!user) return res.status(404).json({ message: 'User not found' });
-
-            const products = await Product.find({ name: { $in: productNames } });
-            if (products.length !== productNames.length) return res.status(404).json({ message: 'Some products not found' });
-
-            const productIds = products.map(product => product._id);
+            }
 
             const orderData = {
-                user_id: user._id,
-                product_ids: productIds,
+                user_id,
+                product_ids,
                 summary,
                 status,
-                document
+                document: ""
             };
+
+            console.log('Order Data:', orderData);
 
             const order = new Order(orderData);
             await order.save();
 
             res.status(201).json(order);
         } catch (error) {
+            console.log('Error:', error);
             res.status(500).json({ message: error.message });
         }
     },
 
-    // Obtener todos los pedidos
-    getAllOrders: async (req, res) => {
+    // GET ALL ORDERS
+    getAllOrders: async (_req, res) => {
         try {
             const orders = await Order.find().populate('user_id').populate('product_ids');
             res.status(200).json(orders);
@@ -47,7 +56,7 @@ const OrderController = {
         }
     },
 
-    // Obtener un pedido por ID
+    // GET ORDER BY ID
     getOrderById: async (req, res) => {
         try {
             const { id } = req.params;
@@ -59,7 +68,7 @@ const OrderController = {
         }
     },
 
-    // Actualizar un pedido
+    // UPDATE ORDER
     updateOrder: async (req, res) => {
         try {
             const { id } = req.params;
@@ -71,7 +80,7 @@ const OrderController = {
         }
     },
 
-    // Eliminar un pedido
+    // DELETE ORDER
     deleteOrder: async (req, res) => {
         try {
             const { id } = req.params;

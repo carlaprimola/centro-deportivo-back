@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { string } from 'zod';
 
 const orderSchema = new mongoose.Schema({
     user_id: {
