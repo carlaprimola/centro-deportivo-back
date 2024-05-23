@@ -5,6 +5,9 @@ Este proyecto tiene como objetivo desarrollar el backend del Centro Deportivo CA
 
 ## Tecnologías Utilizadas
 
+### Creación de prototipos en Figma.
+<a href="https://www.figma.com/" rel="nofollow"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/figma-colored.svg" width="36" height="36" alt="Figma" style="max-width: 100%;"></a>
+
 ### Lenguajes de Programación
 <a href="#"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white&labelColor=101010" alt="JavaScript"></a>
 
@@ -63,8 +66,7 @@ Este proyecto tiene como objetivo desarrollar el backend del Centro Deportivo CA
 
 1. **Clonar el Repositorio**
    ```bash
-   git clone https://github.com/usuario/proyecto-centro-deportivo-ca.git
-   cd proyecto-centro-deportivo-ca
+   git clone https://github.com/carlaprimola/centro-deportivo-back.git
 
 2. **Instalar las dependencias utilizando **
    ```bash
@@ -92,17 +94,18 @@ Este proyecto tiene como objetivo desarrollar el backend del Centro Deportivo CA
 | BRANCH   | Description                                                                           |
 | -------- | ------------------------------------------------------------------------------------- |
 | main     | Rama principal. Aquí alojamos solo los resultados finales                             |                   
-| develop      | Rama de backend|
-| origin/feature/| Rama de backend|
-| origin/feature/| Rama de backend|
-| origin/feature/ | Rama de backend|
-| origin/feature/| Rama de backend|
-| origin/feature/| Rama de backend|
-| origin/feature/l  | Rama de backend|
-| origin/feature/| Rama de backend|
-| origin/feature/ | Rama de backend|
+| develop      | Rama para implementaciones en étapa de desarrollo |
+| origin/feature/auth | Rama para gestion de token y registro de usuarios, login |
+| origin/feature/new-player-form-integration | Rama para integracion de toke con formulario de jugador |
+| origin/feature/order | Rama para CRUD básico de order |
+| origin/feature/order-users | Rama para CRUD de pagos con restricciones según requerimientos del cliente |
+| origin/feature/payments | Rama de backend|
+| origin/feature/players  | Rama de backend|
+| origin/feature/productPayment| Rama para pagos de productos |
+| origin/feature/products | Rama de backend|
+| origin/feature/users | Rama de backend|
+| origin/feature/users-and-players | Rama de backend|
 | origin/test | Rama de backend para test
-
 
 
 
@@ -113,23 +116,17 @@ Este proyecto tiene como objetivo desarrollar el backend del Centro Deportivo CA
 - Sprints
 - Todos para uno.
   
-<a href="https://www.figma.com/" rel="nofollow"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/figma-colored.svg" width="36" height="36" alt="Figma" style="max-width: 100%;"></a>
-- Creación de prototipos en Figma.
-
 
 # Nuestro equipo
 
-- Carla Primola (https://github.com/amanda1686)
+- Carla Escobar (https://github.com/carlaprimola)
 - Leandra Montoya(https://github.com/leamontoya19)
-- Andrea ()
+- Andrea GARCÍA CEDEÑO (https://github.com/angarce25)
 - Fiorella ()
 - Alvaro ()
 - Isaac (https://github.com/Isarok)
 - Abelardo Acosta(https://github.com/Moriarty369)
 
-## Licencia
-
-Este proyecto está bajo la Licencia. Para más detalles, por favor consulta el archivo LICENSE.
 
 ## Contribuyendo
 
@@ -139,4 +136,9 @@ Para contribuir a este proyecto, por favor sigue los siguientes pasos:
 2. Crea una nueva rama (`git checkout -b feature/nueva-funcionalidad`).
 3. Realiza tus cambios y haz commit de ellos (`git commit -am 'Añadir nueva funcionalidad'`).
 4. Sube tus cambios al repositorio (`git push origin feature/nueva-funcionalidad`).
-5. Crea un nuevo Pull Request.
+5. Crea un nuevo Pull Request
+6. Serás informado sobre la solicitud por el equipo de desarrolladores
+
+ ## Licencia
+
+Este proyecto está bajo la Licencia. Para más detalles, por favor consulta el archivo LICENSE.
