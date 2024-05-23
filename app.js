@@ -10,6 +10,7 @@ import productPayment from "./routes/productPayment.routes.js";
 import cookieParser from 'cookie-parser';
 import ProductRouter from "./routes/product.routes.js";
 import PlayerRouter from "./routes/player.routes.js";
+import orderRoutes from "./routes/orders.routes.js";
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use(cors());
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin: 'http://localhost:5173',
     credentials: true
 }));
 
@@ -32,7 +33,7 @@ app.use(express.json());
 }) */
 
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
-app.use("/api/payments", memberPaymentRouter) ;
+app.use("/api/payments", memberPaymentRouter);
 app.use("/api/", authRoutes)
 app.use("/api/payments", productPayment)
 
@@ -43,5 +44,9 @@ app.use("/api/products", ProductRouter);
 
 //-_- Ruta base de jugadores -_-
 app.use("/api/players", PlayerRouter);
+
+
+//-_- Ruta pedidos -_-
+app.use("/api/orders", orderRoutes);
 
 export default app;
