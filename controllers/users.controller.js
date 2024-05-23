@@ -1,24 +1,22 @@
 import Player from "../models/player.model.js";
 
 
-
-
-
 export const getMyPlayers = async (req, res) => {
   try {
   
     //el ID y el nombre del usuario autenticado
     const userId = req.user._id;
     console.log(`Players del usuario ${userId}`);
+
     // Consulta solo los jugadores creados por el usuario autenticado por parent_id igual al ID del usuario autenticado
     const usersPlayers = await Player.find({ parent_id: userId }).populate('parent_id', 'name lastname');
     
     // Loguear el nombre del usuario creador
-    // usersPlayers.forEach(player => {
-    //   console.log(`Jugador: ${player.name}, Creado por: ${player.parent_id.name} ${player.parent_id.lastname}`);
-    // });
+    usersPlayers.forEach(player => {
+      console.log(`Jugador: ${player.name}, Creado por: ${player.parent_id.name} ${player.parent_id.lastname}`);
+    });
     
-    res.status(200).json(usersPlayers);
+    return res.status(200).json(usersPlayers);
   } catch (error) {
     console.error(`Error en getMyPlayers: ${error.message}`);
     res.status(500).json({ message: "Error al obtener los jugadores" });

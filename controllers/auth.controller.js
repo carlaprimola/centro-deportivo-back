@@ -57,8 +57,7 @@ export const register = async (req, res) => {
         res.json({
             // id: userSaved._id,
             name: userSaved.name,
-            lastname: userSaved.lastname,
-            // username: userSaved.username,
+            lastname: userSaved.lastname,            
             email: userSaved.email,
             mobile: userSaved.mobile,
             password: userSaved.password,
@@ -90,7 +89,7 @@ export const login = async (req, res) => {
         return res.status(400).json({ message: 'La contraseña es incorrecta' });
         } 
 
-        const token = await createAccessToken({ _id: userLogged._id });
+        const token = await createAccessToken({ _id: userLogged._id, rol_id: userLogged.rol_id });
         console.log('Token generado para login:', token);
         res.cookie("token", token, {
             httpOnly: true,
@@ -100,10 +99,8 @@ export const login = async (req, res) => {
         });
 
         res.json({
-            id: userLogged._id,
-            // username: userLogged.username,
-            email: userLogged.email,
-            // role: userLogged.rol_id,
+            id: userLogged._id,            
+            email: userLogged.email,            
             isAdmin: userLogged.rol_id === 'admin',
             rol_id: userLogged.rol_id,
             token
@@ -121,20 +118,6 @@ export const logout = async (req, res) => {
     return res.sendStatus(200);
 };
 
-// Perfil de usuario
-export const profile = async (req, res) => {
-    const userFound = await User.findById(req.user._id);
-
-    if (!userFound) return res.status(403).json({ message: 'Usuario no encontrado' });
-
-    return res.json({
-        id: userFound._id,
-        // username: userFound.username,
-        email: userFound.email,
-        createdAt: userFound.createdAt,
-        updatedAt: userFound.updatedAt,
-    });
-};
 
 // Verificación de Token
 export const verifyToken = async (req, res, next) => {

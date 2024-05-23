@@ -4,7 +4,7 @@ export const getPlayersCtlr = async (req, res) => {
   try {
     console.log("entrando en player controller getPlayersCtlr");
     // Consulta todos los usuarios en la base de datos
-    const players = await Player.find();
+    const players = await Player.find({});
 
     console.log(`player controller obtiene estos datos del modelo: ${players}`);
 

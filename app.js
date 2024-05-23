@@ -27,24 +27,15 @@ app.use(cookieParser());
 app.use(express.json());
 
 
-
-/* app.use('/', (req, res) =>{
-    res.json({message: 'Bienvenido a la API de Proyectos'})
-}) */
-
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/payments", memberPaymentRouter);
-app.use("/api/", authRoutes)
 app.use("/api/payments", productPayment)
-
 
 //-_- Ruta productos -_-
 app.use("/api/products", ProductRouter);
 
-
 //-_- Ruta base de jugadores -_-
 app.use("/api/players", PlayerRouter);
-
 
 //-_- Ruta pedidos -_-
 app.use("/api/orders", orderRoutes);
