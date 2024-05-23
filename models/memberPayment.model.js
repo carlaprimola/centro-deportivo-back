@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+import { Schema, model } from "mongoose";
 
-const membershipPaymentSchema = new mongoose.Schema({
-  player_id: {
-    type: mongoose.Schema.Types.ObjectId,
+const membershipPaymentSchema =  new Schema({
+  players_id: {
+    type: Schema.Types.ObjectId,
     ref: 'Player',
     required: true
   },
@@ -43,7 +43,6 @@ const membershipPaymentSchema = new mongoose.Schema({
   versionKey: false
 });
 
-// Crear el modelo a partir del esquema
-const MembershipPayment = mongoose.model('MembershipPayment', membershipPaymentSchema);
 
-export default MembershipPayment;
+export default model('MembershipPayment', membershipPaymentSchema);
+
