@@ -24,7 +24,7 @@ const ProductController = {
     }
     },
 
-    // CREATE PRODUCT
+    // POST CREATE PRODUCT
     createNewProduct: async (req, res) => {
         try {
             const product = new ProductModel(req.body);

@@ -14,7 +14,7 @@ import { validateSchema } from "../middlewares/validator.middleware.js";
 import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 // import { getMyPlayers, createPlayer } from "../controllers/users.players.controller.js";
 import rateLimit from "express-rate-limit";
-
+import { getPlayersCtlr } from "../controllers/players.controller.js";
 const router = Router()
 
 
@@ -40,6 +40,14 @@ router.post('/logout', logout)
 // router.get('/profile', authRequired, profile)
 // router.get('/profile', profile)
 
+//RUTAS PARA EL USUARIO (Dentro de la sesión de usuario)
+router.get('/myplayers', authRequired, getMyPlayers);
+router.post('/newplayer', authRequired, createPlayer);
 
+//rutas para el admin
+router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios ,
+router.get('/players',verifyToken, isAdmin ,getPlayersCtlr)
+router.patch('/user/:id', authRequired, updateUser); //actualiza un usuario
+router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario
 
 export default router;

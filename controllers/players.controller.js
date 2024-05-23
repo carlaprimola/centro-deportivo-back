@@ -2,9 +2,9 @@ import Player from "../models/player.model.js";
 
 export const getPlayersCtlr = async (req, res) => {
   try {
-    console.log("entrando en player controller getUsersCtrl");
+    console.log("entrando en player controller getPlayersCtlr");
     // Consulta todos los usuarios en la base de datos
-    const players = await Player.findby();
+    const players = await Player.find();
 
     console.log(`player controller obtiene estos datos del modelo: ${players}`);
 
@@ -14,7 +14,7 @@ export const getPlayersCtlr = async (req, res) => {
     // Si hay algún error, devuelve un error al cliente
     res
       .status(500)
-      .json({ message: "Error al obtener usuarios", error: error.message });
+      .json({ message: "Error al obtener jugadores", error: error.message });
   }
 };
 

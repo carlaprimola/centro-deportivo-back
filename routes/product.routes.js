@@ -9,9 +9,9 @@ const ProductRouter = Router();
 ProductRouter
     .get('/', ProductController.getAllProducts)
     .get('/product/:id', ProductController.getProduct)
-    .post('/add-product',validateSchema (createProductSchema),ProductController.createNewProduct)
+    .post('/add-product', validateSchema(createProductSchema), ProductController.createNewProduct)
     .put('/product/:id', ProductController.updateOneProduct)
     .delete('/product/:id', ProductController.deleteOneProduct)
-    /* .put('/products/:id/stock', productController.updateOneProduct) */
+/* .put('/products/:id/stock', productController.updateOneProduct) */
 
-export default ProductRouter ;
+export default ProductRouter;

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     },
     lastname: {
         type: String,
-        required: true,        
+        required: true,
     },
     email: {
         type: String,
@@ -27,18 +27,18 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     rol_id: {
-        type: String,        
+        type: String,
         default: "user",
         enum: ["user", "admin"],
     },
-   players_id: [{
+    players_id: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'players'
     }]
 
- }, {
-        timestamps: true,
-    }
+}, {
+    timestamps: true,
+}
 )
 
 export default mongoose.model("User", userSchema);
