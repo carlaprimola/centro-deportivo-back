@@ -33,8 +33,8 @@ app.use(express.json());
 }) */
 
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
-app.use("/api/payments", memberPaymentRouter);
 app.use("/api/", authRoutes)
+app.use("/api/payments", memberPaymentRouter);
 app.use("/api/payments", productPayment)
 
 
@@ -43,7 +43,7 @@ app.use("/api/products", ProductRouter);
 
 
 //-_- Ruta base de jugadores -_-
-app.use("/api/players", PlayerRouter);
+// app.use("/api/players", PlayerRouter);
 
 
 //-_- Ruta pedidos -_-

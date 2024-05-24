@@ -80,6 +80,7 @@ export const createPlayerCtrl = async (req, res) => {
        .json({ message: "Error al crear el jugador", error: error.message });
    }
  };
+
 export const deletePlayerCtrl = async (req, res) => {
   try {
     console.log("Entrando en player controller deletePlayerCtrl");
@@ -104,6 +105,7 @@ export const deletePlayerCtrl = async (req, res) => {
       .json({ message: "Error al eliminar el jugador", error: error.message });
   }
 };
+
 export const updatePlayerCtrl = async (req, res) => {
   try {
     console.log("Entrando en player controller updatePlayerCtrl");
