@@ -18,9 +18,8 @@ const OrderController = {
         try {
 
             const { user_id, product_ids, summary, status, document } = req.body;
-            const orderId = req.params.id;
-            console.log(orderId);
 
+            console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
 
             const orderData = {
                 user_id,
