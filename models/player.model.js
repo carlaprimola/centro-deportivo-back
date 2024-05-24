@@ -78,6 +78,12 @@ const playerSchema = new Schema({
     required: true,
     index: true,
   },
+  payments: {
+    type: Schema.Types.ObjectId,
+    ref: "MembershipPayment",
+    required: false,
+    index: true,
+  }
 }, {
   timestamps: true,
   versionKey: false // Para que no aparezca la versión del documento en la base de datos

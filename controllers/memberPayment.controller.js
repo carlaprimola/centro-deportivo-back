@@ -83,8 +83,16 @@ export const createMembershipPayment = async (req, res) => {
       await sendEmail(newMemberPayment);
       // await sendWhatsAppMessage(newPayment);
 
-    // OJO PUEDE QUE FALTE EN CREATEPLATERCTLR Actualiza el usuario correspondiente con el ID del nuevo pago creado
-    await User.findByIdAndUpdate(parent_id, { $set: { member_payment_status: newMemberPayment._id } });
+    // OJO PUEDE QUE FALTE EN CREATEPLAYERCTLR Actualiza el usuario correspondiente con el ID del nuevo pago creado
+     // Actualiza el usuario correspondiente con el ID del nuevo pago creado
+     const updateResult = await User.findByIdAndUpdate(parent_id, {
+      $push: { membershipPayments: newMemberPayment._id }
+    });
+
+    console.log('RESULTADO DEL UPDATE DE MEMBERSHIP HACIA LA TABLA USER:', updateResult);
+    // Después de la actualización, recupera el usuario y verifica
+const updatedUser = await User.findById(parent_id).populate('membershipPayments');
+console.log('RESULTADO DEL UPDATE DE MEMBERSHIP Populated MembershipPayments:', updatedUser);
 
     res.status(201).json(newMemberPayment);
   } catch (error) {
