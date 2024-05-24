@@ -58,9 +58,7 @@ export const createPlayer = async (req, res) => {
       shoe_size
     });
    //Esto es para actualizar el usuario al crear jugadores
-    await User.findByIdAndUpdate(parent_id, {
-      $push: { players_id: newPlayer._id }
-    });
+    await User.findByIdAndUpdate(parent_id, {$push: { players_id: newPlayer._id }});
 
     res.status(201).json(newPlayer);
   } catch (error) {
