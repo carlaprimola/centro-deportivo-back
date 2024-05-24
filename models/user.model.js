@@ -28,18 +28,17 @@ const userSchema = new mongoose.Schema({
     },
     rol_id: {
         type: String,
-        default: "user",
+        default: "User",
         enum: ["user", "admin"],
     },
-    member_payment_status: {
+    membershipPayments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "MembershipPayment",
-        required: false,
         index: true,
-      },
+    }],
     players_id: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'players'
+        ref: 'Player'
     }]
 
 }, {
