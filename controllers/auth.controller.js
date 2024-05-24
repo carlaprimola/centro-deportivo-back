@@ -90,7 +90,7 @@ export const login = async (req, res) => {
         return res.status(400).json({ message: 'La contraseña es incorrecta' });
         } 
 
-        const token = await createAccessToken({ _id: userLogged._id });
+        const token = await createAccessToken({ _id: userLogged._id,  rol_id: userLogged.rol_id  });
         console.log('Token generado para login:', token);
         res.cookie("token", token, {
             httpOnly: true,
@@ -98,16 +98,15 @@ export const login = async (req, res) => {
             maxAge: 3600000,
             sameSite: "strict",
         });
-
-        res.json({
-            id: userLogged._id,
-            // username: userLogged.username,
-            email: userLogged.email,
-            // role: userLogged.rol_id,
+        
+        res.json({            
+            id: userLogged._id,            
+            email: userLogged.email,            
             isAdmin: userLogged.rol_id === 'admin',
             rol_id: userLogged.rol_id,
             token
         });
+        
     } catch (error) {
         console.log('❌', error);
         res.status(500).json({ message: 'Algo salió mal, intente más tarde' });
