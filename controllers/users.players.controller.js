@@ -1,4 +1,5 @@
 import Player from "../models/player.model.js";
+import User from "../models/user.model.js"
 
 export const getMyPlayers = async (req, res) => {
   try {
@@ -55,6 +56,10 @@ export const createPlayer = async (req, res) => {
       shirt_size,
       pants_size,
       shoe_size
+    });
+   //Esto es para actualizar el usuario al crear jugadores
+    await User.findByIdAndUpdate(parent_id, {
+      $push: { players_id: newPlayer._id }
     });
 
     res.status(201).json(newPlayer);
