@@ -39,7 +39,11 @@ const userSchema = new mongoose.Schema({
     players_id: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Player'
-    }]
+    }],
+    orders_id: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order'
+    }],
 
 }, {
     timestamps: true,
