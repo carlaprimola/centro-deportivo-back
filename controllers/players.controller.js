@@ -2,11 +2,11 @@ import Player from "../models/player.model.js";
 
 export const getPlayersCtlr = async (req, res) => {
   try {
-    console.log("entrando en player controller getPlayersCtlr");
+    console.log("Entrando en getPlayersCtlr"); 
     // Consulta todos los usuarios en la base de datos
     const players = await Player.find({});
 
-    console.log(`player controller obtiene estos datos del modelo: ${players}`);
+    console.log("Datos de jugadores obtenidos:", players);
 
     // Devuelve los usuarios encontrados como respuesta JSON
     res.json(players);

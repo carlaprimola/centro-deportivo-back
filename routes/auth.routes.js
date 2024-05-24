@@ -7,12 +7,12 @@ import { login,
   deleteUser,
   isAdmin } from "../controllers/auth.controller.js";
 import { getUsers } from "../controllers/admin.controller.js";
-import { authRequired } from "../middlewares/validateToken.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 import { getMyPlayers, createPlayer } from "../controllers/users.players.controller.js";
 import rateLimit from "express-rate-limit";
 import { getPlayersCtlr } from "../controllers/players.controller.js";
+
 const router = Router()
 
 
@@ -37,13 +37,13 @@ router.post('/logout', logout)
 // router.get('/verify', verifyToken)
 
 //RUTAS PARA EL USUARIO (Dentro de la sesión de usuario)
-router.get('/myplayers', authRequired, getMyPlayers); //mis jugadores en user
-router.post('/newplayer', authRequired, createPlayer);
+router.get('/myplayers', verifyToken, getMyPlayers); //mis jugadores en user
+router.post('/newplayer', verifyToken, createPlayer);
 
 //rutas para el admin
 router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios ,
-router.get('/players',verifyToken, isAdmin ,getPlayersCtlr); //todos los jugadores en admin
-router.patch('/user/:id', authRequired, updateUser); //actualiza un usuario
-router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario
+router.get('/players', verifyToken, isAdmin ,getPlayersCtlr); 
+router.patch('/user/:id', verifyToken, isAdmin, updateUser); //actualiza un usuario
+router.delete('/user/:id', verifyToken, isAdmin, deleteUser); //elimina un usuario
 
 export default router;

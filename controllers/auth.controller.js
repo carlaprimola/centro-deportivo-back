@@ -57,7 +57,8 @@ export const register = async (req, res) => {
         res.json({
             // id: userSaved._id,
             name: userSaved.name,
-            lastname: userSaved.lastname,            
+            lastname: userSaved.lastname,
+            // username: userSaved.username,
             email: userSaved.email,
             mobile: userSaved.mobile,
             password: userSaved.password,
@@ -89,8 +90,9 @@ export const login = async (req, res) => {
         return res.status(400).json({ message: 'La contraseña es incorrecta' });
         } 
 
-        const token = await createAccessToken({ _id: userLogged._id, rol_id: userLogged.rol_id });
+        const token = await createAccessToken({ _id: userLogged._id });
         console.log('Token generado para login:', token);
+        console.log('Rol del usuario:', userLogged.rol_id);
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
@@ -99,8 +101,8 @@ export const login = async (req, res) => {
         });
 
         res.json({
-            id: userLogged._id,            
-            email: userLogged.email,            
+            id: userLogged._id,
+            email: userLogged.email,
             isAdmin: userLogged.rol_id === 'admin',
             rol_id: userLogged.rol_id,
             token
@@ -118,27 +120,51 @@ export const logout = async (req, res) => {
     return res.sendStatus(200);
 };
 
+// Perfil de usuario
+export const profile = async (req, res) => {
+    const userFound = await User.findById(req.user._id);
+
+    if (!userFound) return res.status(403).json({ message: 'Usuario no encontrado' });
+
+    return res.json({
+        id: userFound._id,
+        // username: userFound.username,
+        email: userFound.email,
+        createdAt: userFound.createdAt,
+        updatedAt: userFound.updatedAt,
+    });
+};
 
 // Verificación de Token
 export const verifyToken = async (req, res, next) => {
     const { token } = req.cookies;
-    console.log("🔐 Cookies:", req.cookies);
-    if (!token) return res.status(401).json({ message: "No se ha encontrado ningún token" });
+
+    if (!token) {
+        return res.status(401).json({ message: "No se ha encontrado ningún token" });
+    }
 
     try {
         const payload = jwt.verify(token, TOKEN_SECRET);
         console.log('El token es válido y su payload es:', payload);
 
         const userFound = await User.findById(payload._id);
-        if (!userFound) return res.status(403).json({ message: 'Usuario no encontrado' });
+        if (!userFound) {
+            return res.status(403).json({ message: 'El usuario asociado al token no existe' });
+        }
 
         req.user = userFound;
         next();
     } catch (error) {
-        console.error('El token no es válido:', error);
-        res.status(500).json({ message: 'Hubo un error al verificar el token' });
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'El token ha expirado' });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'El token es inválido' });
+        } else {
+            console.error('Error al verificar el token:', error);
+            return res.status(500).json({ message: 'Hubo un error al verificar el token' });
+        }
     }
-}
+};
 
 // Verificación de Rol de Administrador
 export const isAdmin = (req, res, next) => {
