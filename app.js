@@ -9,13 +9,13 @@ import productPayment from "./routes/productPayment.routes.js";
 
 import cookieParser from 'cookie-parser';
 import ProductRouter from "./routes/product.routes.js";
-import PlayerRouter from "./routes/player.routes.js";
+//import PlayerRouter from "./routes/player.routes.js";
 import orderRoutes from "./routes/orders.routes.js";
 
 const app = express();
 
 
-app.use(cors());
+//app.use(cors());
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 
 app.use(cors({
