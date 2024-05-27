@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async (payment) => {
   const mailOptions = {
     from: 'testcdlaf5@gmail.com',
-    to: 'carlaprimola91@gmail.com',
+    to: 'abelardoacostacracco@gmail.com',
     subject: 'Nuevo pago recibido',
     text: `Se ha recibido un nuevo pago: ${JSON.stringify(payment)}`,
   };

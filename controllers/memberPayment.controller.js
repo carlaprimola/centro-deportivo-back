@@ -132,9 +132,10 @@ export const updateMembershipPayment = async (req, res) => {
 };
 
 export const updatePaymentStatus = async (req, res) => {
-  const {  first_payment, second_payment, third_payment, parent_id } = req.body;
-  const paymentID = req.params.id
-  console.log('PAYMENT ID CON VALOR DE: ', paymentID)
+  const { annual_payment, first_payment, second_payment, third_payment, parent_id } = req.body;
+  const paymentID = req.params.id;
+  console.log('PAYMENT ID CON VALOR DE: ', paymentID);
+
   try {
     // Buscar el pago existente por su ID
     const payment = await MembershipPayment.findById(paymentID);
@@ -144,20 +145,22 @@ export const updatePaymentStatus = async (req, res) => {
       return res.status(404).json({ message: "Pago no encontrado." });
     }
 
-// Actualizar los estados de los pagos
-if (first_payment !== undefined) {
-  payment.first_payment = first_payment;
-}
-if (second_payment !== undefined) {
-  payment.second_payment = second_payment;
-}
-if (third_payment !== undefined) {
-  payment.third_payment = third_payment;
-}
-if (parent_id !== undefined) {
-  payment.parent_id = parent_id;
-}
-
+    // Actualizar los estados de los pagos
+    if (annual_payment !== undefined) {
+      payment.annual_payment = annual_payment;
+    }
+    if (first_payment !== undefined) {
+      payment.first_payment = first_payment;
+    }
+    if (second_payment !== undefined) {
+      payment.second_payment = second_payment;
+    }
+    if (third_payment !== undefined) {
+      payment.third_payment = third_payment;
+    }
+    if (parent_id !== undefined) {
+      payment.parent_id = parent_id;
+    }
 
     // Guardar los cambios realizados en el pago
     await payment.save();
