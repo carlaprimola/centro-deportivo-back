@@ -15,7 +15,7 @@ import orderRoutes from "./routes/orders.routes.js";
 const app = express();
 
 
-app.use(cors());
+//app.use(cors());
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 
 app.use(cors({
