@@ -6,7 +6,7 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: 'testcdlaf5@gmail.com',
     pass: 'uzmn mrqi ojhg zaxk',
-  },
+  }, //NECESITAMOS AGREGAR VARIABLE DE ENTORNO AQUÍ
 });
 
 export const sendEmail = async (payment) => {
