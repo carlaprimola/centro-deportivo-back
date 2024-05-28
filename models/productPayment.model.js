@@ -7,17 +7,22 @@ const productPaymentSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  sumary : {
-type : String,
-require: true
+  sumary: {
+    type: String,
+    require: true
   },
-product_payment: {
+  order_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Order',
+    required: true
+  },
+  product_payment: {
     status: {
       type: Boolean,
       default: false
     },
     document: {
-      type: String 
+      type: String
     }
   },
 
