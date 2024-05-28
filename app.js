@@ -15,7 +15,7 @@ import orderRoutes from "./routes/orders.routes.js";
 const app = express();
 
 
-//app.use(cors());
+// app.use(cors());
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 
 app.use(cors({
@@ -35,7 +35,7 @@ app.use(express.json());
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/", authRoutes)
 app.use("/api/payments", memberPaymentRouter);
-app.use("/api/payments", productPayment)
+// app.use("/api/payments", productPayment)
 
 
 //-_- Ruta productos -_-
