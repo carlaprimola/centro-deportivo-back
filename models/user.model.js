@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order'
     }],
+    payments_id: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ProductPayment'
+    }],
 
 }, {
     timestamps: true,

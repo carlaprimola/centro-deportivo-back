@@ -11,11 +11,11 @@ const productPaymentSchema = new mongoose.Schema({
     type: String,
     require: true
   },
-  order_id: {
+  order_id: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order',
     required: true
-  },
+  }],
   product_payment: {
     status: {
       type: Boolean,
