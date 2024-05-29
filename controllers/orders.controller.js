@@ -2,44 +2,29 @@ import Order from '../models/orders.model.js';
 import multer from 'multer';
 import User from '../models/user.model.js';
 //import Product from '../models/product.model.js';
-import multer from 'multer'; //para adjuntar archivos
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-        const fileExtension = file.originalname.split('.').pop(); // Obtener la extensión del archivo
-        const fileName = `${uniqueSuffix}.${fileExtension}`; // Generar un nombre único con la extensión original
-        cb(null, fileName);
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 
-const upload = multer({ storage: storage }).single('document');
-
-// POST CREATE ORDER
+// POST ADD ORDER
 const OrderController = {
     addOrder: async (req, res) => {
         try {
-            await upload.single('document')(req, res, async (err) => {
-                if (err) {
-                    console.error('Error al cargar el archivo:', err);
-                    return res.status(500).json({ message: 'Error al cargar el archivo' });
-                }
-
-            const { user_id, product_ids, summary, status, document } = req.body;            
-            
+            const { user_id, product_ids, summary, status, document } = req.body;
             console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
             const orderData = {
                 user_id: req.user,
                 product_ids,
                 summary,
                 status,
-                document: {
-                    data: req.file ? req.file.buffer : null,
-                    contentType: req.file ? req.file.mimetype : null
-                }
+                document: ""
+
             };
             console.log('Order Data:', orderData);
             const order = new Order(orderData);
@@ -50,7 +35,6 @@ const OrderController = {
             console.log('Leelo', order._id);
 
             res.status(201).json(order);
-        })
         } catch (error) {
             console.log('Error:', error);
             res.status(500).json({ message: error.message });
