@@ -63,9 +63,15 @@ export const createPlayer = async (req, res) => {
 
    //Esto es para actualizar el usuario al crear jugadores
     await User.findByIdAndUpdate(parent_id, {$push: { players_id: newPlayer._id }});
+    console.log("User updated with new player:", parent_id);
     
-    //Para enviar la notification por email
-    await emailNewPlayerNotification(newPlayer);
+    //Para que aparezca el nombre del usuario en el email
+    const user = await User.findById(parent_id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    // Para enviar la notificación por email
+    await emailNewPlayerNotification(newPlayer, user);
     console.log("Email notification sent successfully");
 
     res.status(201).json(newPlayer);
