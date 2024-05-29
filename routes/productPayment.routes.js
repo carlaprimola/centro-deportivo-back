@@ -10,6 +10,6 @@ router.get('/ckali/:id', getPaymentById);
 router.put('/ckali/:id', updatePayment);
 router.delete('/ckali/:id', deletePayment);
 router.post('/ckali/:id/upload', uploadPaymentDocument);
-router.post('/userPayment/', authRequired, addPayment);
+router.post('/userPayment', authRequired, addPayment);
 
 export default router;

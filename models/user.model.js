@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
     }],
     payments_id: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'productPayment'
+        ref: 'ProductPayment'
     }],
 
 }, {
