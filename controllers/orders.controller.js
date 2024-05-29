@@ -1,5 +1,6 @@
 import Order from '../models/orders.model.js';
-//import User from '../models/user.model.js';
+import multer from 'multer';
+import User from '../models/user.model.js';
 //import Product from '../models/product.model.js';
 import multer from 'multer'; //para adjuntar archivos
 
@@ -30,9 +31,8 @@ const OrderController = {
             const { user_id, product_ids, summary, status, document } = req.body;            
             
             console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
-
             const orderData = {
-                user_id,
+                user_id: req.user,
                 product_ids,
                 summary,
                 status,
@@ -41,11 +41,13 @@ const OrderController = {
                     contentType: req.file ? req.file.mimetype : null
                 }
             };
-
             console.log('Order Data:', orderData);
-
             const order = new Order(orderData);
             await order.save();
+            await User.findByIdAndUpdate(req.user, {
+                $push: { "orders_id": order._id }
+            });
+            console.log('Leelo', order._id);
 
             res.status(201).json(order);
         })
@@ -55,8 +57,11 @@ const OrderController = {
         }
     },
 
+
+
+
     // GET ALL ORDERS
-    getAllOrders: async (_req, res) => {
+    getAllOrders: async (req, res) => {
         try {
             const orders = await Order.find().populate('user_id').populate('product_ids');
             res.status(200).json(orders);

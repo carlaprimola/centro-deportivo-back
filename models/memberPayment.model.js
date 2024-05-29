@@ -12,8 +12,13 @@ const membershipPaymentSchema =  new Schema({
     required: true
   },
   annual_payment: {
-    type: Boolean,
-    default: false
+    status: {
+      type: Boolean,
+      default: false
+    },
+    document: {
+      type: String 
+    }
   },
   first_payment: {
     status: {
