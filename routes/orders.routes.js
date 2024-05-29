@@ -9,12 +9,10 @@ const OrderRouter = Router();
 
 OrderRouter
     .get('/', verifyToken, isAdmin, OrderController.getAllOrders)
-    .get('/order/:id', OrderController.getOrderById)
-    .post('/add-order', OrderController.addOrder)
-    .put('/order/:id', OrderController.updateOrder)
-    .delete('/order/:id', OrderController.deleteOrder)
+    .get('/order/:id', verifyToken, authRequired, OrderController.getOrderById)
+    .post('/add-order', authRequired, OrderController.addOrder)
+    .put('/order/:id', verifyToken, authRequired, OrderController.updateOrder)
+    .delete('/order/:id', verifyToken, authRequired, OrderController.deleteOrder)
     .get('/myorders', authRequired, getMyOrders)
-    // router.post('/neworder', authRequired, );
-
 
 export default OrderRouter;
