@@ -26,7 +26,7 @@ export const getPlayerByIdCtlr = async (req, res) => {
     const playerId = req.params.id;
 
     // Consultar el jugador por su ID en la base de datos
-    const player = await Player.findById(playerId);
+    const player = await Player.findById(playerId).exec();
 
     // Verificar si se encontró el jugador
     if (!player) {

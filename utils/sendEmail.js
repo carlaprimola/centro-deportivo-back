@@ -107,6 +107,10 @@ export const emailNewPlayerNotification = async (player, user) => {
             <td style="padding: 10px; border: 1px solid #ddd;">${player.birthdate}</td>
           </tr>
           <tr>
+            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Edad</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${player.age}</td>
+          </tr>
+          <tr>
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">ID del Jugador</td>
             <td style="padding: 10px; border: 1px solid #ddd;">${player._id}</td>
           </tr>
