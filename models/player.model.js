@@ -48,7 +48,6 @@ const playerSchema = new Schema({
     required: false,
     index: true,
   },
-
   allergies: {
     type: String,
     index: true,
@@ -58,20 +57,20 @@ const playerSchema = new Schema({
     index: true,
   },
   shirt_size: {
-     type: String,
-     enum: ["S", "M", "L", "XL"],
-     required: true,
-   },
+    type: String,
+    enum: ["S", "M", "L", "XL"],
+    required: true,
+  },
   pants_size: {
-     type: Number,
-     enum: [34, 36, 38, 40],
-     required: true,
-   },
-   shoe_size: {
-     type: Number,
-     enum: [36, 37, 38, 39, 40, 41, 42],
-     required: true,
-   },
+    type: Number,
+    enum: [34, 36, 38, 40],
+    required: true,
+  },
+  shoe_size: {
+    type: Number,
+    enum: [36, 37, 38, 39, 40, 41, 42],
+    required: true,
+  },
   status: {
     type: Boolean,
     default: false,
@@ -88,6 +87,22 @@ const playerSchema = new Schema({
   timestamps: true,
   versionKey: false // Para que no aparezca la versión del documento en la base de datos
 });
+
+//Cálculo de edad y actualización en el tiempo
+playerSchema.virtual('age').get(function() {
+  const today = new Date();
+  const birthDate = new Date(this.birthdate);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+});
+
+// Habilitar virtuals en el JSON de salida
+playerSchema.set('toJSON', { virtuals: true });
+playerSchema.set('toObject', { virtuals: true });
 
 // Exportar el modelo con la función model de mongoose que recibe el nombre del modelo y el esquema
 export default model('Player', playerSchema);
