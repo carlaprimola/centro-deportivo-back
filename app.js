@@ -35,7 +35,7 @@ app.use(express.json());
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/", authRoutes)
 app.use("/api/payments", memberPaymentRouter);
-// app.use("/api/payments", productPayment)
+app.use("/api/pay", productPayment)
 
 
 //-_- Ruta productos -_-
