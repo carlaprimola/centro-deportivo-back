@@ -16,6 +16,7 @@ const storage = multer.diskStorage({
 const OrderController = {
     addOrder: async (req, res) => {
         try {
+
             const { user_id, product_ids, summary, status, document } = req.body;
             console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
             const orderData = {

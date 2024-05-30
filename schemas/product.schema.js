@@ -9,6 +9,7 @@ export const createProductSchema = z.object({
   stock: z.number().int().min(0, { message: 'Stock inválido' }),
   image: z.string().url({ message: 'URL de imagen inválida' }),
   rating: z.object().optional(), // Aunque está comentado en tu modelo original
+  sizes: z.array(z.enum(['S', 'M', 'L', 'XL', 'XXL'])).optional(),
 });
 
 

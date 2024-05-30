@@ -1,18 +1,19 @@
-import  ProductModel  from "../models/product.model.js";
+import ProductModel from "../models/product.model.js";
 
 
-    // GET ALL PRODUCTS
+// GET ALL PRODUCTS
 
 const ProductController = {
     getAllProducts: async (_req, res) => {
-    try {
-        const products = await ProductModel.find();
-        console.log('Consulta MongoDB:', ProductModel.find().toString());
-        res.json(products);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener productos', error: error.message });
-    }
-},
+        try {
+            const products = await ProductModel.find().populate('sizes');
+            console.log('Consulta MongoDB:', ProductModel.find().toString());
+
+            res.json(products);
+        } catch (error) {
+            res.status(500).json({ message: 'Error al obtener productos', error: error.message });
+        }
+    },
     // GET ONE PRODUCT
     getProduct: async (req, res) => {
         try {
@@ -21,7 +22,7 @@ const ProductController = {
             res.json(product);
         } catch (error) {
             res.status(500).json({ message: "Error to obtain the product", error });
-    }
+        }
     },
 
     // POST CREATE PRODUCT
@@ -55,7 +56,7 @@ const ProductController = {
             res.json({ message: "Product deleted successfully", product });
         } catch (error) {
             res.status(500).json({ message: "Error to delete the product", error });
-      }
+        }
 
     },
 
