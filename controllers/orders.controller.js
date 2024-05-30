@@ -16,23 +16,24 @@ const storage = multer.diskStorage({
 const OrderController = {
     addOrder: async (req, res) => {
         try {
-            const { user_id, product_ids, summary, status, document } = req.body;
+            const { product_ids, summary, status, document } = req.body;
             console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
             const orderData = {
                 user_id: req.user,
                 product_ids,
                 summary,
                 status,
-                document: ""
+                document: document || ""
 
             };
             console.log('Order Data:', orderData);
             const order = new Order(orderData);
             await order.save();
+             // Actualizar el usuario con el nuevo order_id
             await User.findByIdAndUpdate(req.user, {
                 $push: { "orders_id": order._id }
             });
-            console.log('Leelo', order._id);
+            
 
             res.status(201).json(order);
         } catch (error) {

@@ -21,8 +21,8 @@ const orderSchema = new mongoose.Schema({
         default: 'pendiente'
     },
     document: {
-        data: Buffer, // Campo para almacenar el archivo adjunto
-        contentType: String // Tipo de contenido del archivo adjunto
+        // data: Buffer, // Campo para almacenar el archivo adjunto
+        contentType: String 
     }
 }, {
     timestamps: true,
