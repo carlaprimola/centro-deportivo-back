@@ -16,10 +16,11 @@ const upload = multer({ storage: storage });
 // Crear un nuevo pago
 export const createPayment = async (req, res) => {
   try {
-    const { user_id, sumary } = req.body;
+    const { user_id, sumary, order_id } = req.body;
     const newPayment = new productPayment({
       user_id,
       sumary,
+      order_id,
       product_payment: {
         status: false,
         document: ""
@@ -34,13 +35,13 @@ export const createPayment = async (req, res) => {
 
 // Obtener todos los pagos
 export const getAllPayments = async (req, res) => {
-    try {
-      const payments = await productPayment.find().populate('user_id');
-      res.status(200).json(payments);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  };
+  try {
+    const payments = await productPayment.find().populate('user_id');
+    res.status(200).json(payments);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 // Obtener un pago por ID
 export const getPaymentById = async (req, res) => {

@@ -99,6 +99,13 @@ export const login = async (req, res) => {
             sameSite: "strict",
         });
 
+        res.cookie("name", userLogged.name, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 3600000,
+            sameSite: "strict",
+        });
+        
         res.json({
             id: userLogged._id,
             // username: userLogged.username,
@@ -106,6 +113,7 @@ export const login = async (req, res) => {
             // role: userLogged.rol_id,
             isAdmin: userLogged.rol_id === 'admin',
             rol_id: userLogged.rol_id,
+            name: userLogged.name, // Enviar el nombre del usuario
             token
         });
     } catch (error) {
