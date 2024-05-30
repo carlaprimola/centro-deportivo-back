@@ -6,9 +6,19 @@ const membershipPaymentSchema =  new Schema({
     ref: 'Player',
     required: true
   },
+  parent_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   annual_payment: {
-    type: Boolean,
-    default: false
+    status: {
+      type: Boolean,
+      default: false
+    },
+    document: {
+      type: String 
+    }
   },
   first_payment: {
     status: {

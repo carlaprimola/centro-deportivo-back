@@ -28,13 +28,26 @@ const userSchema = new mongoose.Schema({
     },
     rol_id: {
         type: String,
-        default: "user",
+        default: "User",
         enum: ["user", "admin"],
     },
+    membershipPayments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "MembershipPayment",
+        index: true,
+    }],
     players_id: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'players'
-    }]
+        ref: 'Player'
+    }],
+    orders_id: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order'
+    }],
+    payments_id: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ProductPayment'
+    }],
 
 }, {
     timestamps: true,

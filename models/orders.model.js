@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { string } from 'zod';
+
 
 const orderSchema = new mongoose.Schema({
     user_id: {
@@ -14,7 +14,6 @@ const orderSchema = new mongoose.Schema({
     }],
     summary: {
         type: String,
-
     },
     status: {
         type: String,
@@ -22,7 +21,8 @@ const orderSchema = new mongoose.Schema({
         default: 'pendiente'
     },
     document: {
-        type: String
+        data: Buffer, // Campo para almacenar el archivo adjunto
+        contentType: String // Tipo de contenido del archivo adjunto
     }
 }, {
     timestamps: true,

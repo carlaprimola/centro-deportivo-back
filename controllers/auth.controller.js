@@ -98,12 +98,22 @@ export const login = async (req, res) => {
             maxAge: 3600000,
             sameSite: "strict",
         });
+
+        res.cookie("name", userLogged.name, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 3600000,
+            sameSite: "strict",
+        });
         
-        res.json({            
-            id: userLogged._id,            
-            email: userLogged.email,            
+        res.json({
+            id: userLogged._id,
+            // username: userLogged.username,
+            email: userLogged.email,
+            // role: userLogged.rol_id,
             isAdmin: userLogged.rol_id === 'admin',
             rol_id: userLogged.rol_id,
+            name: userLogged.name, // Enviar el nombre del usuario
             token
         });
         
