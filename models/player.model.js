@@ -16,6 +16,11 @@ const playerSchema = new Schema({
     required: true,
     index: true,
   },
+  age: {
+    type: String,
+    required: true,
+    index: true,
+  },
   parent_id: {
     type: Schema.Types.ObjectId,
     ref: "User",
