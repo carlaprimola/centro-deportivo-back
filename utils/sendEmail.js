@@ -103,10 +103,6 @@ export const emailNewPlayerNotification = async (player, user) => {
             <td style="padding: 10px; border: 1px solid #ddd;">${player.lastname}</td>
           </tr>
           <tr>
-            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Fecha de Nacimiento</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${player.birthdate}</td>
-          </tr>
-          <tr>
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Edad</td>
             <td style="padding: 10px; border: 1px solid #ddd;">${player.age}</td>
           </tr>
@@ -115,17 +111,10 @@ export const emailNewPlayerNotification = async (player, user) => {
             <td style="padding: 10px; border: 1px solid #ddd;">${user.name}</td>
           </tr>
           <tr>
-            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">DNI del Padre/Responsable</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${player.dni}</td>
-          </tr>
-          <tr>
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Email del Padre/Responsable</td>
             <td style="padding: 10px; border: 1px solid #ddd;">${player.email}</td>
           </tr>
-          <tr>
-            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Teléfono</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${player.phone}</td>
-          </tr>
+          
           ${
             player.status
               ? `
