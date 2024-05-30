@@ -11,6 +11,7 @@ import cookieParser from 'cookie-parser';
 import ProductRouter from "./routes/product.routes.js";
 //import PlayerRouter from "./routes/player.routes.js";
 import orderRoutes from "./routes/orders.routes.js";
+import assignTeamRouter from "./routes/teams.routes.js";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use("/api/", authRoutes)
 app.use("/api/payments", memberPaymentRouter);
 app.use("/api/pay", productPayment)
+app.use("/api/player", assignTeamRouter)
 
 
 //-_- Ruta productos -_-

@@ -2,19 +2,17 @@ import Player from "../models/player.model.js";
 
 export const getPlayersCtlr = async (req, res) => {
   try {
-    console.log("entrando en player controller getPlayersCtlr");
-    // Consulta todos los usuarios en la base de datos
-    const players = await Player.find({});
+    console.log("Entrando en player controller getPlayersCtlr");
+    // Consulta todos los jugadores y popula el campo "team" con el nombre del equipo
+    const players = await Player.find({}).populate('team', 'name');
 
-    console.log(`player controller obtiene estos datos del modelo: ${players}`);
+    console.log(`Player controller obtiene estos datos del modelo: ${players}`);
 
-    // Devuelve los usuarios encontrados como respuesta JSON
+    // Devuelve los jugadores encontrados como respuesta JSON
     res.json(players);
   } catch (error) {
     // Si hay algún error, devuelve un error al cliente
-    res
-      .status(500)
-      .json({ message: "Error al obtener jugadores", error: error.message });
+    res.status(500).json({ message: "Error al obtener jugadores", error: error.message });
   }
 };
 
@@ -25,8 +23,8 @@ export const getPlayerByIdCtlr = async (req, res) => {
     // Obtener el ID del jugador desde los parámetros de la solicitud
     const playerId = req.params.id;
 
-    // Consultar el jugador por su ID en la base de datos
-    const player = await Player.findById(playerId).exec();
+    // Consultar el jugador por su ID en la base de datos y popula el campo "team" con el nombre del equipo
+    const player = await Player.findById(playerId).populate('team', 'name').exec();
 
     // Verificar si se encontró el jugador
     if (!player) {
@@ -37,12 +35,9 @@ export const getPlayerByIdCtlr = async (req, res) => {
     res.json(player);
   } catch (error) {
     // Si hay algún error, devolver un error al cliente
-    res
-      .status(500)
-      .json({ message: "Error al obtener el jugador", error: error.message });
+    res.status(500).json({ message: "Error al obtener el jugador", error: error.message });
   }
 };
-
 
 
 export const deletePlayerCtrl = async (req, res) => {
