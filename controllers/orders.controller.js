@@ -1,6 +1,6 @@
 import Order from '../models/orders.model.js';
 import multer from 'multer';
-import User from '../models/user.model.js';
+//import User from '../models/user.model.js';
 //import Product from '../models/product.model.js';
 
 const storage = multer.diskStorage({
@@ -18,15 +18,18 @@ const OrderController = {
         try {
             const { product_ids, summary, status, document } = req.body;
             console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
+
             const orderData = {
-                user_id: req.user,
+                user_id,
                 product_ids,
                 summary,
                 status,
                 document: document || ""
 
             };
+
             console.log('Order Data:', orderData);
+
             const order = new Order(orderData);
             await order.save();
              // Actualizar el usuario con el nuevo order_id
@@ -42,11 +45,8 @@ const OrderController = {
         }
     },
 
-
-
-
     // GET ALL ORDERS
-    getAllOrders: async (req, res) => {
+    getAllOrders: async (_req, res) => {
         try {
             const orders = await Order.find().populate('user_id').populate('product_ids');
             res.status(200).json(orders);
