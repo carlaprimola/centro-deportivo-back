@@ -28,8 +28,18 @@ const ProductController = {
     // POST CREATE PRODUCT
     createNewProduct: async (req, res) => {
         try {
-            const product = new ProductModel(req.body);
-            console.log(product);
+            const { name, price, description, category, stock, image, sizes } = req.body;
+
+            const product = new ProductModel({
+                name: name,
+                price: price,
+                description: description,
+                category: category,
+                stock: stock,
+                image: image,
+                sizes: sizes // Incluir las tallas 
+            });
+
             const savedProduct = await product.save();
             res.json({ message: "Product created successfully", product: savedProduct });
         } catch (error) {

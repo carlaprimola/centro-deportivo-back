@@ -33,7 +33,7 @@ const productSchema = new Schema({
   },
   sizes: {
     type: [String], // Array de strings para almacenar las tallas
-    enum: ["S", "M", "L", "XL", "XXL"],
+    enum: ["XS", "S", "M", "L", "XL", "XXL"],
     required: false,
   },
 }, {
