@@ -22,7 +22,8 @@ const orderSchema = new mongoose.Schema({
     },
     document: {
         // data: Buffer, // Campo para almacenar el archivo adjunto
-        contentType: String 
+        // contentType: String 
+        type: String,
     }
 }, {
     timestamps: true,
