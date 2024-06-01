@@ -3,45 +3,71 @@ import multer from 'multer';
 import User from '../models/user.model.js';
 // import Product from '../models/product.model.js';
 
+
+//Funcion para almacenamiento de archivos
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, 'public/uploads/');
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 
-// POST ADD ORDER
+const upload = multer({ storage: storage }).single('document');
+
+// POST CREATE ORDER
 const OrderController = {
     addOrder: async (req, res) => {
         try {
-            const { user_id, product_ids, summary, status, document } = req.body;
-            console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
-
-            const orderData = {
+            const { product_ids, summary, status, document } = req.body;
+            
+            if (!req.file || !summary) {
+                return res.status(400).json({ message: 'Complete los campos requeridos' });
+              }
+            
+            // Crear un nuevo pedido
+            const newOrder = new Order({
                 user_id: req.user,
                 product_ids,
                 summary,
                 status,
-                document: document || ""
-
-            };
-
-            console.log('Order Data:', orderData);
-
-            const order = new Order(orderData);
-            await order.save();
-             // Actualizar el usuario con el nuevo order_id
-            await User.findByIdAndUpdate(req.user, {
-                $push: { "orders_id": order._id }
+                document: req.file,
+                    contentType: req.file.mimetype
             });
+
+            await newOrder.save();
+
+            res.status(201).json(newOrder);
+
+            //console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
+
+            // const orderData = {
+            //     user_id: req.user,
+            //     product_ids,
+            //     summary,
+            //     status,
+            //     document: document.buffer,
+            //     contentType: document.mimetype
+
+            // };
+
+            // console.log('Order Data:', orderData);
+
+            // const order = new Order(orderData);
+            // await order.save();
+
+            //  // Actualizar el usuario con el nuevo order_id
+            // await User.findByIdAndUpdate(req.user, {
+            //     $push: { "orders_id": order._id }
+            // });
             
 
-            res.status(201).json(order);
+            // res.status(201).json(order);
+
         } catch (error) {
-            console.log('Error:', error);
-            res.status(500).json({ message: error.message });
+            console.error(error);
+    res.status(500).json({ message: 'Error al crear el pedido' });
         }
     },
 
@@ -91,5 +117,5 @@ const OrderController = {
         }
     }
 }
-
+export { upload };
 export default OrderController;

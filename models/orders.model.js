@@ -14,6 +14,7 @@ const orderSchema = new mongoose.Schema({
     }],
     summary: {
         type: String,
+        required: true
     },
     status: {
         type: String,
@@ -21,10 +22,20 @@ const orderSchema = new mongoose.Schema({
         default: 'pendiente'
     },
     document: {
-        // data: Buffer, // Campo para almacenar el archivo adjunto
-        // contentType: String 
+        type: Object,
+        fieldname: String,
+        originalname: String,
+        encoding: String,
+        mimetype: String,
+        destination: String,
+        filename: String,
+        path: String,
+        size: Number
+      },
+      contentType: {
         type: String,
-    }
+        enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+      }
 }, {
     timestamps: true,
     collection: "orders",
