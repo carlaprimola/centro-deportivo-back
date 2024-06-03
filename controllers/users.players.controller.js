@@ -1,5 +1,6 @@
 import Player from "../models/player.model.js";
-import User from "../models/user.model.js"
+import User from "../models/user.model.js";
+import { emailNewPlayerNotification } from '../utils/sendEmail.js';
 
 export const getMyPlayers = async (req, res) => {
   try {
@@ -27,17 +28,20 @@ export const createPlayer = async (req, res) => {
     const {
       name,
       lastname,
-      birthdate,
       email,
       dni,
       phone,
       post_code,
+      birthdate,
+      age,
       allergies,
       injury_illness,
       shirt_size,
       pants_size,
       shoe_size
     } = req.body;
+     
+    console.log("Creating player with data:", req.body);
 
      //Aquí relaciono el id del representante 
      const parent_id = req.user._id;
@@ -45,20 +49,32 @@ export const createPlayer = async (req, res) => {
     const newPlayer = await Player.create({
       name,
       lastname,
-      birthdate,
       parent_id,
       email,
       dni,
       phone,
       post_code,
+      birthdate,
+      age,
       allergies,
       injury_illness,
       shirt_size,
       pants_size,
       shoe_size
     });
+
    //Esto es para actualizar el usuario al crear jugadores
     await User.findByIdAndUpdate(parent_id, {$push: { players_id: newPlayer._id }});
+    console.log("User updated with new player:", parent_id);
+    
+    //Para que aparezca el nombre del usuario en el email
+    const user = await User.findById(parent_id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    // Para enviar la notificación por email
+    await emailNewPlayerNotification(newPlayer, user);
+    console.log("Email notification sent successfully");
 
     res.status(201).json(newPlayer);
   } catch (error) {
