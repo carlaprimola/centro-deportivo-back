@@ -22,7 +22,7 @@ OrderRouter
     .get('/', verifyToken, isAdmin, OrderController.getAllOrders)
     .get('/order/:id', verifyToken, authRequired, OrderController.getOrderById)
     .post('/add-order', authRequired, OrderController.addOrder)
-    .put('/orders/:id', verifyToken, authRequired, OrderController.updateOrder)
+    .put('/orders/:id/status', verifyToken, authRequired, OrderController.updateOrder)
     .delete('/order/:id', verifyToken, authRequired, OrderController.deleteOrder)
     .get('/myorders', authRequired, getMyOrders)
 

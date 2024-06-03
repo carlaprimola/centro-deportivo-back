@@ -72,7 +72,7 @@ const OrderController = {
             const { id } = req.params;
             const updatedOrder = await Order.findByIdAndUpdate(
                 id, 
-                req.body, 
+                { status: req.body.status }, //actual updating 
                 { new: true } // Devuelve el documento actualizado
             );
             if (!updatedOrder) {
