@@ -70,20 +70,32 @@ const OrderController = {
     updateOrder: async (req, res) => {
         try {
             const { id } = req.params;
-            const updatedOrder = await Order.findByIdAndUpdate(
-                id, 
-                { status: req.body.status }, //actual updating 
+            const { status } = req.body;
+
+            // Validar el estado recibido
+            const validStatuses = ['pendiente', 'completado', 'enviado', 'cancelado'];
+            if (!validStatuses.includes(status)) {
+                return res.status(400).json({ message: 'Estado no válido' });
+            }
+
+            const updatedOrderStatus = await Order.findByIdAndUpdate(
+                id,
+                { status },
                 { new: true } // Devuelve el documento actualizado
             );
-            if (!updatedOrder) {
+
+            if (!updatedOrderStatus) {
                 return res.status(404).json({ message: 'Order not found' });
             }
-            res.status(200).json(updatedOrder);
+
+            res.status(200).json(updatedOrderStatus);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
-    
+
+
+
     // DELETE ORDER
     deleteOrder: async (req, res) => {
         try {

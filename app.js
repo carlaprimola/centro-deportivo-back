@@ -9,8 +9,8 @@ import productPayment from "./routes/productPayment.routes.js";
 
 import cookieParser from 'cookie-parser';
 import ProductRouter from "./routes/product.routes.js";
-//import PlayerRouter from "./routes/player.routes.js";
-import orderRoutes from "./routes/orders.routes.js";
+//import PlayerRouter from "./routes/player.routes.js";;
+import OrderRouter from "./routes/orders.routes.js";
 
 const app = express();
 
@@ -47,6 +47,7 @@ app.use("/api/products", ProductRouter);
 
 
 //-_- Ruta pedidos -_-
-app.use("/api/orders", orderRoutes);
+app.use("/api/orders", OrderRouter);
+
 
 export default app;
