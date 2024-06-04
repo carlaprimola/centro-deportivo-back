@@ -63,7 +63,7 @@ const playerSchema = new Schema({
   },
   pants_size: {
     type: Number,
-    enum: [34, 36, 38, 40],
+    enum: [34,35, 36, 38,39, 40],
     required: true,
   },
   shoe_size: {
