@@ -96,15 +96,11 @@ export const emailNewPlayerNotification = async (player, user) => {
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
           <tr>
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Nombre del Jugador</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${player.name}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Apellidos del Jugador</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${player.lastname}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${player.name} ${player.lastname}</td>
           </tr>
           <tr>
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Nombre del Padre/Responsable</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${user.name}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${user.name} ${user.lastname}</td>
           </tr>
           <tr>
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Email del Padre/Responsable</td>
