@@ -146,8 +146,10 @@ export const profile = async (req, res) => {
 
 // Verificación de Token
 export const verifyToken = async (req, res, next) => {
-    const { token } = req.cookies;
-    console.log("🔐 Cookies:", req.cookies);
+    const token  = req.headers.authorization.split(" ")[1];
+    console.log(req.headers.authorization)
+    console.log(token)
+    console.log("🔐 Cookies:", token);
     if (!token) return res.status(401).json({ message: "No se ha encontrado ningún token" });
 
     try {

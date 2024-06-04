@@ -10,7 +10,7 @@ const OrderRouter = Router();
 OrderRouter
     .get('/', verifyToken, isAdmin, OrderController.getAllOrders)
     .get('/order/:id', verifyToken, authRequired, OrderController.getOrderById)
-    .post('/add-order', authRequired, upload, OrderController.addOrder)
+    .post('/add-order', verifyToken, upload, OrderController.addOrder)
     .put('/order/:id', verifyToken, authRequired, OrderController.updateOrder)
     .delete('/order/:id', verifyToken, authRequired, OrderController.deleteOrder)
     .get('/myorders', authRequired, getMyOrders)
