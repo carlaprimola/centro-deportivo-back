@@ -21,11 +21,11 @@ const OrderController = {
     addOrder: async (req, res) => {
         try {
             const { product_ids, summary, status, document } = req.body;
-            
+
             if (!req.file || !summary) {
                 return res.status(400).json({ message: 'Complete los campos requeridos' });
-              }
-            
+            }
+
             // Crear un nuevo pedido
             const newOrder = new Order({
                 user_id: req.user,
@@ -33,7 +33,7 @@ const OrderController = {
                 summary,
                 status,
                 document: req.file,
-                    contentType: req.file.mimetype
+                contentType: req.file.mimetype
             });
 
             await newOrder.save();
@@ -61,13 +61,13 @@ const OrderController = {
             // await User.findByIdAndUpdate(req.user, {
             //     $push: { "orders_id": order._id }
             // });
-            
+
 
             // res.status(201).json(order);
 
         } catch (error) {
             console.error(error);
-    res.status(500).json({ message: 'Error al crear el pedido' });
+            res.status(500).json({ message: 'Error al crear el pedido' });
         }
     },
 
