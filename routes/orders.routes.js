@@ -11,7 +11,7 @@ OrderRouter
     .get('/', verifyToken, isAdmin, OrderController.getAllOrders)
     .get('/order/:id', verifyToken, authRequired, OrderController.getOrderById)
     .post('/add-order', authRequired, upload, OrderController.addOrder)
-    .put('/order/:id', verifyToken, authRequired, OrderController.updateOrder)
+    .put('/order/:id/status', verifyToken, isAdmin, OrderController.updateOrder)
     .delete('/order/:id', verifyToken, authRequired, OrderController.deleteOrder)
     .get('/myorders', authRequired, getMyOrders)
 
