@@ -90,7 +90,7 @@ export const login = async (req, res) => {
         return res.status(400).json({ message: 'La contraseña es incorrecta' });
         } 
 
-        const token = await createAccessToken({ _id: userLogged._id });
+        const token = await createAccessToken({ _id: userLogged._id,  rol_id: userLogged.rol_id  });
         console.log('Token generado para login:', token);
         res.cookie("token", token, {
             httpOnly: true,
@@ -116,6 +116,7 @@ export const login = async (req, res) => {
             name: userLogged.name, // Enviar el nombre del usuario
             token
         });
+        
     } catch (error) {
         console.log('❌', error);
         res.status(500).json({ message: 'Algo salió mal, intente más tarde' });
