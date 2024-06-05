@@ -110,27 +110,21 @@ export const login = async (req, res) => {
       sameSite: "strict",
     });
 
-        res.cookie("name", userLogged.name, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 3600000,
-            sameSite: "strict",
-        });
-        
-        res.json({
-            id: userLogged._id,
-            // username: userLogged.username,
-            email: userLogged.email,
-            // role: userLogged.rol_id,
-            isAdmin: userLogged.rol_id === 'admin',
-            rol_id: userLogged.rol_id,
-            name: userLogged.name, // Enviar el nombre del usuario
-            token
-        });
-    } catch (error) {
-        console.log('❌', error);
-        res.status(500).json({ message: 'Algo salió mal, intente más tarde' });
-    }
+    res.json({
+      id: userLogged._id,
+      username: userLogged.name,
+      email: userLogged.email,
+      // role: userLogged.rol_id,
+      isAdmin: userLogged.rol_id,
+      // rol_id: userLogged.rol_id,
+      token,
+    });
+    
+    
+  } catch (error) {
+    console.log("❌", error);
+    res.status(500).json({ message: "Algo salió mal, intente más tarde" });
+  }
 };
 
 // Logout
