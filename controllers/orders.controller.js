@@ -19,10 +19,12 @@ const upload = multer({ storage: storage }).single('document');
 // POST CREATE ORDER
 const OrderController = {
     addOrder: async (req, res) => {
+        console.log(req.body);
+        console.log(req.file)
         try {
-            const { product_ids, summary, status, document } = req.body;
+            const { product_ids, selectedSize, summary, status, document } = req.body;
 
-            if (!req.file || !summary) {
+            if (!req.file || !summary || !product_ids || product_ids.length === 0|| !selectedSize) {
                 return res.status(400).json({ message: 'Complete los campos requeridos' });
             }
 
@@ -30,41 +32,18 @@ const OrderController = {
             const newOrder = new Order({
                 user_id: req.user,
                 product_ids,
+                selectedSize,
                 summary,
                 status,
                 document: req.file,
                 contentType: req.file.mimetype
             });
-
+            
             await newOrder.save();
 
             res.status(201).json(newOrder);
-
-            //console.log(`PARENT ID DEL req.params ANTES DE IR A MONGO TIENE VALOR DE: ${req.body}`);
-
-            // const orderData = {
-            //     user_id: req.user,
-            //     product_ids,
-            //     summary,
-            //     status,
-            //     document: document.buffer,
-            //     contentType: document.mimetype
-
-            // };
-
-            // console.log('Order Data:', orderData);
-
-            // const order = new Order(orderData);
-            // await order.save();
-
-            //  // Actualizar el usuario con el nuevo order_id
-            // await User.findByIdAndUpdate(req.user, {
-            //     $push: { "orders_id": order._id }
-            // });
-
-
-            // res.status(201).json(order);
-
+            console.log(newOrder)
+            
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Error al crear el pedido' });
@@ -85,7 +64,7 @@ const OrderController = {
     getOrderById: async (req, res) => {
         try {
             const { id } = req.params;
-            const order = await Order.findById(id).populate('user_id').populate('product_ids');
+            const order = await Order.findById(id).populate('user_id').populate('products');
             if (!order) return res.status(404).json({ message: 'Order not found' });
             res.status(200).json(order);
         } catch (error) {

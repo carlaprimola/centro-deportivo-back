@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 const orderSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -12,6 +11,11 @@ const orderSchema = new mongoose.Schema({
         ref: 'Product',
         required: true
     }],
+    selectedSize: {
+        type: String,
+        enum: ["XS", "S", "M", "L", "XL", "XXL"],
+        required: true
+    },
     summary: {
         type: String,
         required: true
