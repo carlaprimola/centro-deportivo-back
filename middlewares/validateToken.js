@@ -1,6 +1,6 @@
 //validar Token
-import jwt from 'jsonwebtoken';
-import { TOKEN_SECRET } from '../config.js';
+import jwt from "jsonwebtoken";
+import { TOKEN_SECRET } from "../config.js";
 
 export const authRequired = async (req, res, next) => {
     
@@ -9,8 +9,7 @@ export const authRequired = async (req, res, next) => {
     const role = req.body
     //console.log(`Rol del usuario autenticado: ${role}`);
 
-    if (!token) 
-        return res.status(401).json({message: 'Acceso no autorizado'});
+  if (!token) return res.status(401).json({ message: "Acceso no autorizado" });
 
         jwt.verify(token, TOKEN_SECRET,(err, user) => {
             if (err) {
