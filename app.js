@@ -10,8 +10,9 @@ import productPayment from "./routes/productPayment.routes.js";
 import ExpressMongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
 import ProductRouter from "./routes/product.routes.js";
-//import PlayerRouter from "./routes/player.routes.js";;
+//import PlayerRouter from "./routes/player.routes.js";
 import OrderRouter from "./routes/orders.routes.js";
+import assignTeamRouter from "./routes/teams.routes.js";
 
 const app = express();
 
@@ -47,28 +48,21 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(cookieParser());
+app.use(cookieParser()); // Middleware para manejar cookies
 app.use(express.json());
 
 
-
-/* app.use('/', (req, res) =>{
-    res.json({message: 'Bienvenido a la API de Proyectos'})
-}) */
-
-//añadimos /api antes de la ruta para distinguirlo de las rutas del front ¿cuáles rutas en front?
-//OJO POSIBLEMENTE HAY QUE CAMBIAR LA RUTA DE LOS ENDPOINTS API X AUTH
-// app.use('/auth', authRoutes);
+//añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/", authRoutes)
 
 
 app.use("/api/payments", memberPaymentRouter);
 app.use("/api/pay", productPayment)
+app.use("/api/player", assignTeamRouter)
 
 
 //-_- Ruta productos -_-
 app.use("/api/products", ProductRouter);
-
 
 //-_- Ruta base de jugadores -_-
 // app.use("/api/players", PlayerRouter);
