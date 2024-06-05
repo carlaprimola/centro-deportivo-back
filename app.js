@@ -51,6 +51,7 @@ app.use(cors({
 app.use(cookieParser()); // Middleware para manejar cookies
 app.use(express.json());
 
+app.use('/uploads', express.static('uploads'));
 
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/", authRoutes)
