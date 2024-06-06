@@ -11,14 +11,14 @@ const OrderRouter = Router();
 // Limitar la cantidad de intentos de pedidos
 const limitAddOrder = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 min
-    max: 3, // Max number of entries to try log in
+    max: 10, // Max number of entries to try log in
     message: 'Demasiados intentos en poco tiempo, por favor inténtalo más tarde',
 });
 
 OrderRouter
     .get('/', verifyToken, isAdmin, OrderController.getAllOrders)
     .get('/order/:id', verifyToken, authRequired, OrderController.getOrderById)
-    .post('/add-order', limitAddOrder, verifyToken, upload, OrderController.addOrder)
+    .post('/add-order', limitAddOrder, authRequired, upload, OrderController.addOrder)
     .put('/order/:id/status', verifyToken, isAdmin, OrderController.updateOrder)
     .delete('/order/:id', verifyToken, authRequired, OrderController.deleteOrder)
     .get('/myorders', authRequired, getMyOrders)

@@ -150,17 +150,42 @@ export const profile = async (req, res) => {
 };
 
 // Verificación de Token
+// export const verifyToken = async (req, res, next) => {
+//     const authHeader = req.headers.authorization;
+//     if (!authHeader) {
+//         return res.status(401).json({ message: "No se ha encontrado ningún token en el encabezado de autorización" });
+//     }
+//     const token = authHeader.split(" ")[1];
+//     // const token  = req.headers.authorization.split(" ")[1];
+//     console.log(req.headers.authorization)
+//     console.log(token)
+//     console.log("🔐 Cookies:", token);
+//     if (!token) return res.status(401).json({ message: "No se ha encontrado ningún token" });
+
+//   try {
+//     const payload = jwt.verify(token, TOKEN_SECRET);
+//     console.log("El token es válido y su payload es:", payload);
+
+//     const userFound = await User.findById(payload._id);
+//     if (!userFound)
+//       return res.status(403).json({ message: "Usuario no encontrado" });
+
+//     req.user = userFound;
+//     next();
+//   } catch (error) {
+//     console.error("El token no es válido:", error);
+//     res.status(500).json({ message: "Hubo un error al verificar el token" });
+//   }
+// };
+
+//VerifyToken version 2
 export const verifyToken = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).json({ message: "No se ha encontrado ningún token en el encabezado de autorización" });
-    }
-    const token = authHeader.split(" ")[1];
-    // const token  = req.headers.authorization.split(" ")[1];
-    console.log(req.headers.authorization)
-    console.log(token)
-    console.log("🔐 Cookies:", token);
-    if (!token) return res.status(401).json({ message: "No se ha encontrado ningún token" });
+  const { token } = req.cookies;
+  console.log("🔐 Cookies:", req.cookies);
+  if (!token)
+    return res
+      .status(401)
+      .json({ message: "No se ha encontrado ningún token" });
 
   try {
     const payload = jwt.verify(token, TOKEN_SECRET);

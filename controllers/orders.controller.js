@@ -19,11 +19,11 @@ const upload = multer({ storage: storage }).single('document');
 // POST CREATE ORDER
 const OrderController = {
     addOrder: async (req, res) => {
-        console.log(req.body);
-        console.log(req.file)
+        // console.log('Resumen:', req.body);
+        // console.log(req.file)
         try {
             const { product_ids, selectedSize, summary, status, document } = req.body;
-
+            console.log(selectedSize)
             if (!req.file || !summary || !product_ids || product_ids.length === 0|| !selectedSize) {
                 return res.status(400).json({ message: 'Complete los campos requeridos' });
             }
@@ -42,10 +42,10 @@ const OrderController = {
             await newOrder.save();
 
             res.status(201).json(newOrder);
-            console.log(newOrder)
+            console.log('Resumen pedido:', newOrder)
             
         } catch (error) {
-            console.error(error);
+            console.log(error);
             res.status(500).json({ message: 'Error al crear el pedido' });
         }
     },
