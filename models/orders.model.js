@@ -12,7 +12,7 @@ const orderSchema = new mongoose.Schema({
         required: true
     }],
     selectedSize: {
-        type: String,
+        type: [String],
         enum: ["XS", "S", "M", "L", "XL", "XXL"],
         required: true
     },
