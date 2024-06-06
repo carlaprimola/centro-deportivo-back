@@ -47,7 +47,7 @@ export const createMembershipPayment = async (req, res) => {
 
     // Actualiza el usuario correspondiente con el ID del nuevo pago creado
     await User.findByIdAndUpdate(parent_id, {
-      $push: { membershipPayments: newMemberPayment._id }
+      $push: { membership_payments: newMemberPayment._id }
     });
 
     res.status(201).json(newMemberPayment);
