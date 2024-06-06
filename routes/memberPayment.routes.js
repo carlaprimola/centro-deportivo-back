@@ -3,6 +3,7 @@ import { createMembershipPayment, deleteMembershipPayment, getAllMembershipPayme
 import { isAdmin } from "../controllers/auth.controller.js";
 
 import { verifyToken } from "../controllers/auth.controller.js";
+import { get } from "mongoose";
 const router = Router();
 
 router.get('/', verifyToken, isAdmin, getAllMembershipPayments);
@@ -18,6 +19,7 @@ router.put('/payment/:id',  verifyToken, updateMembershipPayment);
 
 router.delete('/payment/:id',  verifyToken, deleteMembershipPayment);
 
+router.get('/status/',  verifyToken, isAdmin ,getAllMembershipPayments);
 
 router.put('/status/:id',  verifyToken, isAdmin ,updatePaymentStatus);
 

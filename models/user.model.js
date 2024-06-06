@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
         default: "User",
         enum: ["user", "admin"],
     },
-    membershipPayments: [{
+    membership_payments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "MembershipPayment",
         index: true,

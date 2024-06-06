@@ -58,7 +58,7 @@ app.use("/api/", authRoutes)
 
 
 app.use("/api/payments", memberPaymentRouter);
-app.use("/api/pay", productPayment)
+// app.use("/api/pay", productPayment)
 app.use("/api/player", assignTeamRouter)
 
 
