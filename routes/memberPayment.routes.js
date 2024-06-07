@@ -4,13 +4,14 @@ import { isAdmin } from "../controllers/auth.controller.js";
 
 import { verifyToken } from "../controllers/auth.controller.js";
 import { get } from "mongoose";
+import { authRequired } from "../middlewares/validateToken.js";
 const router = Router();
 
 router.get('/', verifyToken, isAdmin, getAllMembershipPayments);
 
 router.get('/payment/:id',  verifyToken,  getSingleMembershipPayment);
 
-router.get('/my-status/',  verifyToken,  getMyPaymentStatus);
+router.get('/my-status/',  authRequired,  getMyPaymentStatus);
 
 router.post('/payment/',  verifyToken, createMembershipPayment);
 
