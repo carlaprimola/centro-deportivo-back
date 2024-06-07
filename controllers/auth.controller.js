@@ -223,27 +223,35 @@ export const profile = async (req, res) => {
 // };
 // Verificación de Token
 export const verifyToken = async (req, res, next) => {
-  const token = req.cookies.token || req.headers['authorization'];
-  console.log("Token:", token);
-  
-  if (!token)
-    return res
-      .status(401)
-      .json({ message: "No se ha encontrado ningún token" });
+  let token;
+  const authHeader = req.headers.authorization;
+
+  if (authHeader && authHeader.startsWith('Bearer')) {
+    // Si se proporciona un token en el encabezado de autorización
+    token = authHeader.split(' ')[1];
+  } else if (req.cookies.token) {
+    // Si se proporciona un token en las cookies
+    token = req.cookies.token;
+  }
+
+  if (!token) {
+    return res.status(401).json({ message: 'No se ha encontrado ningún token' });
+  }
 
   try {
     const payload = jwt.verify(token, TOKEN_SECRET);
-    console.log("El token es válido y su payload es:", payload);
+    console.log('El token es válido y su payload es:', payload);
 
     const userFound = await User.findById(payload._id);
-    if (!userFound)
-      return res.status(403).json({ message: "Usuario no encontrado" });
+    if (!userFound) {
+      return res.status(403).json({ message: 'Usuario no encontrado' });
+    }
 
     req.user = userFound;
     next();
   } catch (error) {
-    console.error("El token no es válido:", error);
-    res.status(500).json({ message: "Hubo un error al verificar el token" });
+    console.error('El token no es válido:', error);
+    return res.status(500).json({ message: 'Hubo un error al verificar el token' });
   }
 };
 
