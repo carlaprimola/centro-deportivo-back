@@ -101,26 +101,45 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "La contraseña es incorrecta" });
     }
 
-    const token = await createAccessToken({ _id: userLogged._id, isAdmin: userLogged.rol_id });
-    console.log("Token generado para login:", token);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000,
-      sameSite: "strict",
-    });
+    // const token = await createAccessToken({ _id: userLogged._id, isAdmin: userLogged.rol_id });
+    // console.log("Token generado para login:", token);
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   maxAge: 3600000,
+    //   sameSite: "strict",
+    // });
 
-    res.json({
-      id: userLogged._id,
-      username: userLogged.name,
-      email: userLogged.email,
-      // role: userLogged.rol_id,
-      isAdmin: userLogged.rol_id,
-      // rol_id: userLogged.rol_id,
-      token,
-    });
+    // res.json({
+    //   id: userLogged._id,
+    //   username: userLogged.name,
+    //   email: userLogged.email,
+    //   // role: userLogged.rol_id,
+    //   isAdmin: userLogged.rol_id,
+    //   // rol_id: userLogged.rol_id,
+    //   token,
+    // });
     
-    
+    const token = await createAccessToken({ _id: userLogged._id, isAdmin: userLogged.rol_id });
+console.log("Token generado para login:", token);
+
+const isProduction = process.env.NODE_ENV === "production";
+
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: isProduction,  // Si estamos en producción, usar secure
+  maxAge: 3600000,  // 1 hora
+  sameSite: isProduction ? "strict" : "lax",  // strict en producción, lax en desarrollo
+});
+
+res.json({
+  id: userLogged._id,
+  username: userLogged.name,
+  email: userLogged.email,
+  isAdmin: userLogged.rol_id,
+  token,
+});
+
   } catch (error) {
     console.log("❌", error);
     res.status(500).json({ message: "Algo salió mal, intente más tarde" });
