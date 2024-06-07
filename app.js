@@ -11,6 +11,8 @@ import OrderRouter from "./routes/orders.routes.js";
 import assignTeamRouter from "./routes/teams.routes.js";
 
 const app = express();
+// Confía en el encabezado X-Forwarded-For
+app.set('trust proxy', 1);
 
 // Sanitización contra NoSQL query injection (capa extra adicional al modelo User que ya espera un String)
 app.use(ExpressMongoSanitize());
@@ -41,6 +43,15 @@ app.use(cors(corsOptions));
 
 app.use(cookieParser()); // Middleware para manejar cookies
 app.use(express.json());
+
+// Aplica el límite de velocidad
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100 // límite de solicitudes por IP
+});
+
+// Aplica el límite de velocidad a todas las solicitudes
+app.use(limiter);
 
 app.use('/uploads', express.static('uploads'));
 
