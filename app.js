@@ -43,10 +43,12 @@ app.use(
 
 /* app.use(morgan('dev')); */ //simplifica el proceso de registros
 
-app.use(cors({
-    origin: 'http://localhost:5173',
+const corsOptions = {
+    origin: ['http://localhost:5173','https://centrodeportivoca.netlify.app/'],
     credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use(cookieParser()); // Middleware para manejar cookies
 app.use(express.json());
