@@ -57,7 +57,7 @@ app.use('/uploads', express.static('uploads'));
 app.use("/api/", authRoutes)
 
 
-app.use("/api/payments", memberPaymentRouter);
+app.use("/api/memberships", memberPaymentRouter);
 // app.use("/api/pay", productPayment)
 app.use("/api/player", assignTeamRouter)
 
