@@ -9,6 +9,7 @@ import xss from "xss-clean";
 import ProductRouter from "./routes/product.routes.js";
 import OrderRouter from "./routes/orders.routes.js";
 import assignTeamRouter from "./routes/teams.routes.js";
+import rateLimit from 'express-rate-limit'; 
 
 const app = express();
 // Confía en el encabezado X-Forwarded-For
