@@ -39,7 +39,7 @@ router.get('/myplayers', authRequired, getMyPlayers);
 router.post('/newplayer', authRequired, createPlayer);
 
 //rutas para el admin
-router.get('/user', isAdmin, getUsers); //muestra todos los usuarios ,
+router.get('/user', verifyToken, isAdmin, getUsers); //muestra todos los usuarios ,
 router.get('/players',verifyToken, isAdmin ,getPlayersCtlr)
 router.patch('/user/:id', authRequired, updateUser); //actualiza un usuario
 router.delete('/user/:id', authRequired, deleteUser); //elimina un usuario

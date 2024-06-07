@@ -84,22 +84,22 @@ export const register = async (req, res) => {
 };
 
 // Login
-export const login = async (req, res) => {
-  const { email, password } = req.body;
-  console.log("Datos recibidos para login:", req.body);
+// export const login = async (req, res) => {
+//   const { email, password } = req.body;
+//   console.log("Datos recibidos para login:", req.body);
 
-  try {
-    const userLogged = await User.findOne({ email });
-    if (!userLogged) {
-      console.log("Usuario no encontrado");
-      return res.status(400).json({ message: "Usuario no encontrado" });
-    }
+//   try {
+//     const userLogged = await User.findOne({ email });
+//     if (!userLogged) {
+//       console.log("Usuario no encontrado");
+//       return res.status(400).json({ message: "Usuario no encontrado" });
+//     }
 
-    const isMatch = await bcrypt.compare(password, userLogged.password);
-    if (!isMatch) {
-      console.log("la contraseña es incorrecta");
-      return res.status(400).json({ message: "La contraseña es incorrecta" });
-    }
+//     const isMatch = await bcrypt.compare(password, userLogged.password);
+//     if (!isMatch) {
+//       console.log("la contraseña es incorrecta");
+//       return res.status(400).json({ message: "La contraseña es incorrecta" });
+//     }
 
     // const token = await createAccessToken({ _id: userLogged._id, isAdmin: userLogged.rol_id });
     // console.log("Token generado para login:", token);
@@ -120,31 +120,56 @@ export const login = async (req, res) => {
     //   token,
     // });
     
-    const token = await createAccessToken({ _id: userLogged._id, isAdmin: userLogged.rol_id });
-console.log("Token generado para login:", token);
+// Login
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  console.log("Datos recibidos para login:", req.body);
 
-const isProduction = process.env.NODE_ENV === "production";
+  try {
+    const userLogged = await User.findOne({ email });
+    if (!userLogged) {
+      console.log("Usuario no encontrado");
+      return res.status(400).json({ message: "Usuario no encontrado" });
+    }
 
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: isProduction,  // Si estamos en producción, usar secure
-  maxAge: 3600000,  // 1 hora
-  sameSite: isProduction ? "strict" : "lax",  // strict en producción, lax en desarrollo
-});
+    const isMatch = await bcrypt.compare(password, userLogged.password);
+    if (!isMatch) {
+      console.log("la contraseña es incorrecta");
+      return res.status(400).json({ message: "La contraseña es incorrecta" });
+    }
 
-res.json({
-  id: userLogged._id,
-  username: userLogged.name,
-  email: userLogged.email,
-  isAdmin: userLogged.rol_id,
-  token,
-});
+    const token = req.cookies.token || req.headers['authorization']?.split(' ')[1];
+    console.log("Token recibido:", token);
+
+    const payload = jwt.verify(token, TOKEN_SECRET);
+    console.log("El token es válido y su payload es:", payload);
+
+    const tokenToSend = await createAccessToken({ _id: userLogged._id, isAdmin: userLogged.rol_id });
+    console.log("Token generado para login:", tokenToSend);
+
+    const isProduction = process.env.NODE_ENV === "production";
+
+    res.cookie("token", tokenToSend, {
+      httpOnly: true,
+      secure: isProduction,  // Si estamos en producción, usar secure
+      maxAge: 3600000,  // 1 hora
+      sameSite: isProduction ? "strict" : "lax",  // strict en producción, lax en desarrollo
+    });
+
+    res.json({
+      id: userLogged._id,
+      username: userLogged.name,
+      email: userLogged.email,
+      isAdmin: userLogged.rol_id,
+      token: tokenToSend,
+    });
 
   } catch (error) {
     console.log("❌", error);
     res.status(500).json({ message: "Algo salió mal, intente más tarde" });
   }
 };
+
 
 // Logout
 export const logout = async (req, res) => {
