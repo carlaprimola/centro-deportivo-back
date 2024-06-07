@@ -156,6 +156,24 @@ export const getAllMembershipPayments = async (req, res) => {
   }
 };
 
+// Obtener el status de los pagos
+export const getAllPaymentStatus = async (req, res) => {
+  //el ID y el nombre del usuario autenticado
+  const parentId = req.user._id;
+  console.log(`PARENT ID : ${parentId}`);
+  try {
+    const payments = await MembershipPayment.find({ parent_id : parentId });
+
+    if (payments.length === 0) {
+      return res.status(200).json({ message: "Todavía no hay pagos." });
+    }
+
+    res.status(200).json(payments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 // Actualizar status de pagos
 export const updatePaymentStatus = async (req, res) => {
   const { annual_payment, first_payment, second_payment, third_payment, parent_id } = req.body;
