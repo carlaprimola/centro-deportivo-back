@@ -1,29 +1,26 @@
 import { Router } from "express";
 import { createMembershipPayment, deleteMembershipPayment, getAllMembershipPayments, getAllPaymentStatus, getMyPaymentStatus, getSingleMembershipPayment, updateMembershipPayment, updatePaymentStatus } from "../controllers/memberPayment.controller.js";
 import { isAdmin } from "../controllers/auth.controller.js";
-import { verifyToken } from "../controllers/auth.controller.js";
+import { authRequired } from '../middlewares/validateToken.js';
 
 const router = Router();
 
 // Rutas para usuarios
 
-router.get('/payment/:id',  verifyToken,  getSingleMembershipPayment);
-router.get('/my-status/',  verifyToken,  getMyPaymentStatus);
-router.post('/payment/',  verifyToken, createMembershipPayment);
-router.put('/payment/:id',  verifyToken, updateMembershipPayment);
-router.delete('/payment/:id',  verifyToken, deleteMembershipPayment);
+router.get('/payment/:id', authRequired,  getSingleMembershipPayment);
+router.get('/my-status/', authRequired,  getMyPaymentStatus);
+router.post('/payment/',  authRequired, createMembershipPayment);
+router.put('/payment/:id',  authRequired, updateMembershipPayment);
+router.delete('/payment/:id',  authRequired, deleteMembershipPayment);
 
 // Fin de rutas para usuarios
 
-// Rutas para administradores
+// Rutas para administradores OJO FALTA IMPLEMENTAR MIDDLEWARE IS ADMIN 
 
-// router.get('/', verifyToken, isAdmin, getAllMembershipPayments);
+router.get('/status/',  authRequired ,getAllMembershipPayments);
 
-router.get('/status/',  verifyToken, isAdmin ,getAllMembershipPayments);
+router.put('/status/:id',  authRequired ,updatePaymentStatus);
 
-router.put('/status/:id',  verifyToken, isAdmin ,updatePaymentStatus);
-
-// router.delete('/kcali/:id/:paymentType', deleteSinglePayment);
 
 // Fin de rutas para administradores
 

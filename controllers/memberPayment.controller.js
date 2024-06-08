@@ -3,13 +3,13 @@ import MembershipPayment from "../models/memberPayment.model.js";
 import User from "../models/user.model.js";
 import Player from "../models/player.model.js";
 import { sendEmail } from '../utils/sendEmail.js';
-// import { sendWhatsAppMessage } from '../utils/sendWhatsAppMessage.js';
 
-// -------------------- -_- Rutas de Usuario -------------------- -_-
 
+// --------------------  Rutas de Usuario -------------------- 
+// Crear un nuevo pago de membresía -_- OJO FALTA CON CON PDF -_-
 export const createMembershipPayment = async (req, res) => {
   try {
-    const { first_payment, second_payment, third_payment, players_id, parent_id } = req.body;
+    const { first_payment, second_payment, third_payment, annual_payment, players_id, parent_id } = req.body;
 
     // Verificar si el padre existe en la base de datos
     const parent = await User.findById(parent_id);
@@ -27,9 +27,62 @@ export const createMembershipPayment = async (req, res) => {
     const newMemberPayment = new MembershipPayment({
       players_id: players_id,
       parent_id: parent_id,
-      first_payment: first_payment ? { status: false, document: first_payment.document } : undefined,
-      second_payment: second_payment ? { status: false, document: second_payment.document } : undefined,
-      third_payment: third_payment ? { status: false, document: third_payment.document } : undefined,
+      annual_payment: annual_payment ? {
+        status: 'none',
+        document: {
+          fieldname: annual_payment.fieldname,
+          originalname: annual_payment.originalname,
+          encoding: annual_payment.encoding,
+          mimetype: annual_payment.mimetype,
+          destination: annual_payment.destination,
+          filename: annual_payment.filename,
+          path: annual_payment.path,
+          size: annual_payment.size
+        },
+        contentType: annual_payment.mimetype
+      } : undefined,
+      first_payment: first_payment ? {
+        status: 'none',
+        document: {
+          fieldname: first_payment.fieldname,
+          originalname: first_payment.originalname,
+          encoding: first_payment.encoding,
+          mimetype: first_payment.mimetype,
+          destination: first_payment.destination,
+          filename: first_payment.filename,
+          path: first_payment.path,
+          size: first_payment.size
+        },
+        contentType: first_payment.mimetype
+      } : undefined,
+      second_payment: second_payment ? {
+        status: 'none',
+        document: {
+          fieldname: second_payment.fieldname,
+          originalname: second_payment.originalname,
+          encoding: second_payment.encoding,
+          mimetype: second_payment.mimetype,
+          destination: second_payment.destination,
+          filename: second_payment.filename,
+          path: second_payment.path,
+          size: second_payment.size
+        },
+        contentType: second_payment.mimetype
+      } : undefined,
+      third_payment: third_payment ? {
+        status: 'none',
+        document: {
+          fieldname: third_payment.fieldname,
+          originalname: third_payment.originalname,
+          encoding: third_payment.encoding,
+          mimetype: third_payment.mimetype,
+          destination: third_payment.destination,
+          filename: third_payment.filename,
+          path: third_payment.path,
+          size: third_payment.size
+        },
+        contentType: third_payment.mimetype
+      } : undefined,
     });
 
     // Guardar el pago de membresía en la base de datos
@@ -37,13 +90,12 @@ export const createMembershipPayment = async (req, res) => {
     console.log("Nuevo pago de membresía creado:", newMemberPayment);
 
     // Enviar notificación al administrador
-    await sendEmail(newMemberPayment)
-      .then(() => {
-        console.log("Email enviado correctamente");
-      })
-      .catch((err) => {
-        console.error("Error al enviar el email:", err);
-      });
+    try {
+      await sendEmail(newMemberPayment);
+      console.log("Email enviado correctamente");
+    } catch (err) {
+      console.error("Error al enviar el email:", err);
+    }
 
     // Actualiza el usuario correspondiente con el ID del nuevo pago creado
     await User.findByIdAndUpdate(parent_id, {
@@ -56,6 +108,9 @@ export const createMembershipPayment = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+
 
 // Obtener un pago
 export const getSingleMembershipPayment = async (req, res) => {
@@ -140,6 +195,7 @@ export const getMyPaymentStatus = async (req, res) => {
   }
 }
 
+
 // -------------------- -_- Rutas de Administrador -------------------- -_-
 // Obtener todos los pagos
 export const getAllMembershipPayments = async (req, res) => {
@@ -188,19 +244,19 @@ export const updatePaymentStatus = async (req, res) => {
     if (!payment) {
       return res.status(404).json({ message: "Pago no encontrado." });
     }
-
+console.log(payment);
     // Actualizar los estados de los pagos
     if (annual_payment !== undefined) {
-      payment.annual_payment = annual_payment;
+      payment.annual_payment.status = annual_payment.status;
     }
     if (first_payment !== undefined) {
-      payment.first_payment = first_payment;
+      payment.first_payment.status = first_payment.status;
     }
     if (second_payment !== undefined) {
-      payment.second_payment = second_payment;
+      payment.second_payment.status = second_payment.status;
     }
     if (third_payment !== undefined) {
-      payment.third_payment = third_payment;
+      payment.third_payment.status = third_payment.status;
     }
     if (parent_id !== undefined) {
       payment.parent_id = parent_id;
@@ -217,3 +273,4 @@ export const updatePaymentStatus = async (req, res) => {
   }
 };
 
+// Fin de rutas para administradores
