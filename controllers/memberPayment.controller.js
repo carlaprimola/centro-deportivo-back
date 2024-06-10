@@ -1,110 +1,118 @@
-import mongoose from "mongoose";
 import MembershipPayment from "../models/memberPayment.model.js";
 import User from "../models/user.model.js";
 import Player from "../models/player.model.js";
-import { sendEmail } from '../utils/sendEmail.js';
+import { sendEmail } from "../utils/sendEmail.js";
 
 
-// --------------------  Rutas de Usuario -------------------- 
-// Crear un nuevo pago de membresía -_- OJO FALTA CON CON PDF -_-
+import path from 'path';
+import { fileURLToPath } from 'url';
+import PDFDocument from "pdfkit";
+import fs from "fs";
+
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// -------------------- CONTROLADORES PARA Usuarios --------------------
+
+// -_- PDF : OJO falta  SENDEMAIL y VERIFICACIONES
+// CREAR PAGO DE MEMBRESÍA CON UN ARCHIVO Y ENVIAR UN CORREO ELECTRÓNICO
 export const createMembershipPayment = async (req, res) => {
+  console.log("WELCOME TO CREATE MEMBERSHIP PAYMENT :)");
   try {
-    const { first_payment, second_payment, third_payment, annual_payment, players_id, parent_id } = req.body;
+    // Detalles del archivo subido
+    console.log("Archivo subido:", req.file);
 
-    // Verificar si el padre existe en la base de datos
-    const parent = await User.findById(parent_id);
-    if (!parent) {
-      return res.status(404).json({ error: "El padre/responsable no existe" });
+    // Obtener y validar los campos requeridos del cuerpo de la solicitud
+    const { playerId, parentId, paymentType } = req.body;
+
+    if (!playerId || !parentId || !paymentType) {
+      return res.status(400).json({ error: "Faltan campos requeridos: playerId, parentId o paymentType" });
     }
 
-    // Verificar si el jugador asociado al padre existe en la base de datos
-    const player = await Player.findById(players_id);
-    if (!player) {
-      return res.status(404).json({ error: 'El jugador asociado al padre/responsable no existe' });
-    }
+    // Crear el objeto de documento basado en el archivo subido
+    const document = {
+      fieldname: req.file.fieldname,
+      originalname: req.file.originalname,
+      encoding: req.file.encoding,
+      mimetype: req.file.mimetype,
+      destination: req.file.destination,
+      filename: req.file.filename,
+      path: req.file.path,
+      size: req.file.size,
+    };
 
-    // Crear un nuevo pago de membresía
-    const newMemberPayment = new MembershipPayment({
-      players_id: players_id,
-      parent_id: parent_id,
-      annual_payment: annual_payment ? {
-        status: 'none',
-        document: {
-          fieldname: annual_payment.fieldname,
-          originalname: annual_payment.originalname,
-          encoding: annual_payment.encoding,
-          mimetype: annual_payment.mimetype,
-          destination: annual_payment.destination,
-          filename: annual_payment.filename,
-          path: annual_payment.path,
-          size: annual_payment.size
-        },
-        contentType: annual_payment.mimetype
-      } : undefined,
-      first_payment: first_payment ? {
-        status: 'none',
-        document: {
-          fieldname: first_payment.fieldname,
-          originalname: first_payment.originalname,
-          encoding: first_payment.encoding,
-          mimetype: first_payment.mimetype,
-          destination: first_payment.destination,
-          filename: first_payment.filename,
-          path: first_payment.path,
-          size: first_payment.size
-        },
-        contentType: first_payment.mimetype
-      } : undefined,
-      second_payment: second_payment ? {
-        status: 'none',
-        document: {
-          fieldname: second_payment.fieldname,
-          originalname: second_payment.originalname,
-          encoding: second_payment.encoding,
-          mimetype: second_payment.mimetype,
-          destination: second_payment.destination,
-          filename: second_payment.filename,
-          path: second_payment.path,
-          size: second_payment.size
-        },
-        contentType: second_payment.mimetype
-      } : undefined,
-      third_payment: third_payment ? {
-        status: 'none',
-        document: {
-          fieldname: third_payment.fieldname,
-          originalname: third_payment.originalname,
-          encoding: third_payment.encoding,
-          mimetype: third_payment.mimetype,
-          destination: third_payment.destination,
-          filename: third_payment.filename,
-          path: third_payment.path,
-          size: third_payment.size
-        },
-        contentType: third_payment.mimetype
-      } : undefined,
-    });
-
-    // Guardar el pago de membresía en la base de datos
-    await newMemberPayment.save();
-    console.log("Nuevo pago de membresía creado:", newMemberPayment);
-
-    // Enviar notificación al administrador
     try {
-      await sendEmail(newMemberPayment);
-      console.log("Email enviado correctamente");
-    } catch (err) {
-      console.error("Error al enviar el email:", err);
+      // Crear el nuevo registro de pago de membresía
+      const paymentData = {
+        players_id: playerId, // Asegúrate de enviar el playerId en el cuerpo de la solicitud
+        parent_id: parentId,  // Asegúrate de enviar el parentId en el cuerpo de la solicitud
+      };
+
+      paymentData[`${paymentType}_payment`] = {
+        status: 'pendiente', // Puedes ajustar este valor según tus necesidades
+        document: document,
+        contentType: req.file.mimetype,
+      };
+
+      const membershipPayment = new MembershipPayment(paymentData);
+    
+  
+
+      // Guarda el registro en la base de datos
+      await membershipPayment.save();
+
+       // Actualizar el documento del usuario (padre)
+  await User.findByIdAndUpdate(
+    parentId,
+    { $push: { membership_payments: membershipPayment._id } }, // Suponiendo que tienes un campo 'payments' que es un array en el modelo User
+    { new: true, useFindAndModify: false }
+  );
+
+  // Actualizar el documento del jugador
+  await Player.findByIdAndUpdate(
+    playerId,
+    { $push: { membership_payments: membershipPayment._id } }, // Suponiendo que tienes un campo 'payments' que es un array en el modelo Player
+    { new: true, useFindAndModify: false }
+  );
+
+      res.status(201).json({ message: "Pago de membresía creado exitosamente", membershipPayment });
+    } catch (saveError) {
+      console.error("Error al guardar el pago de membresía:", saveError);
+      res.status(500).json({ error: "Error al guardar el pago de membresía" });
+    }
+  } catch (error) {
+    console.error("Error al crear el pago de membresía:", error);
+    res.status(500).json({ error: "Error al crear el pago de membresía" });
+  }
+};
+
+
+// Obtener el status de mis pagos (ES MEJOR GETMYPAYMENTS?¿?)
+export const getMyPaymentStatus = async (req, res) => {
+  // Obtener el ID del usuario autenticado
+  const parentId = req.user._id;
+  console.log(`PARENT ID EN WORKING: ${parentId}`);
+  try {
+    // Obtener los pagos asociados al ID del usuario
+    const payments = await MembershipPayment.find({ parent_id: parentId });
+
+    if (payments.length === 0) {
+      return res.status(200).json({ message: "Todavía no hay pagos." });
     }
 
-    // Actualiza el usuario correspondiente con el ID del nuevo pago creado
-    await User.findByIdAndUpdate(parent_id, {
-      $push: { membership_payments: newMemberPayment._id }
-    });
+    // Mapear los pagos para obtener solo los estados de cada tipo de pago
+    const paymentStatus = payments.map(payment => ({
+      annual_payment: payment.annual_payment.status || 'none',
+      first_payment: payment.first_payment.status || 'none',
+      second_payment: payment.second_payment.status || 'none',
+      third_payment: payment.third_payment.status || 'none'
+    }));
 
-    res.status(201).json(newMemberPayment);
+    console.log("PAYMENTS STATUS FILTRADO POR PARENT ID: ", paymentStatus);
+    res.status(200).json(paymentStatus);
   } catch (error) {
-    console.error("Error en createMembershipPayment:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -112,7 +120,29 @@ export const createMembershipPayment = async (req, res) => {
 
 
 
-// Obtener un pago
+
+
+
+
+
+
+// -------------------- CTRL PARA  Administrador --------------------
+// Obtener todos los pagos
+export const getAllMembershipPayments = async (req, res) => {
+  try {
+    const payments = await MembershipPayment.find();
+
+    if (payments.length === 0) {
+      return res.status(200).json({ message: "Todavía no hay pagos." });
+    }
+
+    res.status(200).json(payments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//  Obtener un pago POR ID (para ver PDF y luego EDITAR STATUS )
 export const getSingleMembershipPayment = async (req, res) => {
   const id = req.params.id;
 
@@ -129,112 +159,17 @@ export const getSingleMembershipPayment = async (req, res) => {
   }
 };
 
-// Actualizar un pago
-export const updateMembershipPayment = async (req, res) => {
-  const {  first_payment, second_payment, third_payment, parent_id } = req.body;
-
-  try {
-    const payment = await MembershipPayment.findById(parent_id);
-
-    if (!payment) {
-      return res.status(404).json({ message: "Pago no encontrado." });
-    }
-
-    if (first_payment !== undefined) {
-      payment.first_payment = first_payment;
-    }
-
-    if (second_payment !== undefined) {
-      payment.second_payment = second_payment;
-    }
-
-    if (third_payment !== undefined) {
-      payment.third_payment = third_payment;
-    }
-
-    await payment.save();
-
-    res.status(200).json({ message: "Pago actualizado correctamente." });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Eliminar un pago
-export const deleteMembershipPayment = async (req, res) => {
-  const { _id } = req.body;
-
-  try {
-    const deletedPayment = await MembershipPayment.findByIdAndDelete(_id);
-
-    if (!deletedPayment) {
-      return res.status(404).json({ message: "Pago no encontrado." });
-    }
-
-    res.status(200).json({ message: "Pago eliminado exitosamente." });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Obtener el status de mis pagos
-export const getMyPaymentStatus = async (req, res) => {
-  //el ID y el nombre del usuario autenticado
-  const parentId = req.user._id;
-  console.log(`PARENT ID : ${parentId}`);
-  try {
-    const payments = await MembershipPayment.find({ parent_id : parentId });
-
-    if (payments.length === 0) {
-      return res.status(200).json({ message: "Todavía no hay pagos." });
-    }
-
-    res.status(200).json(payments);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-
-// -------------------- -_- Rutas de Administrador -------------------- -_-
-// Obtener todos los pagos
-export const getAllMembershipPayments = async (req, res) => {
-  try {
-    const payments = await MembershipPayment.find();
-
-    if (payments.length === 0) {
-      return res.status(200).json({ message: "Todavía no hay pagos." });
-    }
-
-    res.status(200).json(payments);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Obtener el status de los pagos
-export const getAllPaymentStatus = async (req, res) => {
-  //el ID y el nombre del usuario autenticado
-  const parentId = req.user._id;
-  console.log(`PARENT ID : ${parentId}`);
-  try {
-    const payments = await MembershipPayment.find({ parent_id : parentId });
-
-    if (payments.length === 0) {
-      return res.status(200).json({ message: "Todavía no hay pagos." });
-    }
-
-    res.status(200).json(payments);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
 // Actualizar status de pagos
 export const updatePaymentStatus = async (req, res) => {
-  const { annual_payment, first_payment, second_payment, third_payment, parent_id } = req.body;
+  const {
+    annual_payment,
+    first_payment,
+    second_payment,
+    third_payment,
+    parent_id,
+  } = req.body;
   const paymentID = req.params.id;
-  console.log('PAYMENT ID CON VALOR DE: ', paymentID);
+  console.log("PAYMENT ID CON VALOR DE: ", paymentID);
 
   try {
     // Buscar el pago existente por su ID
@@ -244,7 +179,7 @@ export const updatePaymentStatus = async (req, res) => {
     if (!payment) {
       return res.status(404).json({ message: "Pago no encontrado." });
     }
-console.log(payment);
+    console.log(payment);
     // Actualizar los estados de los pagos
     if (annual_payment !== undefined) {
       payment.annual_payment.status = annual_payment.status;
@@ -266,11 +201,76 @@ console.log(payment);
     await payment.save();
 
     // Devolver una respuesta exitosa
-    res.status(200).json({ message: "Estado del pago actualizado correctamente." });
+    res
+      .status(200)
+      .json({ message: "Estado del pago actualizado correctamente." });
   } catch (error) {
     // Si ocurre algún error, devolver un mensaje de error
     res.status(500).json({ error: error.message });
   }
 };
 
-// Fin de rutas para administradores
+
+
+
+
+
+
+
+
+
+// --------------------------- (BETA)-----------------------------------
+
+
+// PERMITIR AL USUARIO Eliminar un pago
+// export const deleteMembershipPayment = async (req, res) => {
+//   const { _id } = req.body;
+
+//   try {
+//     const deletedPayment = await MembershipPayment.findByIdAndDelete(_id);
+
+//     if (!deletedPayment) {
+//       return res.status(404).json({ message: "Pago no encontrado." });
+//     }
+
+//     res.status(200).json({ message: "Pago eliminado exitosamente." });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+
+// PERMITIR AL USUARIO Actualizar un pago
+// export const updateMembershipPayment = async (req, res) => {
+//   const { first_payment, second_payment, third_payment, parent_id } = req.body;
+
+//   try {
+//     const payment = await MembershipPayment.findById(parent_id);
+
+//     if (!payment) {
+//       return res.status(404).json({ message: "Pago no encontrado." });
+//     }
+
+//     if (first_payment !== undefined) {
+//       payment.first_payment = first_payment;
+//     }
+
+//     if (second_payment !== undefined) {
+//       payment.second_payment = second_payment;
+//     }
+
+//     if (third_payment !== undefined) {
+//       payment.third_payment = third_payment;
+//     }
+
+//     await payment.save();
+
+//     res.status(200).json({ message: "Pago actualizado correctamente." });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// --------------------------- (BETA)-----------------------------------
+
+
