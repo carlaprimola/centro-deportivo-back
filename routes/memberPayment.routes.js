@@ -1,30 +1,56 @@
 import { Router } from "express";
-import { createMembershipPayment, deleteMembershipPayment, getAllMembershipPayments, getAllPaymentStatus, getMyPaymentStatus, getSingleMembershipPayment, updateMembershipPayment, updatePaymentStatus } from "../controllers/memberPayment.controller.js";
+import { createMembershipPayment, getAllMembershipPayments, getMyPaymentStatus, getSingleMembershipPayment,  updatePaymentStatus } from "../controllers/memberPayment.controller.js";
 import { isAdmin } from "../controllers/auth.controller.js";
-import { verifyToken } from "../controllers/auth.controller.js";
-
+import { authRequired } from '../middlewares/validateToken.js';
+import { upload } from '../middlewares/upload.middleware.js';
 const router = Router();
 
-// Rutas para usuarios
+// Limitar la cantidad de intentos de pedidos para pago de membresías (PDF)
+// const limitAddOrder = rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15 min
+//     max: 10, // Max number of entries to try log in
+//     message: 'Demasiados intentos en poco tiempo, por favor inténtalo más tarde',
+// });
 
-router.get('/payment/:id',  verifyToken,  getSingleMembershipPayment);
-router.get('/my-status/',  verifyToken,  getMyPaymentStatus);
-router.post('/payment/',  verifyToken, createMembershipPayment);
-router.put('/payment/:id',  verifyToken, updateMembershipPayment);
-router.delete('/payment/:id',  verifyToken, deleteMembershipPayment);
+// ---------- Rutas para usuarios ---------- //
 
-// Fin de rutas para usuarios
+router.get('/my-payments/', authRequired,  getMyPaymentStatus);
 
-// Rutas para administradores
 
-// router.get('/', verifyToken, isAdmin, getAllMembershipPayments);
+// -------- (PDF) RUTAS DE TRABAJO ACTUAL 
+//  PARA LEER EL PDF DE UN PAGO DE MEMBRESÍA (POR ID)
+router.post('/pay', upload,  createMembershipPayment); // OJO FALTA limitAddOrder ¿? y  upload, OrderController.addOrder despues de authRequired
 
-router.get('/status/',  verifyToken, isAdmin ,getAllMembershipPayments);
 
-router.put('/status/:id',  verifyToken, isAdmin ,updatePaymentStatus);
+// -------- FIN DE (PDF) RUTA DE TRABAJO
 
-// router.delete('/kcali/:id/:paymentType', deleteSinglePayment);
 
-// Fin de rutas para administradores
+
+// router.put('/payment/:id',  authRequired, updateMembershipPayment);
+
+
+
+
+
+
+
+// router.delete('/payment/:id',  authRequired, deleteMembershipPayment);
+
+// ---------- Fin de rutas para usuarios ---------- //
+
+
+// ---------- Rutas para administradores OJO FALTA MIDDLEWARE IS ADMIN ---------- //
+
+router.get('/payment/:id', authRequired,  getSingleMembershipPayment);
+router.get('/status/',  authRequired,  getAllMembershipPayments);
+router.put('/status/:id',  authRequired,  updatePaymentStatus);
+
+// -------- (PDF) RUTAS DE TRABAJO ACTUAL 
+//  PARA LEER UN PAGO DE MEMBRESÍA
+
+
+
+
+// ---------- Fin de rutas para administradores ---------- //
 
 export default router;

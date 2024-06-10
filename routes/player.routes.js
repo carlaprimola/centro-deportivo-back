@@ -1,15 +1,21 @@
 import { Router } from "express";
-//import { authRequired } from "../middlewares/validateToken.js";
-import  { getPlayersCtlr, getPlayerByIdCtlr, deletePlayerCtrl, updatePlayerCtrl } from "../controllers/players.controller.js";
+import { authRequired } from "../middlewares/validateToken.js";
+import  { getPlayersCtlr, getPlayerByIdCtlr, updatePlayerCtrl } from "../controllers/players.controller.js";
 
-// // import { validateSchema } from "../middlewares/validator.middleware.js";
+//import { validateSchema } from "../middlewares/validator.middleware.js";
 
-// const PlayerRouter = Router();
+const router = Router();
 
-// PlayerRouter.get("/", getPlayersCtlr)
-//   .get("/player/:id", getPlayerByIdCtlr)
+// ---OJO --- por verificar con auth.routes.js
+router.get("/", getPlayersCtlr)
 
-   .delete("/player/:id", deletePlayerCtrl)
-  .put("/player/:id", updatePlayerCtrl);
+router.put("/player/:id", updatePlayerCtrl);
 
-// export default PlayerRouter;
+// MI PRUEBA:
+router.get("/player/:id", authRequired, getPlayerByIdCtlr)
+
+
+// .delete("/player/:id", deletePlayerCtrl)
+
+
+export default router;
