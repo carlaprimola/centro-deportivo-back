@@ -19,7 +19,7 @@ router.get('/my-payments/', authRequired,  getMyPaymentStatus);
 
 // -------- (PDF) RUTAS DE TRABAJO ACTUAL 
 //  PARA LEER EL PDF DE UN PAGO DE MEMBRESÍA (POR ID)
-router.get('/:id/pdf', upload,  createMembershipPayment); // OJO FALTA limitAddOrder ¿? y  upload, OrderController.addOrder despues de authRequired
+router.post('/pay', upload,  createMembershipPayment); // OJO FALTA limitAddOrder ¿? y  upload, OrderController.addOrder despues de authRequired
 
 
 // -------- FIN DE (PDF) RUTA DE TRABAJO
