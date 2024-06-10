@@ -20,19 +20,18 @@ const membershipPaymentSchema =  new Schema({
       default: 'none'
   },
   document: {
-      type: Object,
-      fieldname: String,
-      originalname: String,
-      encoding: String,
-      mimetype: String,
-      destination: String,
-      filename: String,
-      path: String,
-      size: Number
+    fieldname: { type: String },
+    originalname: { type: String },
+    encoding: { type: String },
+    mimetype: { type: String },
+    destination: { type: String },
+    filename: { type: String },
+    path: { type: String },
+    size: { type: Number }
     },
     contentType: {
       type: String,
-      enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+      // enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
     }
   },
 
@@ -43,15 +42,14 @@ const membershipPaymentSchema =  new Schema({
       default: 'none'
     },
   document: {
-      type: Object,
-      fieldname: String,
-      originalname: String,
-      encoding: String,
-      mimetype: String,
-      destination: String,
-      filename: String,
-      path: String,
-      size: Number
+    fieldname: { type: String },
+    originalname: { type: String },
+    encoding: { type: String },
+    mimetype: { type: String },
+    destination: { type: String },
+    filename: { type: String },
+    path: { type: String },
+    size: { type: Number }
     },
     contentType: {
       type: String,
@@ -66,21 +64,21 @@ const membershipPaymentSchema =  new Schema({
       default: 'none'
   },
   document: {
-      type: Object,
-      fieldname: String,
-      originalname: String,
-      encoding: String,
-      mimetype: String,
-      destination: String,
-      filename: String,
-      path: String,
-      size: Number
+    fieldname: { type: String },
+    originalname: { type: String },
+    encoding: { type: String },
+    mimetype: { type: String },
+    destination: { type: String },
+    filename: { type: String },
+    path: { type: String },
+    size: { type: Number }
     },
     contentType: {
       type: String,
       enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
     }
   },
+
   third_payment: {
     status: {
       type: String,
@@ -88,15 +86,14 @@ const membershipPaymentSchema =  new Schema({
       default: 'none'
   },
   document: {
-      type: Object,
-      fieldname: String,
-      originalname: String,
-      encoding: String,
-      mimetype: String,
-      destination: String,
-      filename: String,
-      path: String,
-      size: Number
+    fieldname: { type: String },
+    originalname: { type: String },
+    encoding: { type: String },
+    mimetype: { type: String },
+    destination: { type: String },
+    filename: { type: String },
+    path: { type: String },
+    size: { type: Number }
     },
     contentType: {
       type: String,

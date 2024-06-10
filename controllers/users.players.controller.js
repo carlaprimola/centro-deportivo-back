@@ -7,7 +7,7 @@ export const getMyPlayers = async (req, res) => {
   
     //el ID y el nombre del usuario autenticado
     const userId = req.user._id;
-    console.log(`Players del usuario ${userId}`);
+    console.log(`Players del usuario en user.players.controller: ${userId}`);
     // Consulta solo los jugadores creados por el usuario autenticado por parent_id igual al ID del usuario autenticado
     const usersPlayers = await Player.find({ parent_id: userId }).populate('parent_id', 'name lastname').populate('team', 'name');
     
