@@ -22,6 +22,7 @@ app.use(ExpressMongoSanitize());
 // sanitización contra site script XSS
 app.use(xss());
 
+app.use(express.static('public'))
 
 // sanitización de los encabezados HTTP
 app.use(helmet());
@@ -51,7 +52,7 @@ app.use(cors({
 app.use(cookieParser()); // Middleware para manejar cookies
 app.use(express.json());
 
-app.use('/uploads', express.static('uploads'));
+// app.use('/uploads', express.static('uploads'));
 
 //añadimos /api antes de la ruta para distinguirlo de las rutas del front
 app.use("/api/", authRoutes)
@@ -72,5 +73,6 @@ app.use("/api/products", ProductRouter);
 //-_- Ruta pedidos -_-
 app.use("/api/orders", OrderRouter);
 
+// app.get('public/uploads/:filename', );
 
 export default app;

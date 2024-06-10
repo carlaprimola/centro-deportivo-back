@@ -38,7 +38,7 @@ const orderSchema = new mongoose.Schema({
       },
       contentType: {
         type: String,
-        enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+        // enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
       }
 }, {
     timestamps: true,
