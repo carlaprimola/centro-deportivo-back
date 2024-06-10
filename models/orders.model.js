@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema({
     }],
     selectedSize: {
         type: [String],
-        enum: ["XS", "S", "M", "L", "XL", "XXL"],
+        enum: ["Talla única", "3XS", "2XS", "XS", "S", "M", "L", "XL", "XXL"],
         required: true
     },
     summary: {
@@ -35,11 +35,11 @@ const orderSchema = new mongoose.Schema({
         filename: String,
         path: String,
         size: Number
-      },
-      contentType: {
+    },
+    contentType: {
         type: String,
         enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
-      }
+    }
 }, {
     timestamps: true,
     collection: "orders",
