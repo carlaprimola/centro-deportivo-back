@@ -58,12 +58,12 @@ const playerSchema = new Schema({
   },
   shirt_size: {
     type: String,
-    enum: ["S", "M", "L", "XL"],
+    enum: ["3XS", "2XS", "XS", "S", "M", "L", "XL", "XXL"],
     required: true,
   },
   pants_size: {
-    type: Number,
-    enum: [34,35, 36, 38,39, 40],
+    type: String,
+    enum: ["3XS", "2XS", "XS", "S", "M", "L", "XL", "XXL"],
     required: true,
   },
   shoe_size: {
@@ -89,7 +89,7 @@ const playerSchema = new Schema({
 });
 
 //Cálculo de edad y actualización en el tiempo
-playerSchema.virtual('age').get(function() {
+playerSchema.virtual('age').get(function () {
   const today = new Date();
   const birthDate = new Date(this.birthdate);
   let age = today.getFullYear() - birthDate.getFullYear();
