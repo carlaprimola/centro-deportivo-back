@@ -41,7 +41,7 @@ app.use(express.json());
 //OJO ¿cambiar por X auth ?--- añadimos /api antes de la ruta para distinguirlo de las rutas del front 
 app.use("/api/", authRoutes)
 app.use("/api/payments", memberPaymentRouter);
-app.use("/api/pay", productPayment)
+// app.use("/api/pay", productPayment)
 app.use("/api/player", assignTeamRouter)
 app.use("/api/products", ProductRouter);
 app.use("/api/orders", OrderRouter);
