@@ -9,12 +9,11 @@ const transporter = nodemailer.createTransport({
 });
 
 
-export const sendEmail = async (payment) => {
+export const sendEmail = async ({ playerName, parentName, status, filename }) => {
   const mailOptions = {
     from: "testcdlaf5@gmail.com",
     to: "abelardoacostacracco@gmail.com",
-    subject:
-      "¡Nuevo pago de membresía recibido!, recuerda verificarlo en tu dashboard.",
+    subject: "¡Nuevo pago de membresía recibido!, recuerda verificarlo en tu dashboard.",
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
         <h2 style="color: #333;">Nuevo Pago Recibido</h2>
@@ -25,43 +24,21 @@ export const sendEmail = async (payment) => {
             <th style="text-align: left; padding: 10px; background-color: #F2E205; color: #0D0D0D; border: 1px solid #ddd;">Valor</th>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd;">ID del Jugador</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${payment.players_id}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Nombre del Jugador</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${playerName}</td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd;">ID del Padre/Responsable</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${payment.parent_id}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Nombre del Padre/Responsable</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${parentName}</td>
           </tr>
-          ${
-            payment.first_payment
-              ? `
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ddd;">Primer Pago</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">Documento: ${payment.first_payment.document}, Estado: ${payment.first_payment.status}</td>
-            </tr>
-          `
-              : ""
-          }
-          ${
-            payment.second_payment
-              ? `
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ddd;">Segundo Pago</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">Documento: ${payment.second_payment.document}, Estado: ${payment.second_payment.status}</td>
-            </tr>
-          `
-              : ""
-          }
-          ${
-            payment.third_payment
-              ? `
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ddd;">Tercer Pago</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">Documento: ${payment.third_payment.document}, Estado: ${payment.third_payment.status}</td>
-            </tr>
-          `
-              : ""
-          }
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;">Estado del Pago</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${status}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;">Nombre del Archivo</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${filename}</td>
+          </tr>
         </table>
         <div style="text-align: center; padding: 10px; border-radius: 4px;">
           <a href="https://www.tusitio.com" style="text-decoration: none;">
@@ -84,6 +61,9 @@ export const sendEmail = async (payment) => {
     console.error('Error enviando el correo de pago:', error);
   }
 };
+
+
+
 export const emailNewPlayerNotification = async (player, user) => {
   const mailOptions = {
     from: 'testcdlaf5@gmail.com',

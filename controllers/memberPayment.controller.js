@@ -3,13 +3,10 @@ import User from "../models/user.model.js";
 import Player from "../models/player.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
 
-
-import path from 'path';
-import { fileURLToPath } from 'url';
-import PDFDocument from "pdfkit";
-import fs from "fs";
-
-
+import path from "path";
+import { fileURLToPath } from "url";
+// import PDFDocument from "pdfkit";
+// import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,7 +25,11 @@ export const createMembershipPayment = async (req, res) => {
     const { playerId, parentId, paymentType } = req.body;
 
     if (!playerId || !parentId || !paymentType) {
-      return res.status(400).json({ error: "Faltan campos requeridos: playerId, parentId o paymentType" });
+      return res
+        .status(400)
+        .json({
+          error: "Faltan campos requeridos: playerId, parentId o paymentType",
+        });
     }
 
     // Crear el objeto de documento basado en el archivo subido
@@ -47,37 +48,73 @@ export const createMembershipPayment = async (req, res) => {
       // Crear el nuevo registro de pago de membresía
       const paymentData = {
         players_id: playerId, // Asegúrate de enviar el playerId en el cuerpo de la solicitud
-        parent_id: parentId,  // Asegúrate de enviar el parentId en el cuerpo de la solicitud
+        parent_id: parentId, // Asegúrate de enviar el parentId en el cuerpo de la solicitud
       };
 
       paymentData[`${paymentType}_payment`] = {
-        status: 'pendiente', // Puedes ajustar este valor según tus necesidades
+        status: "pendiente", // Puedes ajustar este valor según tus necesidades
         document: document,
         contentType: req.file.mimetype,
       };
 
       const membershipPayment = new MembershipPayment(paymentData);
-    
-  
 
       // Guarda el registro en la base de datos
       await membershipPayment.save();
 
-       // Actualizar el documento del usuario (padre)
-  await User.findByIdAndUpdate(
-    parentId,
-    { $push: { membership_payments: membershipPayment._id } }, // Suponiendo que tienes un campo 'payments' que es un array en el modelo User
-    { new: true, useFindAndModify: false }
-  );
 
-  // Actualizar el documento del jugador
-  await Player.findByIdAndUpdate(
-    playerId,
-    { $push: { membership_payments: membershipPayment._id } }, // Suponiendo que tienes un campo 'payments' que es un array en el modelo Player
-    { new: true, useFindAndModify: false }
-  );
+      // Enviar un correo electrónico al admin con el nuevo pago de membresía
+       const player = await Player.findById(playerId).select('name'); // Cambia 'name' por el campo que contenga el nombre del jugador
+      const parent = await User.findById(parentId).select('name'); // Cambia 'name' por el campo que contenga el nombre del padre
 
-      res.status(201).json({ message: "Pago de membresía creado exitosamente", membershipPayment });
+      const playerName = player.name;
+      const parentName = parent.name;
+      const payment = paymentData;
+
+      console.log("PLAYER NAME: ", playerName);
+      console.log("PARENT NAME: ", parentName);
+      console.log("PAYMENT INFO HACIA EL SENDEMAIL", payment)
+       // Desestructurar los datos de pago
+       const { status, document: { filename } } = membershipPayment[`${paymentType}_payment`];
+
+       // Enviar un correo electrónico al admin con el nuevo pago de membresía
+       await sendEmail({
+         playerName,
+         parentName,
+         status,
+         filename,
+       }).then(() => {
+         console.log("Email enviado correctamente");
+       }).catch((err) => {
+         console.error("Error al enviar el email:", err);
+       });
+ 
+
+
+
+
+
+
+      // Actualizar el documento del usuario (padre)
+      await User.findByIdAndUpdate(
+        parentId,
+        { $push: { membership_payments: membershipPayment._id } }, // Suponiendo que tienes un campo 'payments' que es un array en el modelo User
+        { new: true, useFindAndModify: false }
+      );
+
+      // Actualizar el documento del jugador
+      await Player.findByIdAndUpdate(
+        playerId,
+        { $push: { membership_payments: membershipPayment._id } }, // Suponiendo que tienes un campo 'payments' que es un array en el modelo Player
+        { new: true, useFindAndModify: false }
+      );
+
+      res
+        .status(201)
+        .json({
+          message: "Pago de membresía creado exitosamente",
+          membershipPayment,
+        });
     } catch (saveError) {
       console.error("Error al guardar el pago de membresía:", saveError);
       res.status(500).json({ error: "Error al guardar el pago de membresía" });
@@ -87,7 +124,6 @@ export const createMembershipPayment = async (req, res) => {
     res.status(500).json({ error: "Error al crear el pago de membresía" });
   }
 };
-
 
 // Obtener el status de mis pagos (ES MEJOR GETMYPAYMENTS?¿?)
 export const getMyPaymentStatus = async (req, res) => {
@@ -103,11 +139,11 @@ export const getMyPaymentStatus = async (req, res) => {
     }
 
     // Mapear los pagos para obtener solo los estados de cada tipo de pago
-    const paymentStatus = payments.map(payment => ({
-      annual_payment: payment.annual_payment.status || 'none',
-      first_payment: payment.first_payment.status || 'none',
-      second_payment: payment.second_payment.status || 'none',
-      third_payment: payment.third_payment.status || 'none'
+    const paymentStatus = payments.map((payment) => ({
+      annual_payment: payment.annual_payment.status || "none",
+      first_payment: payment.first_payment.status || "none",
+      second_payment: payment.second_payment.status || "none",
+      third_payment: payment.third_payment.status || "none",
     }));
 
     console.log("PAYMENTS STATUS FILTRADO POR PARENT ID: ", paymentStatus);
@@ -116,15 +152,6 @@ export const getMyPaymentStatus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
-
-
-
-
-
-
-
 
 // -------------------- CTRL PARA  Administrador --------------------
 // Obtener todos los pagos
@@ -210,17 +237,7 @@ export const updatePaymentStatus = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
 // --------------------------- (BETA)-----------------------------------
-
 
 // PERMITIR AL USUARIO Eliminar un pago
 // export const deleteMembershipPayment = async (req, res) => {
@@ -238,7 +255,6 @@ export const updatePaymentStatus = async (req, res) => {
 //     res.status(500).json({ error: error.message });
 //   }
 // };
-
 
 // PERMITIR AL USUARIO Actualizar un pago
 // export const updateMembershipPayment = async (req, res) => {
@@ -272,5 +288,3 @@ export const updatePaymentStatus = async (req, res) => {
 // };
 
 // --------------------------- (BETA)-----------------------------------
-
-
