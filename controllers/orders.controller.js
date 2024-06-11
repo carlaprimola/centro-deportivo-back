@@ -7,7 +7,7 @@ import User from '../models/user.model.js';
 //Funcion para almacenamiento de archivos
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/uploads/');
+        cb(null, 'public/uploads');
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
@@ -99,7 +99,20 @@ const OrderController = {
             res.status(500).json({ message: error.message });
         }
     },
-
+    // GET PDF
+    getMyPDF: async (req,res) => {
+        console.log("Entrando en PDF")
+        console.log(req)
+        try {
+            const order = await Order.findById(req.user._id).populate('user_id');
+            console.log(order) 
+   
+            res.status(200).json(order);
+        } catch (error) {
+            console.error(`Error en getMyPDF: ${error.message}`);
+            res.status(500).json({ message: "Error al obtener PDF" });
+        }
+    },
 
 
     // DELETE ORDER
@@ -112,7 +125,9 @@ const OrderController = {
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
-    }
+    },
+
+    
 }
 export { upload };
 export default OrderController;

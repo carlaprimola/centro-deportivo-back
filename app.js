@@ -23,6 +23,7 @@ app.use(ExpressMongoSanitize());
 // sanitización contra site script XSS
 app.use(xss());
 
+app.use(express.static('public'))
 
 // sanitización de los encabezados HTTP
 app.use(helmet());
@@ -51,7 +52,8 @@ app.use(cors({
 
 app.use(cookieParser()); // Middleware para manejar cookies
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));
+
+// app.use('/uploads', express.static('uploads'));
 
 //OJO ¿cambiar por X auth ?--- añadimos /api antes de la ruta para distinguirlo de las rutas del front 
 app.use("/api/", authRoutes)
@@ -71,5 +73,14 @@ app.use("/api/players", PlayerRouter);
 app.use("/api/memberships", memberPaymentRouter);
 
 
+
+
+
+//-_- RUTAS EN PRUEBA PARA PDF -_-
+app.use("/api/players", PlayerRouter);
+app.use("/api/memberships", memberPaymentRouter);
+
+
+// app.get('public/uploads/:filename', );
 
 export default app;
