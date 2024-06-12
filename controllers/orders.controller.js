@@ -1,6 +1,7 @@
 import Order from '../models/orders.model.js';
 import multer from 'multer';
 import User from '../models/user.model.js';
+import { sendNewOrderEmail } from '../utils/sendEmail.js'; // Función de envío de correo
 // import Product from '../models/product.model.js';
 
 
@@ -39,7 +40,13 @@ const OrderController = {
                 contentType: req.file.mimetype
             });
             
+            const user = await User.findById(req.user._id);
+            if (!user) {
+                throw new Error('El usuario no existe!');
+            }
+
             await newOrder.save();
+            await sendNewOrderEmail(newOrder, user);
 
             res.status(201).json(newOrder);
             console.log('Resumen pedido:', newOrder)

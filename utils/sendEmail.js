@@ -88,7 +88,7 @@ export const emailNewPlayerNotification = async (player, user) => {
   const mailOptions = {
     from: 'testcdlaf5@gmail.com',
     to: 'leamontoyamua@gmail.com',
-    subject: '¡Nueva solicitud de Nuevo Jugador ⚽!',
+    subject: '¡Nueva solicitud de Jugador ⚽!',
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
         <h2 style="color: #333;">Nuevo Jugador</h2>
@@ -137,5 +137,68 @@ export const emailNewPlayerNotification = async (player, user) => {
     console.log('Correo enviado al administrador');
   } catch (error) {
     console.error('Error enviando el correo:', error);
+  }
+};
+export const sendNewOrderEmail = async (order, user) => {
+  const mailOptions = {
+    from: 'testcdlaf5@gmail.com',
+    to: 'leamontoyamua@gmail.com',
+    subject: '¡Nueva solicitud de Pedido 🛒!',
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2 style="color: #333;">Nuevo Pedido</h2>
+        <p style="color: #333;">Se ha recibido una nueva solicitud de un pedido. Los detalles son los siguientes:</p>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+          <tr>
+            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Nombre del Cliente</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${user.name} ${user.lastname}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Email del Cliente</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${user.email}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Número del Pedido</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${order._id}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Fecha del Pedido</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${order.date}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Total del Pedido</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">$${order.total}</td>
+          </tr>
+          
+          ${
+            order.status
+              ? `
+            <tr>
+              <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Estado del Pedido</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${order.status}</td>
+            </tr>
+          `
+              : ''
+          }
+        </table>
+        <div style="text-align: center; padding: 10px; border-radius: 4px;">
+          <a href="https://www.tusitio.com" style="text-decoration: none;">
+            <button style="background-color: #F2E205; color: #0D0D0D; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
+              Ir a mi panel de control
+            </button>
+          </a>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+          <p style="color: #777;">¡Recuerda gestionar tus pedidos desde tu dashboard!</p>
+        </div>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email enviado correctamente');
+  } catch (error) {
+    console.error('Error al enviar el email:', error);
   }
 };
