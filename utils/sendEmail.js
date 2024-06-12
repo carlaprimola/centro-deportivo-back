@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async (payment) => {
   const mailOptions = {
     from: "testcdlaf5@gmail.com",
-    to: "alberto.morillas@tomillo.org",
+    to: "leamontoyamua@gmail.com",
     subject:
       "¡Nuevo pago de membresía recibido!, recuerda verificarlo en tu dashboard.",
     html: `
@@ -88,7 +88,7 @@ export const sendEmail = async (payment) => {
 export const emailNewPlayerNotification = async (player, user) => {
   const mailOptions = {
     from: 'testcdlaf5@gmail.com',
-    to: 'alberto.morillas@tomillo.org',
+    to: 'leamontoyamua@gmail.com',
     subject: '¡Nueva solicitud de Jugador ⚽!',
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -162,7 +162,7 @@ export const sendNewOrderEmail = async (order, user) => {
 
   const mailOptions = {
     from: 'testcdlaf5@gmail.com',
-    to: 'alberto.morillas@tomillo.org',
+    to: 'leamontoyamua@gmail.com',
     subject: '¡Nueva solicitud de Pedido 🛒!',
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
