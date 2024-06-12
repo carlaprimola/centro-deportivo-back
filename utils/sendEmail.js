@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import Product from "../models/product.model.js"
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -12,7 +13,7 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async (payment) => {
   const mailOptions = {
     from: "testcdlaf5@gmail.com",
-    to: "abelardoacostacracco@gmail.com",
+    to: "alberto.morillas@tomillo.org",
     subject:
       "¡Nuevo pago de membresía recibido!, recuerda verificarlo en tu dashboard.",
     html: `
@@ -87,7 +88,7 @@ export const sendEmail = async (payment) => {
 export const emailNewPlayerNotification = async (player, user) => {
   const mailOptions = {
     from: 'testcdlaf5@gmail.com',
-    to: 'leamontoyamua@gmail.com',
+    to: 'alberto.morillas@tomillo.org',
     subject: '¡Nueva solicitud de Jugador ⚽!',
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -140,9 +141,28 @@ export const emailNewPlayerNotification = async (player, user) => {
   }
 };
 export const sendNewOrderEmail = async (order, user) => {
+  // Obtener detalles de los productos
+  const productDetails = await Promise.all(order.product_ids.map(async (productId) => {
+    const product = await Product.findById(productId);
+    return {
+      name: product.name,
+      price: product.price,
+      size: order.selectedSize, // Asumiendo que el tamaño está en el pedido y es igual para todos los productos
+    };
+  }));
+
+  // Generar HTML para los detalles de los productos
+  const productRows = productDetails.map(product => `
+    <tr>
+      <td style="padding: 10px; border: 1px solid #ddd;">${product.name}</td>
+      <td style="padding: 10px; border: 1px solid #ddd;">${product.size}</td>
+      <td style="padding: 10px; border: 1px solid #ddd;">${product.price}€</td>
+    </tr>
+  `).join('');
+
   const mailOptions = {
     from: 'testcdlaf5@gmail.com',
-    to: 'leamontoyamua@gmail.com',
+    to: 'alberto.morillas@tomillo.org',
     subject: '¡Nueva solicitud de Pedido 🛒!',
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -157,29 +177,29 @@ export const sendNewOrderEmail = async (order, user) => {
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Email del Cliente</td>
             <td style="padding: 10px; border: 1px solid #ddd;">${user.email}</td>
           </tr>
-          <tr>
-            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Número del Pedido</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${order._id}</td>
-          </tr>
+          
           <tr>
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Fecha del Pedido</td>
             <td style="padding: 10px; border: 1px solid #ddd;">${order.date}</td>
           </tr>
           <tr>
             <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Total del Pedido</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">$${order.total}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${order.total}€</td>
           </tr>
-          
-          ${
-            order.status
-              ? `
-            <tr>
-              <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Estado del Pedido</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${order.status}</td>
-            </tr>
-          `
-              : ''
-          }
+          ${order.status ? `
+          <tr>
+            <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Estado del Pedido</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${order.status}</td>
+          </tr>` : ''}
+        </table>
+        <h3 style="color: #333;">Detalles de los Productos</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+          <tr>
+            <th style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Nombre</th>
+            <th style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Talla</th>
+            <th style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Precio</th>
+          </tr>
+          ${productRows}
         </table>
         <div style="text-align: center; padding: 10px; border-radius: 4px;">
           <a href="https://www.tusitio.com" style="text-decoration: none;">
