@@ -57,10 +57,6 @@ app.use("/api/memberships", memberPaymentRouter);
 
 
 
-//-_- RUTAS EN PRUEBA PARA PDF -_-
-app.use("/api/players", PlayerRouter);
-app.use("/api/memberships", memberPaymentRouter);
-
 
 // app.get('public/uploads/:filename', );
 
