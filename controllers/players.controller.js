@@ -1,12 +1,22 @@
 import Player from "../models/player.model.js";
 
-export const getPlayersCtlr = async (req, res) => {
+// ------------------------ CONTROLADORES ADMIN ------------------------  //
+
+
+
+export const getAllPlayersCtlr = async (req, res) => {
   try {
     console.log("Entrando en player controller getPlayersCtlr");
-    // Consulta todos los jugadores y popula el campo "team" con el nombre del equipo
-    const players = await Player.find({}).populate('team', 'name');
+    
+    // Consulta todos los jugadores y popula los campos "team" y "membership_payments"
+    const players = await Player.find({})
+      .populate('team', 'name')
+      .populate({
+        path: 'membership_payments',  // Poblamos el campo 'membership_payments'
+        select: '_id annual_payment first_payment second_payment third_payment createdAt',  // Selecciona los campos necesarios de 'membership_payments'
+      });
 
-    console.log(`Player controller obtiene estos datos del modelo: ${players}`);
+    console.log(`Player controller obtiene estos datos del modelo: ${JSON.stringify(players, null, 2)}`);
 
     // Devuelve los jugadores encontrados como respuesta JSON
     res.json(players);
@@ -15,6 +25,7 @@ export const getPlayersCtlr = async (req, res) => {
     res.status(500).json({ message: "Error al obtener jugadores", error: error.message });
   }
 };
+
 
 export const getPlayerByIdCtlr = async (req, res) => {
   try {
@@ -40,7 +51,7 @@ export const getPlayerByIdCtlr = async (req, res) => {
 };
 
 
-export const deletePlayerCtrl = async (req, res) => {
+export const deletePlayerCtlr = async (req, res) => {
   try {
     console.log("Entrando en player controller deletePlayerCtrl");
 
@@ -65,55 +76,55 @@ export const deletePlayerCtrl = async (req, res) => {
   }
 };
 
-export const updatePlayerCtrl = async (req, res) => {
-  try {
-    console.log("Entrando en player controller updatePlayerCtrl");
+// export const updatePlayerCtlr = async (req, res) => {
+//   try {
+//     console.log("Entrando en player controller updatePlayerCtrl");
 
-    // Obtener el ID del jugador desde los parámetros de la solicitud
-    const playerId = req.params.id;
+//     // Obtener el ID del jugador desde los parámetros de la solicitud
+//     const playerId = req.params.id;
 
-    // Obtener los nuevos datos del jugador del cuerpo de la solicitud
-    const {
-      name,
-      lastname,
-      birthdate,
-      size,
-      team_id,
-      status,
-      gender,
-      father_id,
-    } = req.body;
+//     // Obtener los nuevos datos del jugador del cuerpo de la solicitud
+//     const {
+//       name,
+//       lastname,
+//       birthdate,
+//       size,
+//       team_id,
+//       status,
+//       gender,
+//       father_id,
+//     } = req.body;
 
-    // Buscar y actualizar el jugador por su ID en la base de datos
-    const updatedPlayer = await Player.findByIdAndUpdate(
-      playerId,
-      {
-        name,
-        lastname,
-        birthdate,
-        size,
-        team_id,
-        status,
-        gender,
-        father_id,
-      },
-      { new: true }
-    );
+//     // Buscar y actualizar el jugador por su ID en la base de datos
+//     const updatedPlayer = await Player.findByIdAndUpdate(
+//       playerId,
+//       {
+//         name,
+//         lastname,
+//         birthdate,
+//         size,
+//         team_id,
+//         status,
+//         gender,
+//         father_id,
+//       },
+//       { new: true }
+//     );
 
-    // Verificar si se encontró y actualizó el jugador
-    if (!updatedPlayer) {
-      return res.status(404).json({ message: "Jugador no encontrado" });
-    }
+//     // Verificar si se encontró y actualizó el jugador
+//     if (!updatedPlayer) {
+//       return res.status(404).json({ message: "Jugador no encontrado" });
+//     }
 
-    // Devolver el jugador actualizado como respuesta JSON
-    res.json(updatedPlayer);
-  } catch (error) {
-    // Si hay algún error, devolver un error al cliente
-    res
-      .status(500)
-      .json({
-        message: "Error al actualizar el jugador",
-        error: error.message,
-      });
-  }
-};
+//     // Devolver el jugador actualizado como respuesta JSON
+//     res.json(updatedPlayer);
+//   } catch (error) {
+//     // Si hay algún error, devolver un error al cliente
+//     res
+//       .status(500)
+//       .json({
+//         message: "Error al actualizar el jugador",
+//         error: error.message,
+//       });
+//   }
+// };
