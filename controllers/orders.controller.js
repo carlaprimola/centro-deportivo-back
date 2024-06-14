@@ -23,7 +23,7 @@ const OrderController = {
         // console.log('Resumen:', req.body);
         // console.log(req.file)
         try {
-            const { product_ids, selectedSize, summary, status, document } = req.body;
+            const { product_ids, selectedSize, summary, status,resume, document } = req.body;
             console.log(selectedSize)
             if (!req.file || !summary || !product_ids || product_ids.length === 0|| !selectedSize) {
                 return res.status(400).json({ message: 'Complete los campos requeridos' });
@@ -36,6 +36,7 @@ const OrderController = {
                 selectedSize,
                 summary,
                 status,
+                resume,
                 document: req.file,
                 contentType: req.file.mimetype
             });
@@ -68,16 +69,32 @@ const OrderController = {
     },
 
     // GET ORDER BY ID
-    getOrderById: async (req, res) => {
+    // getOrderById: async (req, res) => {
+    //     try {
+    //         const { id } = req.params;
+    //         const order = await Order.findById(id).populate('user_id').populate('products');
+    //         if (!order) return res.status(404).json({ message: 'Order not found' });
+    //         res.status(200).json(order);
+    //     } catch (error) {
+    //         res.status(500).json({ message: error.message });
+    //     }
+    // },
+
+    //GET ORDER DETAILS
+    getOrderDetails : async (req, res) => {
         try {
-            const { id } = req.params;
-            const order = await Order.findById(id).populate('user_id').populate('products');
-            if (!order) return res.status(404).json({ message: 'Order not found' });
-            res.status(200).json(order);
+          const orderId = req.params.orderId;
+          const order = await Order.findById(orderId).populate('products.product');
+          if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+          }
+          res.json(order);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+          console.error('Error fetching order details:', error);
+          res.status(500).json({ message: 'Server error' });
         }
     },
+
 
     // UPDATE ORDER
     updateOrder: async (req, res) => {
