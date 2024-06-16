@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import Product from "../models/product.model.js";
+import crypto from "crypto";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -224,5 +225,42 @@ export const sendNewOrderEmail = async (order, user) => {
     console.log("Email enviado correctamente");
   } catch (error) {
     console.error("Error al enviar el email:", error);
+  }
+};
+
+// ----------------- 2FA (RED TEAM REPORT) -------------------- //
+// Función para generar un código de verificación
+const generateVerificationCode = () => {
+  return crypto.randomBytes(3).toString('hex'); // Genera un código de 6 caracteres hexadecimales
+}; 
+
+// Función para enviar el correo de verificación
+export const send2FAEmail = async (userEmail) => {
+  const verificationCode = generateVerificationCode();
+
+  const mailOptions = {
+    from: "testcdlaf5@gmail.com",
+    to: userEmail,
+    subject: "Tu código de verificación de doble factor",
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2 style="color: #333;">Código de Verificación</h2>
+        <p style="color: #333;">Tu código de verificación es:</p>
+        <p style="font-size: 24px; color: #333;"><strong>${verificationCode}</strong></p>
+        <p style="color: #333;">Introduce este código en la aplicación para completar tu autenticación.</p>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Correo de verificación enviado exitosamente");
+
+    // Aquí puedes guardar el código de verificación en la base de datos o en la sesión del usuario
+    // para su posterior verificación
+    return verificationCode;
+  } catch (error) {
+    console.error("Error enviando el correo de verificación:", error);
+    throw new Error("No se pudo enviar el correo de verificación");
   }
 };

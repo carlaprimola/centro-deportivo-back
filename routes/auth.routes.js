@@ -5,7 +5,8 @@ import { login,
   register, 
   profile, 
   verifyToken, 
-  getAllUsers, 
+  verifyCode,
+  // getAllUsers, 
   updateUser, 
   deleteUser,
   isAdmin } from "../controllers/auth.controller.js";
@@ -15,6 +16,13 @@ import { validateSchema } from "../middlewares/validator.middleware.js";
 import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 import { getMyPlayers, createPlayer } from "../controllers/users.players.controller.js";
 // import { getPlayersCtlr } from "../controllers/players.controller.js";
+
+
+
+// import { verifyCode } from '../controllers/auth.controller.js';
+
+
+
 const router = Router()
 
 
@@ -28,7 +36,23 @@ const limitLogin = rateLimit({
 
 
 router.post('/register', validateSchema(registerSchema), register)  
+
+
+
+
+// --------------- 2FA ------------------ //
 router.post('/login', limitLogin, validateSchema(loginSchema), login)
+
+
+
+// --------- en revision ------------- //
+router.post('/verify-code', verifyCode);
+ // -------------- 2FA ----------------- //
+
+
+
+
+ 
 router.post('/logout', logout)
 router.get('/verify', verifyToken)
 // router.get('/profile', authRequired, profile)
