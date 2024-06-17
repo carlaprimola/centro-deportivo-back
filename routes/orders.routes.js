@@ -18,8 +18,9 @@ const limitAddOrder = rateLimit({
 });
 
 OrderRouter
-    .get('/', verifyToken, isAdmin, OrderController.getAllOrders)    
-    .get('/order-details/:orderId', authRequired, OrderController.getOrderDetails)
+    .get('/', verifyToken, isAdmin, OrderController.getAllOrders)
+    //.get('/order/:id', verifyToken, authRequired, OrderController.getOrderById)
+    .get('/order/:orderId', authRequired, OrderController.getOrderDetails)
     .post('/add-order', limitAddOrder, authRequired, upload, OrderController.addOrder)
     .put('/order/:id/status', verifyToken, isAdmin, OrderController.updateOrder)
     .delete('/order/:id', verifyToken, authRequired, OrderController.deleteOrder)
