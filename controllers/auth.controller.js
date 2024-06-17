@@ -213,7 +213,7 @@ export const verifyToken = async (req, res, next) => {
   }
 };
 
-// Verificación de Rol de Administrador
+// OJO MOVER A MIDDLEWARE! ---> Verificación de Rol de Administrador
 export const isAdmin = (req, res, next) => {
   try {
     console.log("Usuario:", req.user); // Log para ver el usuario
@@ -228,6 +228,8 @@ export const isAdmin = (req, res, next) => {
       .json({ message: "Hubo un error al verificar el rol del usuario" });
   }
 };
+
+
 
 // Controlador para mostrar todos los usuarios
 export const getAllUsers = async (req, res) => {
@@ -298,8 +300,8 @@ export const deleteUser = async (req, res) => {
 // ---------------- 2FA (RED TEAM REPORT) ---------------------- 
 
 
-// *-_-* ------------- éste respeta la ui ---------- //
-export const login = async (req, res) => {
+// *-_- -------------- éste mantiene la lógica de generar token 
+export const login = async (req, res) => {  
   const { email, password } = req.body;
 
   try {
@@ -318,9 +320,11 @@ export const login = async (req, res) => {
     try {
       const verificationCode = await send2FAEmail(email);
 
+   
+
       // Paso 3: Configurar la cookie para almacenar el código de verificación
       const cookies = new Cookies(req, res);
-      const cookieOptions = { httpOnly: true, maxAge: 600000 }; // Ejemplo de 10 minutos de duración
+      const cookieOptions = { httpOnly: true, maxAge: 600000 }; // Ejemplo de 10 minutos de duración para saltear https
 
       if (process.env.NODE_ENV === 'production') {
         cookieOptions.secure = true;
@@ -329,8 +333,26 @@ export const login = async (req, res) => {
 
       cookies.set('verificationCode', verificationCode, cookieOptions);
 
-      // Paso 4: Retornar una respuesta exitosa con el mensaje y cualquier otro dato necesario
-      return res.status(200).json({ message: "Código de verificación enviado por correo electrónico", requires2f: true });
+      console.log('INFORMACION (VERF CODE) ENVIADA POR LA COOKIE AL FRONT (VERF CODE): ', verificationCode)
+      console.log('INFORMACION (COOKIE OPT) ENVIADA POR LA COOKIE AL FRONT (VERF CODE): ', cookieOptions)
+      return res.status(200).json({
+        requires2f: true,
+        message: "Código de verificación enviado por correo electrónico",});
+
+
+//  // Paso 3: Generar token de acceso
+//  const token = await createAccessToken({ _id: userLogged._id, isAdmin: userLogged.rol_id });
+//  // Paso 5: Retornar una respuesta exitosa con el token y cualquier otro dato necesario
+//  return res.status(200).json({
+//    id: userLogged._id,
+//    username: userLogged.name,
+//    email: userLogged.email,
+//    isAdmin: userLogged.rol_id,
+//    requires2f: true,
+//    token, // Agregar el token al objeto de respuesta
+//    message: "Código de verificación enviado por correo electrónico y token generado"
+//  });
+
 
     } catch (error) {
       console.error("Error enviando el correo de verificación:", error);
@@ -343,92 +365,92 @@ export const login = async (req, res) => {
   }
 };
 
-//*-_- -------------- éste mantiene la lógica de generar token 
-// export const login = async (req, res) => {
-//   const { email, password } = req.body;
-
-//   try {
-//     // Paso 1: Verificar si el usuario existe y las credenciales son válidas
-//     const userLogged = await User.findOne({ email });
-//     if (!userLogged) {
-//       return res.status(400).json({ message: "Usuario no encontrado" });
-//     }
-
-//     const isMatch = await bcrypt.compare(password, userLogged.password);
-//     if (!isMatch) {
-//       return res.status(400).json({ message: "La contraseña es incorrecta" });
-//     }
-
-//     // Paso 2: Si las credenciales son válidas, enviar el código de verificación por correo
-//     try {
-//       const verificationCode = await send2FAEmail(email);
-
-//       // Paso 3: Generar token de acceso
-//       const token = await createAccessToken({ _id: userLogged._id, isAdmin: userLogged.rol_id });
-
-//       // Paso 4: Configurar la cookie para almacenar el código de verificación
-//       const cookies = new Cookies(req, res);
-//       const cookieOptions = { httpOnly: true, maxAge: 600000 }; // Ejemplo de 10 minutos de duración
-
-//       if (process.env.NODE_ENV === 'production') {
-//         cookieOptions.secure = true;
-//         cookieOptions.sameSite = 'none';
-//       }
-
-//       cookies.set('verificationCode', verificationCode, cookieOptions);
-
-//       // Paso 5: Retornar una respuesta exitosa con el token y cualquier otro dato necesario
-//       return res.status(200).json({
-//         id: userLogged._id,
-//         username: userLogged.name,
-//         email: userLogged.email,
-//         isAdmin: userLogged.rol_id,
-//         token, // Agregar el token al objeto de respuesta
-//         message: "Código de verificación enviado por correo electrónico y token generado"
-//       });
-
-//     } catch (error) {
-//       console.error("Error enviando el correo de verificación:", error);
-//       return res.status(500).json({ message: "Error enviando el correo de verificación" });
-//     }
-
-//   } catch (error) {
-//     console.error("Error al iniciar sesión:", error);
-//     return res.status(500).json({ message: "Error en inicio de sesión" });
-//   }
-// };
-
-
 
 
 export const verifyCode = async (req, res) => {
   const { email, code } = req.body;
-  const cookies = new Cookies(req, res);
 
+  try {
+    // Obtener las cookies
+    const cookies = new Cookies(req, res);
 
-  console.log('Cookies:', req.headers.cookie);
-  //console.log('COOKIE EN 401:',  cookies)
+    // Obtener el código de verificación almacenado en las cookies
+    const storedCode = req.body.code;
 
+//AQUI ES EL ERROR OJOOOOOOOOOOOOO
+    console.log('COOKIE EN 401:', req.body); 
+    console.log('2FA CODE EN 401:', storedCode);
 
-  const storedCode = cookies.get('verificationCode');
+    // Verificar si hay un código almacenado y si coincide con el código proporcionado en la solicitud
+    if (!storedCode || storedCode !== code) {
+      return res.status(401).json({ message: "Código de verificación incorrecto o expirado" });
+    }
 
-  console.log('2FA CODE EN 401: ', storedCode )
+    // Si el código es correcto, buscar al usuario por su email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Usuario no encontrado" });
+    }
 
-  if (!storedCode || storedCode !== code) {
-    return res.status(401).json({ message: "Código de verificación incorrecto o expirado" });
+    // Generar token de acceso
+    const token = await createAccessToken({ _id: user._id, isAdmin: user.rol_id });
+    console.log('TOKEN ESTABLECIDO EN VERIF CODE: ', token)
+
+    // Eliminar la cookie de verificación (opcional, depende de tu flujo)
+    cookies.set('verificationCode', '', { expires: new Date(0) });
+
+    // Devolver una respuesta exitosa con el token y otros datos necesarios
+    return res.status(200).json({
+      id: user._id,
+      username: user.name,
+      email: user.email,
+      isAdmin: user.rol_id,
+      token,
+      message: "Autenticación exitosa"
+    });
+
+  } catch (error) {
+    console.error("Error al verificar el código de verificación:", error);
+    return res.status(500).json({ message: "Error al verificar el código de verificación" });
   }
-
-  // Si el código es correcto, autentica al usuario
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ message: "Usuario no encontrado" });
-  }
-
-  // Generar token
-  const token = generateToken(user);
-  cookies.set('verificationCode', '', { expires: new Date(0) }); // Elimina la cookie
-
-  return res.status(200).json({ token, isAdmin: user.isAdmin, username: user.username, message: "Autenticación exitosa" });
 };
+
+
+// export const verifyCode = async (req, res) => {
+//   const { email, code } = req.body;
+//   const cookies = new Cookies(req, res);
+
+
+//   console.log('COOKIE EN 401:', req.headers.cookie);
+//   //console.log('',  cookies)
+
+
+//   const storedCode = cookies.get('verificationCode');
+
+//   console.log('2FA CODE EN 401: ', storedCode )
+
+//   if (!storedCode || storedCode !== code) {
+//     return res.status(401).json({ message: "Código de verificación incorrecto o expirado" });
+//   }
+
+//   // Si el código es correcto, autentica al usuario
+//   const user = await User.findOne({ email });
+//   if (!user) {
+//     return res.status(400).json({ message: "Usuario no encontrado" });
+//   }
+
+//           // Paso 3: Generar token de acceso
+//           const token = await createAccessToken({ _id: user._id, isAdmin: user.rol_id });
+//           // Paso 5: Retornar una respuesta exitosa con el token y cualquier otro dato necesario
+//           return res.status(200).json({
+//             id: user._id,
+//             username: user.name,
+//             email: user.email,
+//             isAdmin: user.rol_id,
+       
+//             token, // Agregar el token al objeto de respuesta
+//             message: "Código de verificación enviado por correo electrónico y token generado"
+//           });
+// };
 
 
