@@ -1,14 +1,16 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
-import { login, 
-  logout, 
-  register, 
-  profile, 
-  verifyToken, 
-  getAllUsers, 
-  updateUser, 
+import {
+  login,
+  logout,
+  register,
+  profile,
+  verifyToken,
+  getAllUsers,
+  updateUser,
   deleteUser,
-  isAdmin } from "../controllers/auth.controller.js";
+  isAdmin
+} from "../controllers/auth.controller.js";
 import { getUsers } from "../controllers/admin.controller.js";
 import { authRequired } from "../middlewares/validateToken.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
@@ -21,13 +23,13 @@ const router = Router()
 
 // Limitar la cantidad de intentos de inicio de sesión
 const limitLogin = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 min
-    max: 3, // Max number of entries to try log in
-    message: 'Too many fail requests, try again in 15 minutes',
+  windowMs: 15 * 60 * 1000, // 15 min
+  max: 3, // Max number of entries to try log in
+  message: 'Too many fail requests, try again in 15 minutes',
 });
 
 
-router.post('/register', validateSchema(registerSchema), register)  
+router.post('/register', validateSchema(registerSchema), register)
 router.post('/login', limitLogin, validateSchema(loginSchema), login)
 router.post('/logout', logout)
 router.get('/verify', verifyToken)
