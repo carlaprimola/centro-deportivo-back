@@ -10,11 +10,9 @@ import fs from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// -------------------- CONTROLADORES PARA USUARIOS -------------------- //
 
-// crear pago con archivo y sendEmail al admin (HAS BORRADO SENDEMAIL)
-export const createMembershipPayment = async (req, res) => {
-  console.log("WELCOME TO CREATE MEMBERSHIP PAYMENT :)");
+//CREAR PAGO
+export const createMembershipPayment = async (req, res) => {  
   try {
     // Detalles del archivo subido
     console.log("Archivo subido:", req.file);

@@ -2,7 +2,7 @@ import Order from '../models/orders.model.js';
 import multer from 'multer';
 import User from '../models/user.model.js';
 import { sendNewOrderEmail } from '../utils/sendEmail.js'; // Función de envío de correo
-// import Product from '../models/product.model.js';
+
 
 
 //Funcion para almacenamiento de archivos
@@ -19,9 +19,7 @@ const upload = multer({ storage: storage }).single('document');
 
 // POST CREATE ORDER
 const OrderController = {
-    addOrder: async (req, res) => {
-        // console.log('Resumen:', req.body);
-        // console.log(req.file)
+    addOrder: async (req, res) => {       
         try {
             const { product_ids, selectedSize, summary, status,resume, document } = req.body;
             console.log(selectedSize)
@@ -67,18 +65,7 @@ const OrderController = {
             res.status(500).json({ message: error.message });
         }
     },
-
-    // GET ORDER BY ID
-    // getOrderById: async (req, res) => {
-    //     try {
-    //         const { id } = req.params;
-    //         const order = await Order.findById(id).populate('user_id').populate('products');
-    //         if (!order) return res.status(404).json({ message: 'Order not found' });
-    //         res.status(200).json(order);
-    //     } catch (error) {
-    //         res.status(500).json({ message: error.message });
-    //     }
-    // },
+   
 
     //GET ORDER DETAILS
     getOrderDetails : async (req, res) => {

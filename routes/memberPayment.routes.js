@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createMembershipPayment, getAllMembershipPayments, getMyPaymentStatus, getSingleMembershipPayment,  updatePaymentStatus } from "../controllers/memberPayment.controller.js";
-import { isAdmin } from "../controllers/auth.controller.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
 import { authRequired } from '../middlewares/validateToken.js';
 import { upload } from '../middlewares/upload.middleware.js';
 const router = Router();
@@ -12,21 +12,16 @@ const router = Router();
 //     message: 'Demasiados intentos en poco tiempo, por favor inténtalo más tarde',
 // });
 
-// ---------- Rutas para usuarios ---------- //
-
+// RUTAS USUARIOS //
 router.get('/my-payments/', authRequired,  getMyPaymentStatus);
 
 
-// -------- (PDF) RUTAS DE TRABAJO ACTUAL 
-//  PARA LEER EL PDF DE UN PAGO DE MEMBRESÍA (POR ID)
+
 router.post('/pay', upload,  createMembershipPayment); // OJO FALTA limitAddOrder ¿? y  upload, OrderController.addOrder despues de authRequired
 
 
-// -------- FIN DE (PDF) RUTA DE TRABAJO
 
 
-
-// router.put('/payment/:id',  authRequired, updateMembershipPayment);
 
 
 

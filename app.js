@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js';
 import memberPaymentRouter from './routes/memberPayment.routes.js'
 import PlayerRouter from './routes/player.routes.js'
-// import productPayment from "./routes/productPayment.routes.js";
 import ExpressMongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
 import ProductRouter from "./routes/product.routes.js";
