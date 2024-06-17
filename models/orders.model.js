@@ -11,6 +11,11 @@ const orderSchema = new mongoose.Schema({
         ref: 'Product',
         required: true
     }],
+    // product_names:[{
+    //     type: mongoose.Schema.Types.ObjectId, 
+    //     ref: 'Product',
+    //     required: true
+    // }],
     selectedSize: {
         type: [String],
         enum: ["Talla única", "3XS", "2XS", "XS", "S", "M", "L", "XL", "XXL"],
@@ -36,10 +41,10 @@ const orderSchema = new mongoose.Schema({
         path: String,
         size: Number
     },
-    resume: [{
-        quantity:[],
-        total:Number,
-    }],
+    resume: {
+        quantity:[Number],
+        total: Number,
+    },
     contentType: {
         type: String,
         enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
@@ -50,7 +55,7 @@ const orderSchema = new mongoose.Schema({
     versionKey: false
 });
 
-// Crear el modelo a partir del esquema
+
 const Order = mongoose.model('Order', orderSchema);
 
 export default Order;
