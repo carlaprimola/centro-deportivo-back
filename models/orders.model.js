@@ -36,6 +36,10 @@ const orderSchema = new mongoose.Schema({
         path: String,
         size: Number
     },
+    resume: [{
+        quantity:[],
+        total:Number,
+    }],
     contentType: {
         type: String,
         enum: ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
