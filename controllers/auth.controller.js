@@ -377,6 +377,8 @@ export const verifyCode = async (req, res) => {
     // Obtener el código de verificación almacenado en las cookies
     const storedCode = req.body.code;
 
+    // const storedCode = cookies.get('verificationCode'); 
+
 //AQUI ES EL ERROR OJOOOOOOOOOOOOO
     console.log('COOKIE EN 401:', req.body); 
     console.log('2FA CODE EN 401:', storedCode);
@@ -393,9 +395,16 @@ export const verifyCode = async (req, res) => {
     }
 
     // Generar token de acceso
-    const token = await createAccessToken({ _id: user._id, isAdmin: user.rol_id });
-    console.log('TOKEN ESTABLECIDO EN VERIF CODE: ', token)
 
+    console.log('USUARIO PARA USAR EN TOKEN isAdmin:', user.rol_id)
+
+    
+    const token = await createAccessToken({ _id: user._id, isAdmin: user.rol_id });
+    //console.log('TOKEN ESTABLECIDO EN VERIF CODE: ', token)
+
+// Configurar la cookie 'isAdmin' con el rol del usuario
+// cookies.set('isAdmin', user.rol_id.toString(), { httpOnly: true, maxAge: 600000 });
+// console.log('isAdmin cookie  YA SETEADA es:', cookies.get('isAdmin'));
     // Eliminar la cookie de verificación (opcional, depende de tu flujo)
     cookies.set('verificationCode', '', { expires: new Date(0) });
 
@@ -406,7 +415,7 @@ export const verifyCode = async (req, res) => {
       email: user.email,
       isAdmin: user.rol_id,
       token,
-      message: "Autenticación exitosa"
+      message: `Bienvenido ${user.name}`
     });
 
   } catch (error) {
