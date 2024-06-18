@@ -138,7 +138,7 @@ export const register = async (req, res) => {
 
 
 export const logout = async (req, res) => {
-  res.cookie("token", "", { expires: new Date(0) });
+  res.clearCookie("token");
   return res.sendStatus(200);
 };
 
@@ -379,7 +379,7 @@ export const verifyCode = async (req, res) => {
 
     // const storedCode = cookies.get('verificationCode'); 
 
-//AQUI ES EL ERROR OJOOOOOOOOOOOOO
+
     console.log('COOKIE EN 401:', req.body); 
     console.log('2FA CODE EN 401:', storedCode);
 
@@ -387,6 +387,8 @@ export const verifyCode = async (req, res) => {
     if (!storedCode || storedCode !== code) {
       return res.status(401).json({ message: "Código de verificación incorrecto o expirado" });
     }
+
+ 
 
     // Si el código es correcto, buscar al usuario por su email
     const user = await User.findOne({ email });
@@ -406,7 +408,12 @@ export const verifyCode = async (req, res) => {
 // cookies.set('isAdmin', user.rol_id.toString(), { httpOnly: true, maxAge: 600000 });
 // console.log('isAdmin cookie  YA SETEADA es:', cookies.get('isAdmin'));
     // Eliminar la cookie de verificación (opcional, depende de tu flujo)
-    cookies.set('verificationCode', '', { expires: new Date(0) });
+    res.cookie("token", token, {
+           httpOnly: true,
+           secure: process.env.NODE_ENV === "production",
+         maxAge: 3600000,
+           sameSite: "strict",
+           });
 
     // Devolver una respuesta exitosa con el token y otros datos necesarios
     return res.status(200).json({
