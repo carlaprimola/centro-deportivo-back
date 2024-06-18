@@ -59,10 +59,8 @@ export const sendNewMembershipEmail = async ({ playerName, parentName, status, f
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Correo de pago enviado exitosamente');
-  } catch (error) {
-    console.error('Error enviando el correo de pago:', error);
-  }
+     } catch (error) {
+     }
 };
 
 
@@ -122,9 +120,7 @@ export const emailNewPlayerNotification = async (player, user) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log("Correo enviado al administrador");
   } catch (error) {
-    console.error("Error enviando el correo:", error);
   }
 };
 
@@ -202,8 +198,6 @@ export const sendNewOrderEmail = async (order, user) => {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email enviado correctamente");
   } catch (error) {
-    console.error("Error al enviar el email:", error);
   }
 };

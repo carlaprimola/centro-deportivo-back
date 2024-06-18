@@ -1,14 +1,10 @@
 import ProductModel from "../models/product.model.js";
 
-
 // GET ALL PRODUCTS
-
 const ProductController = {
     getAllProducts: async (_req, res) => {
         try {
             const products = await ProductModel.find().populate('sizes');
-            console.log('Consulta MongoDB:', ProductModel.find().toString());
-
             res.json(products);
         } catch (error) {
             res.status(500).json({ message: 'Error al obtener productos', error: error.message });
@@ -24,7 +20,6 @@ const ProductController = {
             res.status(500).json({ message: "Error to obtain the product", error });
         }
     },
-
     // POST CREATE PRODUCT
     createNewProduct: async (req, res) => {
         try {
@@ -39,14 +34,12 @@ const ProductController = {
                 image: image,
                 sizes: sizes // Incluir las tallas 
             });
-
             const savedProduct = await product.save();
             res.json({ message: "Product created successfully", product: savedProduct });
         } catch (error) {
             res.status(500).json({ message: "Error to create the product", error });
         }
     },
-
     // UPDATE PRODUCT
     updateOneProduct: async (req, res) => {
         try {
@@ -57,7 +50,6 @@ const ProductController = {
             res.status(500).json({ message: "Error to update the product", error });
         }
     },
-
     // DELETE PRODUCT
     deleteOneProduct: async (req, res) => {
         try {
@@ -67,9 +59,7 @@ const ProductController = {
         } catch (error) {
             res.status(500).json({ message: "Error to delete the product", error });
         }
-
     },
-
     // UPDATE STOCK
     updateStock: async (req, res) => {
         try {

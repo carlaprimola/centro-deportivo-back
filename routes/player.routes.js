@@ -5,11 +5,7 @@ import  { getAllPlayersCtlr, getPlayerByIdCtlr } from "../controllers/players.co
 
 const router = Router();
 
-// ---OJO --- por verificar con auth.routes.js
 router.get("/", getAllPlayersCtlr)
-
-
-// MI PRUEBA?¿?¿?¿:
 router.get("/player/:id", authRequired, getPlayerByIdCtlr)
 
 

@@ -5,19 +5,10 @@ import { authRequired } from '../middlewares/validateToken.js';
 import { upload } from '../middlewares/upload.middleware.js';
 const router = Router();
 
-// Limitar la cantidad de intentos de pedidos para pago de membresías (PDF)
-// const limitAddOrder = rateLimit({
-//     windowMs: 15 * 60 * 1000, // 15 min
-//     max: 10, // Max number of entries to try log in
-//     message: 'Demasiados intentos en poco tiempo, por favor inténtalo más tarde',
-// });
 
-// RUTAS USUARIOS //
 router.get('/my-payments/', authRequired,  getMyPaymentStatus);
 
-
-
-router.post('/pay', upload,  createMembershipPayment); // OJO FALTA limitAddOrder ¿? y  upload, OrderController.addOrder despues de authRequired
+router.post('/pay', upload,  createMembershipPayment); 
 
 
 

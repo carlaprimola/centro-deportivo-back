@@ -32,7 +32,6 @@ export const createPayment = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 // Obtener todos los pagos
 export const getAllPayments = async (req, res) => {
   try {
@@ -42,7 +41,6 @@ export const getAllPayments = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 // Obtener un pago por ID
 export const getPaymentById = async (req, res) => {
   try {
@@ -54,7 +52,6 @@ export const getPaymentById = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 // Actualizar un pago
 export const updatePayment = async (req, res) => {
   try {
@@ -74,7 +71,6 @@ export const updatePayment = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 // Eliminar un pago
 export const deletePayment = async (req, res) => {
   try {
@@ -86,7 +82,6 @@ export const deletePayment = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 // Subir un documento PDF de pago
 export const uploadPaymentDocument = [
   upload.single('document'),
@@ -95,7 +90,6 @@ export const uploadPaymentDocument = [
       const { id } = req.params;
       const payment = await productPayment.findById(id);
       if (!payment) return res.status(404).json({ message: 'Payment not found' });
-
       payment.product_payment.document = req.file.path;
       await payment.save();
       res.status(200).json(payment);

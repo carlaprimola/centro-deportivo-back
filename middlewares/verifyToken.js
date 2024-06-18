@@ -9,19 +9,14 @@ export const verifyToken = async (req, res, next) => {
       return res
         .status(401)
         .json({ message: "No se ha encontrado ningún token" });
-  
-    try {
+      try {
       const payload = jwt.verify(token, TOKEN_SECRET);
-      console.log("El token es válido y su payload es:", payload);
-  
-      const userFound = await User.findById(payload._id);
+       const userFound = await User.findById(payload._id);
       if (!userFound)
         return res.status(403).json({ message: "Usuario no encontrado" });
-  
       req.user = userFound;
       next();
     } catch (error) {
-      console.error("El token no es válido:", error);
-      res.status(500).json({ message: "Hubo un error al verificar el token" });
+       res.status(500).json({ message: "Hubo un error al verificar el token" });
     }
   };
