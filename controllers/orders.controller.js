@@ -1,8 +1,8 @@
 import Order from '../models/orders.model.js';
 import multer from 'multer';
 import User from '../models/user.model.js';
-import { sendNewOrderEmail } from '../utils/sendEmail.js'; // Función de envío de correo
-// import Product from '../models/product.model.js';
+import { sendNewOrderEmail } from '../utils/sendEmail.js'; 
+import Product from '../models/product.model.js';
 
 
 //Funcion para almacenamiento de archivos
@@ -19,15 +19,15 @@ const upload = multer({ storage: storage }).single('document');
 
 // POST CREATE ORDER
 const OrderController = {
-    addOrder: async (req, res) => {
-        // console.log('Resumen:', req.body);
-        // console.log(req.file)
+    addOrder: async (req, res) => {       
         try {
-            const { product_ids, selectedSize, summary, status, document } = req.body;
+            const { product_ids, selectedSize, summary, status,resume, document } = req.body;
             console.log(selectedSize)
             if (!req.file || !summary || !product_ids || product_ids.length === 0|| !selectedSize) {
                 return res.status(400).json({ message: 'Complete los campos requeridos' });
             }
+            // Parsear resume JSON
+            const parsedResume = JSON.parse(resume);
 
             // Crear un nuevo pedido
             const newOrder = new Order({
@@ -36,6 +36,7 @@ const OrderController = {
                 selectedSize,
                 summary,
                 status,
+                resume: parsedResume,
                 document: req.file,
                 contentType: req.file.mimetype
             });
@@ -60,24 +61,34 @@ const OrderController = {
     // GET ALL ORDERS
     getAllOrders: async (_req, res) => {
         try {
-            const orders = await Order.find().populate('user_id').populate('product_ids');
+            const orders = await Order.find().populate('user_id', 'name lastname')
+            .populate('product_ids', 'name');
+            
             res.status(200).json(orders);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
+   
 
-    // GET ORDER BY ID
-    getOrderById: async (req, res) => {
+    //GET ORDER DETAILS
+    getOrderDetails : async (req, res) => {
         try {
-            const { id } = req.params;
-            const order = await Order.findById(id).populate('user_id').populate('products');
-            if (!order) return res.status(404).json({ message: 'Order not found' });
-            res.status(200).json(order);
+          const orderId = req.params.orderId;
+          const order = await Order.findById(orderId).populate('user_id', 'name lastname email').populate('product_ids', 'name price');
+          if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+          }
+      
+          const productInfo = await Product.find({ _id: { $in: order.product_ids } });
+          res.json({ order, productInfo });
+         
         } catch (error) {
-            res.status(500).json({ message: error.message });
+          console.error('Error fetching order details:', error);
+          res.status(500).json({ message: 'Server error' });
         }
-    },
+      },
+
 
     // UPDATE ORDER
     updateOrder: async (req, res) => {

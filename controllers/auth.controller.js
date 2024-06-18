@@ -1,11 +1,8 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { createAccessToken } from "../libs/jwt.js";
-import jwt from "jsonwebtoken";
-import { TOKEN_SECRET } from "../config.js";
-// import { cleanAndValidate } from '../schemas/auth.schema.js';
-// import { registerSchema } from '../schemas/auth.schema.js';
-// import { loginSchema } from '../schemas/auth.schema.js';
+
+
 
 //Register
 export const register = async (req, res) => {
@@ -65,11 +62,9 @@ export const register = async (req, res) => {
     const token = await createAccessToken({ _id: userSaved._id });
     console.log("token generado para registro:", token);
     res.cookie("token", token);
-    res.json({
-      // id: userSaved._id,
+    res.json({      
       name: userSaved.name,
-      lastname: userSaved.lastname,
-      // username: userSaved.username,
+      lastname: userSaved.lastname,      
       email: userSaved.email,
       mobile: userSaved.mobile,
       password: userSaved.password,
@@ -113,10 +108,8 @@ export const login = async (req, res) => {
     res.json({
       id: userLogged._id,
       username: userLogged.name,
-      email: userLogged.email,
-      // role: userLogged.rol_id,
-      isAdmin: userLogged.rol_id,
-      // rol_id: userLogged.rol_id,
+      email: userLogged.email,      
+      isAdmin: userLogged.rol_id,      
       token,
     });
     
@@ -133,91 +126,16 @@ export const logout = async (req, res) => {
   return res.sendStatus(200);
 };
 
-// Perfil de usuario
-export const profile = async (req, res) => {
-  const userFound = await User.findById(req.user._id);
-
-  if (!userFound)
-    return res.status(403).json({ message: "Usuario no encontrado" });
-
-  return res.json({
-    id: userFound._id,
-    // username: userFound.username,
-    email: userFound.email,
-    createdAt: userFound.createdAt,
-    updatedAt: userFound.updatedAt,
-  });
-};
-
-// Verificación de Token
-// export const verifyToken = async (req, res, next) => {
-//     const authHeader = req.headers.authorization;
-//     if (!authHeader) {
-//         return res.status(401).json({ message: "No se ha encontrado ningún token en el encabezado de autorización" });
-//     }
-//     const token = authHeader.split(" ")[1];
-//     // const token  = req.headers.authorization.split(" ")[1];
-//     console.log(req.headers.authorization)
-//     console.log(token)
-//     console.log("🔐 Cookies:", token);
-//     if (!token) return res.status(401).json({ message: "No se ha encontrado ningún token" });
-
-//   try {
-//     const payload = jwt.verify(token, TOKEN_SECRET);
-//     console.log("El token es válido y su payload es:", payload);
-
-//     const userFound = await User.findById(payload._id);
-//     if (!userFound)
-//       return res.status(403).json({ message: "Usuario no encontrado" });
-
-//     req.user = userFound;
-//     next();
-//   } catch (error) {
-//     console.error("El token no es válido:", error);
-//     res.status(500).json({ message: "Hubo un error al verificar el token" });
-//   }
-// };
-
-//VerifyToken version 2
-export const verifyToken = async (req, res, next) => {
-  const { token } = req.cookies;
-  console.log("🔐 Cookies:", req.cookies);
-  if (!token)
-    return res
-      .status(401)
-      .json({ message: "No se ha encontrado ningún token" });
-
+//Mostrar los usuarios en admin
+export const getUsers = async (req, res) => {
   try {
-    const payload = jwt.verify(token, TOKEN_SECRET);
-    console.log("El token es válido y su payload es:", payload);
-
-    const userFound = await User.findById(payload._id);
-    if (!userFound)
-      return res.status(403).json({ message: "Usuario no encontrado" });
-
-    req.user = userFound;
-    next();
+      const users = await User.find();
+      res.status(200).json(users);
   } catch (error) {
-    console.error("El token no es válido:", error);
-    res.status(500).json({ message: "Hubo un error al verificar el token" });
+      console.error(error);
+      res.status(500).json({message: 'Hubo un error al obtener los usuarios', error});
   }
-};
-
-// Verificación de Rol de Administrador
-export const isAdmin = (req, res, next) => {
-  try {
-    console.log("Usuario:", req.user); // Log para ver el usuario
-    if (req.user.rol_id !== "admin") {
-      return res.status(403).json({ message: "Requiere rol de administrador" });
-    }
-    next();
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "Hubo un error al verificar el rol del usuario" });
-  }
-};
+}
 
 // Controlador para mostrar todos los usuarios
 export const getAllUsers = async (req, res) => {
