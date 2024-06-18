@@ -129,7 +129,7 @@ export const emailNewPlayerNotification = async (player, user) => {
 };
 
 
-export const sendNewOrderEmail = async (order, user) => {
+export const sendNewOrderEmail = async (order) => {
   try {
     // Crear las filas de productos
     const productRows = order.product_ids.map((product, index) => {
@@ -138,6 +138,7 @@ export const sendNewOrderEmail = async (order, user) => {
           <td style="padding: 10px; border: 1px solid #ddd;">${product.name}</td>
           <td style="padding: 10px; border: 1px solid #ddd;">${order.selectedSize[index]}</td>
           <td style="padding: 10px; border: 1px solid #ddd;">${product.price}€</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${order.resume.quantity[index]}</td>
         </tr>
       `;
     }).join('');
@@ -154,11 +155,11 @@ export const sendNewOrderEmail = async (order, user) => {
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <tr>
               <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Nombre del Cliente</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.name} ${user.lastname}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${order.user_id.name} ${order.user_id.lastname}</td>
             </tr>
             <tr>
               <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Email del Cliente</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.email}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${order.user_id.email}</td>
             </tr>
             <tr>
               <td style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Fecha del Pedido</td>
@@ -184,6 +185,7 @@ export const sendNewOrderEmail = async (order, user) => {
               <th style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Nombre</th>
               <th style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Talla</th>
               <th style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Precio</th>
+              <th style="padding: 10px; background-color: #F2E205; border: 1px solid #ddd;">Cantidad</th>
             </tr>
             ${productRows}
           </table>

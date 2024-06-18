@@ -26,7 +26,7 @@ const OrderController = {
             if (!req.file || !summary || !product_ids || product_ids.length === 0|| !selectedSize) {
                 return res.status(400).json({ message: 'Complete los campos requeridos' });
             }
-            // Parsear resume JSON
+            
             const parsedResume = JSON.parse(resume);
 
             // Crear un nuevo pedido
@@ -46,11 +46,12 @@ const OrderController = {
                 throw new Error('El usuario no existe!');
             }
 
+            const detailsOrderPopulated = await Order.findById(newOrder._id).populate('user_id', 'name lastname email').populate('product_ids', 'name price');
             await newOrder.save();
-            await sendNewOrderEmail(newOrder, user);
+            await sendNewOrderEmail(detailsOrderPopulated);
 
             res.status(201).json(newOrder);
-            console.log('Resumen pedido:', newOrder)
+            console.log('Resumen pedido:', detailsOrderPopulated)
             
         } catch (error) {
             console.log(error);
