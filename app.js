@@ -1,30 +1,48 @@
-//importamos express
-import express from 'express';
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
+import express from "express";
+import helmet from 'helmet';
 import cors from 'cors';
-
-import authRoutes from './routes/auth.routes.js'
-import taskRoutes from './routes/task.routes.js'
+import cookieParser from 'cookie-parser';
+import authRoutes from './routes/auth.routes.js';
+import memberPaymentRouter from './routes/memberPayment.routes.js'
+import PlayerRouter from './routes/player.routes.js'
+import ExpressMongoSanitize from "express-mongo-sanitize";
+import xss from "xss-clean";
+import ProductRouter from "./routes/product.routes.js";
+import OrderRouter from "./routes/orders.routes.js";
+import assignTeamRouter from "./routes/teams.routes.js";
 
 const app = express();
 
-//configuramos el puerto
+app.use(ExpressMongoSanitize());
+app.use(xss());
+app.use(express.static('public'))
+app.use(helmet());
+app.use(helmet.frameguard({ action: 'deny' }));
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", 'trustedscripts.com'],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  })
+);
 app.use(cors({
     origin: 'http://localhost:5173',
-    credentials: true,
+    credentials: true
 }));
-
-app.use(morgan('dev')); //simplifica el proceso de registros
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
 
+app.use("/api/", authRoutes)
+app.use("/api/payments", memberPaymentRouter);
+app.use("/api/player", assignTeamRouter)
+app.use("/api/products", ProductRouter);
+app.use("/api/orders", OrderRouter);
 
-app.use('/', (req, res) =>{
-    res.json({message: 'Bienvenido a la API de Proyectos'})
-})
-//añadimos /api antes de la ruta para distinguirlo de las rutas del front
-app.use("/api", authRoutes) 
-app.use("/api", taskRoutes)
+//-_- RUTAS EN PRUEBA PARA PDF -_-
+app.use("/api/players", PlayerRouter);
+app.use("/api/memberships", memberPaymentRouter);
 
 export default app;
