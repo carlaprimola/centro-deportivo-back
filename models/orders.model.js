@@ -11,11 +11,6 @@ const orderSchema = new mongoose.Schema({
         ref: 'Product',
         required: true
     }],
-    // product_names:[{
-    //     type: mongoose.Schema.Types.ObjectId, 
-    //     ref: 'Product',
-    //     required: true
-    // }],
     selectedSize: {
         type: [String],
         enum: ["Talla única", "3XS", "2XS", "XS", "S", "M", "L", "XL", "XXL"],

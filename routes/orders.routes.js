@@ -5,7 +5,7 @@ import OrderController from '../controllers/orders.controller.js';
 import { isAdmin } from '../middlewares/isAdmin.js';
 import { upload } from '../controllers/orders.controller.js';
 import rateLimit from "express-rate-limit";
-import { verifyToken } from '../middlewares/verifytoken.js';
+import { verifyToken } from '../middlewares/verifyToken.js';
 
 
 const OrderRouter = Router();
@@ -19,7 +19,6 @@ const limitAddOrder = rateLimit({
 
 OrderRouter
     .get('/', verifyToken, isAdmin, OrderController.getAllOrders)
-    //.get('/order/:id', verifyToken, authRequired, OrderController.getOrderById)
     .get('/order/:orderId', authRequired, OrderController.getOrderDetails)
     .post('/add-order', limitAddOrder, authRequired, upload, OrderController.addOrder)
     .put('/order/:id/status', verifyToken, isAdmin, OrderController.updateOrder)
